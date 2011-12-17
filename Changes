@@ -1,5 +1,8 @@
 Revision history for Queue-DBI
 
+1.7.1   12/16/2011
+        Added missing prerequisite.
+
 1.7.0   12/16/2011
         Changed version number convention to always use two dots. This allows
         correct conversion to integer for CPAN. Bumped to 1.7 to allow proper
