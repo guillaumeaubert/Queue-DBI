@@ -15,6 +15,7 @@ my $builder = Module::Build->new(
 		'Carp'         => 0,
 		'Storable'     => 0,
 		'MIME::Base64' => 0,
+		'DBD::SQLite'  => 0,
 	},
 	requires            =>
 	{
