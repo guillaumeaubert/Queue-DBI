@@ -16,6 +16,7 @@ my $builder = Module::Build->new(
 		'Storable'     => 0,
 		'MIME::Base64' => 0,
 		'DBD::SQLite'  => 0,
+		'DBI'          => 0,
 	},
 	requires            =>
 	{
