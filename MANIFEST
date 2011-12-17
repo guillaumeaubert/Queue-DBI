@@ -4,6 +4,8 @@ ignore.txt
 lib/Queue/DBI.pm
 lib/Queue/DBI/Element.pm
 MANIFEST			This list of files
+MANIFEST.SKIP
+META.yml
 README
 t/00-load.t
 t/10-create_tables.t

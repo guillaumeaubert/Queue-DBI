@@ -1,0 +1,31 @@
+---
+abstract: "A queueing module with an emphasis on safety, using DBI as a\nstorage system for queued data."
+author:
+  - 'Guillaume Aubert <aubertg@cpan.org>'
+build_requires:
+  Carp: 0
+  DBD::SQLite: 0
+  Data::Dumper: 0
+  MIME::Base64: 0
+  Storable: 0
+  Test::More: 0
+configure_requires:
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3603'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Queue-DBI
+provides:
+  Queue::DBI:
+    file: lib/Queue/DBI.pm
+    version: 1.6
+  Queue::DBI::Element:
+    file: lib/Queue/DBI/Element.pm
+    version: 1.6
+requires:
+  perl: 5.006
+resources:
+  license: http://dev.perl.org/licenses/
+version: 1.6
