@@ -19,11 +19,11 @@ storage system for queued data.
 
 =head1 VERSION
 
-Version 1.6
+Version 1.6.1
 
 =cut
 
-our $VERSION = '1.6';
+our $VERSION = '1.6.1';
 
 
 our $UNLIMITED_RETRIES = -1;

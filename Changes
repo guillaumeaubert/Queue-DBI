@@ -1,5 +1,9 @@
 Revision history for Queue-DBI
 
+1.6.1   12/16/2011
+        Corrected meta information, added list of prerequisites, minor
+        documentation corrections.
+
 1.6     12/16/2011
         Added more documentation and tests. Public release.
 

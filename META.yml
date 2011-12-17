@@ -20,12 +20,12 @@ name: Queue-DBI
 provides:
   Queue::DBI:
     file: lib/Queue/DBI.pm
-    version: 1.6
+    version: 1.6.1
   Queue::DBI::Element:
     file: lib/Queue/DBI/Element.pm
-    version: 1.6
+    version: 1.6.1
 requires:
   perl: 5.006
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.6
+version: 1.6.1
