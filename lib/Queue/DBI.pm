@@ -882,7 +882,13 @@ L<http://search.cpan.org/dist/Queue-DBI/>
 
 Thanks to Geeknet, Inc. L<http://www.geek.net> for funding the initial development of this code!
 
-Thanks to Jamie McCarthy for the locking mechanism improvements in version 1.1.
+Thanks to Jacob Rose C<< <jacob at thinkgeek.com> >>, who wrote the first
+queueing module at ThinkGeek L<http://www.thinkgeek.com> and whose work
+provided the inspiration to write this full-fledged queueing system. His
+contribution to shaping the original API in version 1.0.0 was also very
+valuable.
+
+Thanks to Jamie McCarthy for the locking mechanism improvements in version 1.1.0.
 
 
 =head1 COPYRIGHT & LICENSE
