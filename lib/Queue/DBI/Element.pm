@@ -414,7 +414,7 @@ Thanks to Jamie McCarthy for the locking mechanism improvements in version 1.1.0
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2011 Guillaume Aubert.
+Copyright 2009-2012 Guillaume Aubert.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the Artistic License.
