@@ -156,7 +156,7 @@ sub new
 	# Check parameters.
 	foreach my $arg ( qw( queue_name database_handle ) )
 	{
-		die "Argument '$_' is needed to create the Queue::DBI object"
+		die "Argument '$arg' is needed to create the Queue::DBI object"
 			unless defined( $args{$arg} ) && ( $args{$arg} ne '' );
 	}
 	die 'Cleanup timeout must be an integer representing seconds'
