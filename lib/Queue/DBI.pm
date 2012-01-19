@@ -157,7 +157,7 @@ sub new
 	foreach my $arg ( qw( queue_name database_handle ) )
 	{
 		croak "Argument '$arg' is needed to create the Queue::DBI object"
-			unless defined( $args{$arg} ) && ( $args{$arg} ne '' );
+			if !defined( $args{$arg} ) || ( $args{$arg} eq '' );
 	}
 	croak 'Cleanup timeout must be an integer representing seconds'
 		if defined( $args{'cleanup_timeout'} ) && ( $args{'cleanup_timeout'} !~ m/^\d+$/ );
@@ -533,7 +533,7 @@ sub retrieve_batch
 	
 	# All the remaining elements are locked
 	return []
-		unless defined( $data ) && ( scalar( @$data) != 0 );
+		if !defined( $data ) || ( scalar( @$data) == 0 );
 	
 	# Create objects
 	carp "Creating new Queue::DBI::Element objects." if $verbose;
