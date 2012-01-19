@@ -91,7 +91,7 @@ of it
 
 =cut
 
-sub lock
+sub lock ## no critic (Subroutines::ProhibitBuiltinHomonyms)
 {
 	my ( $self ) = @_;
 	my $queue = $self->queue();
