@@ -1,2 +1,5 @@
 # Change default severity to harsh.
 severity = harsh
+
+# What's wrong with tabs? They're more friendly.
+[-CodeLayout::ProhibitHardTabs]
