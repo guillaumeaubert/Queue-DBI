@@ -1,3 +1,4 @@
+.perlcriticrc
 Build.PL
 Changes
 ignore.txt
@@ -17,5 +18,6 @@ t/50-max_requeue_count.t
 t/60-get_element_by_id.t
 t/99-cleanup.t
 t/manifest.t
+t/module_versions.t
 t/pod.t
 t/pod-coverage.t
