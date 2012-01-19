@@ -249,7 +249,7 @@ sub success
 	{
 		# No LOCKED element found to delete, try to find an UNLOCKED one in case it
 		# got requeued by a parallel process.
-		my $rows = $dbh->do(
+		my $deleted_rows = $dbh->do(
 			sprintf(
 				q|
 					DELETE
@@ -262,12 +262,12 @@ sub success
 			$self->id(),
 		);
 		
-		if ( ! defined( $rows ) || $rows == -1 )
+		if ( ! defined( $deleted_rows ) || $deleted_rows == -1 )
 		{
 			croak 'Cannot remove element: ' . $dbh->errstr;
 		}
 		
-		if ( $rows == 1 )
+		if ( $deleted_rows == 1 )
 		{
 			# An UNLOCKED element was found and deleted. It probably means that
 			# another process is still working on that element as well (possibly
