@@ -397,7 +397,7 @@ elements can be specified using 'search_in_ids':
 
 =cut
 
-sub next
+sub next ## no critic (Subroutines::ProhibitBuiltinHomonyms)
 {
 	my ( $self, %args ) = @_;
 	my $verbose = $self->verbose();
