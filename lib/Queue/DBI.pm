@@ -193,7 +193,7 @@ sub new
 	);
 	die "The queue >$args{'queue_name'}< doesn't exist in the lookup table."
 		unless defined( $queue[0] ) && ( $queue[0] =~ m/^\d+$/ );
-	$self->{'queue_id'} = $queue[0],
+	$self->{'queue_id'} = $queue[0];
 	
 	$self->verbose( $args{'verbose'} )
 		if defined( $args{'verbose'} );
