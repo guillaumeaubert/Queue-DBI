@@ -54,10 +54,10 @@ sub new
 	# Check parameters
 	foreach my $arg ( qw( data id requeue_count ) )
 	{
-		die "Argument '$arg' is needed to create the Queue::DBI object"
+		croak "Argument '$arg' is needed to create the Queue::DBI object"
 			unless defined( $args{$arg} ) && ( $args{$arg} ne '' );
 	}
-	die 'Pass a Queue::DBI object to create an Queue::DBI::Element object'
+	croak 'Pass a Queue::DBI object to create an Queue::DBI::Element object'
 		unless defined( $args{'queue'} ) && $args{'queue'}->isa( 'Queue::DBI' );
 	
 	# Create the object
@@ -112,7 +112,7 @@ sub lock
 		{},
 		time(),
 		$self->id(),
-	) || die 'Cannot lock element: ' . $dbh->errstr;
+	) || croak 'Cannot lock element: ' . $dbh->errstr;
 	
 	my $success = ( defined( $rows ) && ( $rows == 1 ) ) ? 1 : 0;
 	carp "Element locked: " . ( $success ? 'success' : 'already locked or gone' ) . "." if $verbose;
@@ -235,7 +235,7 @@ sub success
 	
 	if ( ! defined( $rows ) || $rows == -1 )
 	{
-		die 'Cannot remove element: ' . $dbh->errstr();
+		croak 'Cannot remove element: ' . $dbh->errstr();
 	}
 	
 	my $success = 0;
@@ -264,7 +264,7 @@ sub success
 		
 		if ( ! defined( $rows ) || $rows == -1 )
 		{
-			die 'Cannot remove element: ' . $dbh->errstr;
+			croak 'Cannot remove element: ' . $dbh->errstr;
 		}
 		
 		if ( $rows == 1 )
