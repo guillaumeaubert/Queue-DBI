@@ -779,6 +779,8 @@ sub create_tables
 			ENGINE=InnoDB
 		|
 	);
+	
+	return 1;
 }
 
 
