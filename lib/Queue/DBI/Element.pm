@@ -55,7 +55,7 @@ sub new
 	foreach my $arg ( qw( data id requeue_count ) )
 	{
 		croak "Argument '$arg' is needed to create the Queue::DBI object"
-			unless defined( $args{$arg} ) && ( $args{$arg} ne '' );
+			if !defined( $args{$arg} ) || ( $args{$arg} eq '' );
 	}
 	croak 'Pass a Queue::DBI object to create an Queue::DBI::Element object'
 		unless defined( $args{'queue'} ) && $args{'queue'}->isa( 'Queue::DBI' );
