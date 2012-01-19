@@ -478,7 +478,7 @@ sub retrieve_batch
 		{
 			# Empty queue
 			carp "Detected empty queue, leaving." if $verbose;
-			return undef;
+			return;
 		}
 	}
 	
@@ -603,8 +603,7 @@ sub get_element_by_id
 	die 'Cannot execute SQL: ' . $dbh->errstr() if defined( $dbh->errstr() );
 	
 	# Queue element ID doesn't exist or belongs to another queue.
-	return undef
-		unless defined( $data );
+	return unless defined( $data );
 	
 	# Create the Queue::DBI::Element object.
 	carp "Creating a new Queue::DBI::Element object." if $verbose;
