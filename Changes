@@ -1,5 +1,10 @@
 Revision history for Queue-DBI
 
+1.7.2   01/18/2012
+        Cleanup to pass PerlCritic 'harsh'.
+        Fixed minor bug in error message.
+        Added acknowledgements.
+
 1.7.1   12/16/2011
         Added missing prerequisite.
 

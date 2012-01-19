@@ -21,12 +21,12 @@ name: Queue-DBI
 provides:
   Queue::DBI:
     file: lib/Queue/DBI.pm
-    version: v1.7.1
+    version: v1.7.2
   Queue::DBI::Element:
     file: lib/Queue/DBI/Element.pm
-    version: v1.7.1
+    version: v1.7.2
 requires:
   perl: 5.006
 resources:
   license: http://opensource.org/licenses/artistic-license.php
-version: v1.7.1
+version: v1.7.2
