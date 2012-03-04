@@ -7,6 +7,7 @@ lib/Queue/DBI/Element.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
+META.json
 META.yml
 README
 t/00-load.t

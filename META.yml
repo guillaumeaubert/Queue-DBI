@@ -1,5 +1,5 @@
 ---
-abstract: "A queueing module with an emphasis on safety, using DBI as a\nstorage system for queued data."
+abstract: 'A queueing module with an emphasis on safety, using DBI as a'
 author:
   - 'Guillaume Aubert <aubertg@cpan.org>'
 build_requires:
@@ -11,8 +11,9 @@ build_requires:
   Storable: 0
   Test::More: 0
 configure_requires:
-  Module::Build: 0.36
-generated_by: 'Module::Build version 0.3603'
+  Module::Build: 0.4
+dynamic_config: 1
+generated_by: 'Module::Build version 0.4, CPAN::Meta::Converter version 2.120530'
 license: artistic
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html

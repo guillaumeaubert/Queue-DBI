@@ -1,0 +1,56 @@
+{
+   "abstract" : "A queueing module with an emphasis on safety, using DBI as a",
+   "author" : [
+      "Guillaume Aubert <aubertg@cpan.org>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.4, CPAN::Meta::Converter version 2.120530",
+   "license" : [
+      "artistic_1"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Queue-DBI",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Carp" : "0",
+            "DBD::SQLite" : "0",
+            "DBI" : "0",
+            "Data::Dumper" : "0",
+            "MIME::Base64" : "0",
+            "Storable" : "0",
+            "Test::More" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.4"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "perl" : "5.006"
+         }
+      }
+   },
+   "provides" : {
+      "Queue::DBI" : {
+         "file" : "lib/Queue/DBI.pm",
+         "version" : "v1.7.2"
+      },
+      "Queue::DBI::Element" : {
+         "file" : "lib/Queue/DBI/Element.pm",
+         "version" : "v1.7.2"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://opensource.org/licenses/artistic-license.php"
+      ]
+   },
+   "version" : "v1.7.2"
+}
