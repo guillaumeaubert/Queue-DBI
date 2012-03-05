@@ -11,7 +11,7 @@ build_requires:
   Storable: 0
   Test::More: 0
 configure_requires:
-  Module::Build: 0.4
+  Module::Build: 0
 dynamic_config: 1
 generated_by: 'Module::Build version 0.4, CPAN::Meta::Converter version 2.120530'
 license: artistic
@@ -29,5 +29,8 @@ provides:
 requires:
   perl: 5.006
 resources:
+  bugtracker: http://rt.cpan.org/NoAuth/ReportBug.html?Queue=queue-dbi
+  homepage: https://metacpan.org/release/Queue-DBI
   license: http://opensource.org/licenses/artistic-license.php
+  repository: https://sourceforge.net/p/queuedbiperl/code
 version: v1.7.2

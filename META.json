@@ -27,7 +27,7 @@
       },
       "configure" : {
          "requires" : {
-            "Module::Build" : "0.4"
+            "Module::Build" : "0"
          }
       },
       "runtime" : {
@@ -48,9 +48,16 @@
    },
    "release_status" : "stable",
    "resources" : {
+      "bugtracker" : {
+         "web" : "http://rt.cpan.org/NoAuth/ReportBug.html?Queue=queue-dbi"
+      },
+      "homepage" : "https://metacpan.org/release/Queue-DBI",
       "license" : [
          "http://opensource.org/licenses/artistic-license.php"
-      ]
+      ],
+      "repository" : {
+         "url" : "https://sourceforge.net/p/queuedbiperl/code"
+      }
    },
    "version" : "v1.7.2"
 }

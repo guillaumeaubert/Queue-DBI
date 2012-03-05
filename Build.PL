@@ -10,13 +10,13 @@ my $builder = Module::Build->new(
 	dist_version_from   => 'lib/Queue/DBI.pm',
 	build_requires      =>
 	{
-		'Test::More'   => 0,
-		'Data::Dumper' => 0,
-		'Carp'         => 0,
-		'Storable'     => 0,
-		'MIME::Base64' => 0,
-		'DBD::SQLite'  => 0,
-		'DBI'          => 0,
+		'Test::More'    => 0,
+		'Data::Dumper'  => 0,
+		'Carp'          => 0,
+		'Storable'      => 0,
+		'MIME::Base64'  => 0,
+		'DBD::SQLite'   => 0,
+		'DBI'           => 0,
 	},
 	requires            =>
 	{
@@ -27,6 +27,19 @@ my $builder = Module::Build->new(
 		'Queue-DBI-*',
 	],
 	create_makefile_pl  => 'traditional',
+	configure_requires  =>
+	{
+		'Module::Build' => 0,
+	},
+	meta_merge          =>
+	{
+		resources       =>
+		{
+			repository  => 'https://sourceforge.net/p/queuedbiperl/code',
+			homepage    => 'https://metacpan.org/release/Queue-DBI',
+			bugtracker  => 'http://rt.cpan.org/NoAuth/ReportBug.html?Queue=queue-dbi',
+		},
+	},
 );
 
 $builder->create_build_script();
