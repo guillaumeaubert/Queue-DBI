@@ -22,10 +22,10 @@ name: Queue-DBI
 provides:
   Queue::DBI:
     file: lib/Queue/DBI.pm
-    version: v1.7.2
+    version: v1.7.3
   Queue::DBI::Element:
     file: lib/Queue/DBI/Element.pm
-    version: v1.7.2
+    version: v1.7.3
 requires:
   perl: 5.006
 resources:
@@ -33,4 +33,4 @@ resources:
   homepage: https://metacpan.org/release/Queue-DBI
   license: http://opensource.org/licenses/artistic-license.php
   repository: https://sourceforge.net/p/queuedbiperl/code
-version: v1.7.2
+version: v1.7.3

@@ -1,5 +1,8 @@
 Revision history for Queue-DBI
 
+1.7.3   04/01/2012
+        (RT #76194) Fixed typo in table name, thanks Sergey!
+
 1.7.2   01/18/2012
         Cleanup to pass PerlCritic 'harsh'.
         Fixed minor bug in error message.
