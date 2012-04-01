@@ -773,7 +773,7 @@ sub create_tables
 				`created` INT(10) UNSIGNED NOT NULL DEFAULT '0',
 				PRIMARY KEY (`queue_element_id`),
 				KEY `idx_fk_queue_id` (`queue_id`),
-				CONSTRAINT `queue_element_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `queue` (`queue_id`)
+				CONSTRAINT `queue_element_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `queues` (`queue_id`)
 			)
 			ENGINE=InnoDB
 		|
