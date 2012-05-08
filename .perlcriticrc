@@ -1,6 +1,11 @@
 # Change default severity to harsh.
 severity = harsh
 
+# Use only core PerlCritic policies.
+# This prevents tests from failing if the tester / installer has non-standard
+# additional PerlCritic policies.
+theme = core
+
 # What's wrong with tabs? They're more friendly.
 [-CodeLayout::ProhibitHardTabs]
 
