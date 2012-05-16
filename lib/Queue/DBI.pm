@@ -13,8 +13,7 @@ use Queue::DBI::Element;
 
 =head1 NAME
 
-Queue::DBI - A queueing module with an emphasis on safety, using DBI as a
-storage system for queued data.
+Queue::DBI - A queueing module with an emphasis on safety, using DBI as a storage system for queued data.
 
 
 =head1 VERSION
