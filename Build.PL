@@ -10,7 +10,7 @@ my $builder = Module::Build->new(
 	dist_version_from   => 'lib/Queue/DBI.pm',
 	build_requires      =>
 	{
-		'Test::More'      => 0,
+		'Test::More'      => 0.94,
 		'Test::Exception' => 0,
 		'Data::Dumper'    => 0,
 		'Carp'            => 0,
