@@ -12,7 +12,8 @@ WriteMakefile
                            'Data::Dumper' => 0,
                            'MIME::Base64' => 0,
                            'Storable' => 0,
-                           'Test::More' => 0
+                           'Test::Exception' => 0,
+                           'Test::More' => '0.94'
                          },
           'INSTALLDIRS' => 'site',
           'EXE_FILES' => [],

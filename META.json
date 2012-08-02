@@ -22,7 +22,8 @@
             "Data::Dumper" : "0",
             "MIME::Base64" : "0",
             "Storable" : "0",
-            "Test::More" : "0"
+            "Test::Exception" : "0",
+            "Test::More" : "0.94"
          }
       },
       "configure" : {
@@ -53,7 +54,7 @@
       },
       "homepage" : "https://metacpan.org/release/Queue-DBI",
       "license" : [
-         "http://opensource.org/licenses/artistic-license.php"
+         "http://www.perlfoundation.org/artistic_license_1_0"
       ],
       "repository" : {
          "url" : "https://sourceforge.net/p/queuedbiperl/code"
