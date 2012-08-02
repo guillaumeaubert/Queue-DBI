@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 45;
+use Test::More tests => 15;
 
 use DBI;
 use Data::Dumper;
@@ -89,67 +89,69 @@ ok(
 # prevents loops and we wouldn't be able to retrieve the element again.
 foreach my $try ( 1..6 )
 {
-	note( "<Round $try>" );
-	
-	# Instantiate the queue object.
-	my $queue;
-	lives_ok(
+	subtest(
+		"Round $try.",
 		sub
 		{
-			$queue = Queue::DBI->new(
-				'queue_name'        => 'test1',
-				'database_handle'   => $dbh,
-				'cleanup_timeout'   => 3600,
-				'verbose'           => 0,
-				'max_requeue_count' => 5,
+			# Instantiate the queue object.
+			my $queue;
+			lives_ok(
+				sub
+				{
+					$queue = Queue::DBI->new(
+						'queue_name'        => 'test1',
+						'database_handle'   => $dbh,
+						'cleanup_timeout'   => 3600,
+						'verbose'           => 0,
+						'max_requeue_count' => 5,
+					);
+				},
+				'Create the queue object.',
 			);
-		},
-		'Create the queue object.',
+			isa_ok(
+				$queue,
+				'Queue::DBI',
+				'Object returned by Queue::DBI->new()',
+			);
+			
+			# Retrieve element.
+			my $queue_element;
+			lives_ok(
+				sub
+				{
+					$queue_element = $queue->next();
+				},
+				'Retrieve the next element in the queue.',
+			);
+			isa_ok(
+				$queue_element,
+				'Queue::DBI::Element',
+				'Object returned by next()',
+			);
+			
+			# Lock.
+			lives_ok(
+				sub
+				{
+					$queue_element->lock()
+					||
+					die 'Cannot lock element';
+				},
+				'Lock element.',
+			);
+			
+			# Requeue.
+			lives_ok(
+				sub
+				{
+					$queue_element->requeue()
+					||
+					die 'Cannot requeue element';
+				},
+				'Requeue element.',
+			);
+		}
 	);
-	isa_ok(
-		$queue,
-		'Queue::DBI',
-		'Object returned by Queue::DBI->new()',
-	);
-	
-	# Retrieve element.
-	my $queue_element;
-	lives_ok(
-		sub
-		{
-			$queue_element = $queue->next();
-		},
-		'Retrieve the next element in the queue.',
-	);
-	isa_ok(
-		$queue_element,
-		'Queue::DBI::Element',
-		'Object returned by next()',
-	);
-	
-	# Lock.
-	lives_ok(
-		sub
-		{
-			$queue_element->lock()
-			||
-			die 'Cannot lock element';
-		},
-		'Lock element.',
-	);
-	
-	# Requeue.
-	lives_ok(
-		sub
-		{
-			$queue_element->requeue()
-			||
-			die 'Cannot requeue element';
-		},
-		'Requeue element.',
-	);
-	
-	note( "</Round $try>" );
 }
 
 # Now, the seventh time we try to retrieve the element, it should not be returned.

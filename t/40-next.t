@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 34;
+use Test::More tests => 14;
 
 use DBI;
 use Data::Dumper;
@@ -80,38 +80,41 @@ for ( my $i = 0; $i < 5; $i++ )
 # Retrieve data.
 for ( my $i = 0; $i < 5; $i++ )
 {
-	note( "<Retrieving element $i>" );
-	
-	my $queue_element;
-	lives_ok(
+	subtest(
+		"Retrieve element $i.",
 		sub
 		{
-			$queue_element = $queue->next();
-		},
-		'Call to retrieve the next item in the queue.',
+			my $queue_element;
+			lives_ok(
+				sub
+				{
+					$queue_element = $queue->next();
+				},
+				'Call to retrieve the next item in the queue.',
+			);
+			isa_ok(
+				$queue_element,
+				'Queue::DBI::Element',
+				'Object returned by next()',
+			);
+			
+			my $data;
+			lives_ok(
+				sub
+				{
+					$data = $queue_element->data();
+				},
+				'Extract data.',
+			);
+			ok(
+				defined( $data ),
+				'Data defined.',
+			);
+			
+			ok(
+				defined( $data->{'count'} ) && ( $data->{'count'} == $i ),
+				'Find expected item.',
+			) || diag( "Data:\n" . Dumper( $data ) );
+		}
 	);
-	isa_ok(
-		$queue_element,
-		'Queue::DBI::Element',
-		'Object returned by next()',
-	);
-	
-	my $data;
-	lives_ok(
-		sub
-		{
-			$data = $queue_element->data();
-		},
-		'Extract data.',
-	);
-	ok(
-		defined( $data ),
-		'Data defined.',
-	);
-	ok(
-		defined( $data->{'count'} ) && ( $data->{'count'} == $i ),
-		'Find expected item.',
-	) || diag( "Data:\n" . Dumper( $data ) );
-	
-	note( "</Retrieving element $i>" );
 }
