@@ -1,8 +1,9 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
+use Test::Exception;
 use Test::More tests => 14;
 
 use DBI;
@@ -24,25 +25,23 @@ ok(
 
 # Instantiate the queue object.
 my $queue;
-eval
-{
-	$queue = Queue::DBI->new(
-		'queue_name'      => 'test1',
-		'database_handle' => $dbh,
-		'cleanup_timeout' => 3600,
-		'verbose'         => 0,
-	);
-};
-
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$queue = Queue::DBI->new(
+			'queue_name'      => 'test1',
+			'database_handle' => $dbh,
+			'cleanup_timeout' => 3600,
+			'verbose'         => 0,
+		);
+	},
 	'Instantiate the queue.',
-) || diag( "Error: $@ " );
-
-ok(
-	defined( $queue ) && $queue->isa( 'Queue::DBI' ),
-	'The queue is a Queue::DBI object.',
-) || diag( '$queue: ' . ( defined( $queue ) ? 'ref() >' . ref( $queue ) .'<' : 'undef' ) );
+);
+isa_ok(
+	$queue,
+	'Queue::DBI',
+	'Object returned by Queue::DBI->new()',
+);
 
 # Insert data.
 my $data =
@@ -52,49 +51,45 @@ my $data =
 	block3 => 462643383,
 };
 
-eval
-{
-	$queue->enqueue( $data );
-};
-
-ok(
-	!$@,
-	'Queue data',
-) || diag( "Could not enqueue the following data:\n" . Dumper( $data ) );
+lives_ok(
+	sub
+	{
+		$queue->enqueue( $data );
+	},
+	'Queue data.',
+);
 
 # Retrieve data.
 my $queue_element;
-eval
-{
-	$queue_element = $queue->next();
-};
-
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$queue_element = $queue->next();
+	},
 	'Retrieve the next element in the queue.',
-) || diag( "Error: $@ " );
+);
+isa_ok(
+	$queue_element,
+	'Queue::DBI::Element',
+	'The object returned by next()',
+);
 
-ok(
-	defined( $queue_element ) && $queue_element->isa( 'Queue::DBI::Element' ),
-	'The element is a Queue::DBI::Element object.',
-) || diag( '$queue: ' . ( defined( $queue_element ) ? 'ref() >' . ref( $queue_element ) .'<' : 'undef' ) );
 
 # Retrieve the queue element by ID.
 my $queue_element_by_id;
-eval
-{
-	$queue_element_by_id = $queue->get_element_by_id( $queue_element->id() );
-};
-
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$queue_element_by_id = $queue->get_element_by_id( $queue_element->id() );
+	},
 	'Retrieve a queue element by ID.',
-) || diag( "Error: $@" );
+);
 
-ok(
-	defined( $queue_element_by_id ) && $queue_element_by_id->isa( 'Queue::DBI::Element' ),
-	'Queue::DBI::Element object returned',
-) || diag( '$queue: ' . ( defined( $queue_element_by_id ) ? 'ref() >' . ref( $queue_element_by_id ) .'<' : 'undef' ) );
+isa_ok(
+	$queue_element_by_id,
+	'Queue::DBI::Element',
+	'Object returned by get_element_by_id()',
+);
 
 is(
 	$queue_element_by_id->id(),
@@ -103,34 +98,32 @@ is(
 );
 
 # Lock.
-eval
-{
-	$queue_element->lock()
-	||
-	die 'Cannot lock element';
-};
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$queue_element->lock()
+		||
+		die 'Cannot lock element';
+	},
 	'Lock element.',
-) || diag( "Error: $@ " );
+);
 
 
 # Retrieve the queue element by ID after locking.
 my $queue_element_by_id_after_lock;
-eval
-{
-	$queue_element_by_id_after_lock = $queue->get_element_by_id( $queue_element->id() );
-};
-
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$queue_element_by_id_after_lock = $queue->get_element_by_id( $queue_element->id() );
+	},
 	'Retrieve the queue element by ID after locking it.',
-) || diag( "Error: $@" );
+);
 
-ok(
-	defined( $queue_element_by_id_after_lock ) && $queue_element_by_id_after_lock->isa( 'Queue::DBI::Element' ),
-	'The element is a Queue::DBI::Element object.',
-) || diag( '$queue_element_by_id_after_lock: ' . ( defined( $queue_element_by_id_after_lock ) ? 'ref() >' . ref( $queue_element_by_id_after_lock ) .'<' : 'undef' ) );
+isa_ok(
+	$queue_element_by_id_after_lock,
+	'Queue::DBI::Element',
+	'Object returned by get_element_by_id() after lock()',
+);
 
 is(
 	$queue_element_by_id_after_lock->id(),
@@ -139,13 +132,13 @@ is(
 );
 
 # Remove.
-eval
-{
-	$queue_element->success()
-	||
-	die 'Cannot mark as successfully processed';
-};
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$queue_element->success()
+		||
+		die 'Cannot mark as successfully processed';
+	},
 	'Mark the element as successfully processed.',
-) || diag( "Error: $@" );
+);
+

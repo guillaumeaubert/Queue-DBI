@@ -1,8 +1,9 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
+use Test::Exception;
 use Test::More tests => 8;
 
 use DBI;
@@ -24,23 +25,23 @@ ok(
 
 # Instantiate the queue object.
 my $queue;
-eval
-{
-	$queue = Queue::DBI->new(
-		'queue_name'      => 'test1',
-		'database_handle' => $dbh,
-		'cleanup_timeout' => 3600,
-		'verbose'         => 0,
-	);
-};
-ok(
-	!$@,
-	'Instantiate a new Queue::DBI object',
-) || diag( "Error: $@ " );
-ok(
-	defined( $queue ) && $queue->isa( 'Queue::DBI' ),
-	'Queue::DBI object returned',
-) || diag( '$queue: ' . ( defined( $queue ) ? 'ref() >' . ref( $queue ) .'<' : 'undef' ) );
+lives_ok(
+	sub
+	{
+		$queue = Queue::DBI->new(
+			'queue_name'      => 'test1',
+			'database_handle' => $dbh,
+			'cleanup_timeout' => 3600,
+			'verbose'         => 0,
+		);
+	},
+	'Instantiate a new Queue::DBI object.',
+);
+isa_ok(
+	$queue,
+	'Queue::DBI',
+	'Object returned by new()',
+);
 
 # Insert data.
 my $data =
@@ -49,50 +50,48 @@ my $data =
 	block2 => 589793238,
 	block3 => 462643383,
 };
-eval
-{
-	$queue->enqueue( $data );
-};
-ok(
-	!$@,
-	'Queue data',
-) || diag( "Could not enqueue the following data:\n" . Dumper( $data ) );
+lives_ok(
+	sub
+	{
+		$queue->enqueue( $data );
+	},
+	'Queue data.',
+);
 
 # Retrieve data.
 my $queue_element;
-eval
-{
-	$queue_element = $queue->next();
-};
-ok(
-	!$@,
-	'Call to retrieve the next item in the queue',
-) || diag( "Error: $@ " );
-ok(
-	defined( $queue_element ) && $queue_element->isa( 'Queue::DBI::Element' ),
-	'Queue::Safe::Element object returned',
-) || diag( '$queue: ' . ( defined( $queue_element ) ? 'ref() >' . ref( $queue_element ) .'<' : 'undef' ) );
+lives_ok(
+	sub
+	{
+		$queue_element = $queue->next();
+	},
+	'Call to retrieve the next item in the queue.',
+);
+isa_ok(
+	$queue_element,
+	'Queue::DBI::Element',
+	'Object returned by next()',
+);
 
 # Lock.
-eval
-{
-	$queue_element->lock()
-	||
-	die 'Cannot lock element';
-};
-ok(
-	!$@,
-	'Lock element',
-) || diag( "Error: $@ " );
+lives_ok(
+	sub
+	{
+		$queue_element->lock()
+		||
+		die 'Cannot lock element';
+	},
+	'Lock element.',
+);
 
 # Remove.
-eval
-{
-	$queue_element->success()
-	||
-	die 'Cannot mark as successfully processed';
-};
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$queue_element->success()
+		||
+		die 'Cannot mark as successfully processed';
+	},
 	'Mark as successfully processed.',
-) || diag( "Error: $@ " );
+);
+

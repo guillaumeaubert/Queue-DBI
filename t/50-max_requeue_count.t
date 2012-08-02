@@ -1,9 +1,11 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
+use Test::Exception;
 use Test::More tests => 4;
+
 use DBI;
 use Queue::DBI;
 
@@ -22,24 +24,24 @@ ok(
 
 # Instantiate the queue object.
 my $queue;
-eval
-{
-	$queue = Queue::DBI->new(
-		'queue_name'        => 'test1',
-		'database_handle'   => $dbh,
-		'cleanup_timeout'   => 3600,
-		'verbose'           => 0,
-		'max_requeue_count' => 5,
-	);
-};
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$queue = Queue::DBI->new(
+			'queue_name'        => 'test1',
+			'database_handle'   => $dbh,
+			'cleanup_timeout'   => 3600,
+			'verbose'           => 0,
+			'max_requeue_count' => 5,
+		);
+	},
 	'Instantiate a new Queue::DBI object.',
-) || diag( "Error: $@ " );
-ok(
-	defined( $queue ) && $queue->isa( 'Queue::DBI' ),
-	'The queue is a Queue::DBI object.',
-) || diag( '$queue: ' . ( defined( $queue ) ? 'ref() >' . ref( $queue ) .'<' : 'undef' ) );
+);
+isa_ok(
+	$queue,
+	'Queue::DBI',
+	'Object returned by Queue::DBI->new()',
+);
 
 # Verify that max_requeue_count() returns the correct result.
 is(

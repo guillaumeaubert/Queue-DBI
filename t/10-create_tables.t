@@ -1,8 +1,9 @@
-#!perl
+#!perl -T
 
 use strict;
 use warnings;
 
+use Test::Exception;
 use Test::More tests => 6;
 
 use DBI;
@@ -18,60 +19,56 @@ ok(
 			RaiseError => 1,
 		}
 	),
-	'Create connection to a SQLite database',
+	'Create connection to a SQLite database.',
 );
 
-eval
-{
-	# Disable printing errors out since we expect the test to fail.
-	local $dbh->{'PrintError'} = 0;
-	
-	$dbh->selectrow_array( q| SELECT * FROM queues | );
-};
-ok(
-	$@,
+dies_ok(
+	sub
+	{
+		# Disable printing errors out since we expect the test to fail.
+		local $dbh->{'PrintError'} = 0;
+		
+		$dbh->selectrow_array( q| SELECT * FROM queues | );
+	},
 	'The queues table does not exist yet.',
-) || diag( "Error >$@<." );
+);
 
-eval
-{
-	# Disable printing errors out since we expect the test to fail.
-	local $dbh->{'PrintError'} = 0;
-	
-	$dbh->selectrow_array( q| SELECT * FROM queue_elements | );
-};
-ok(
-	$@,
+dies_ok(
+	sub
+	{
+		# Disable printing errors out since we expect the test to fail.
+		local $dbh->{'PrintError'} = 0;
+		
+		$dbh->selectrow_array( q| SELECT * FROM queue_elements | );
+	},
 	'The queue elements table does not exist yet.',
-) || diag( "Error >$@<." );
+);
 
-eval
-{
-	Queue::DBI::create_tables(
-		dbh           => $dbh,
-		drop_if_exist => 1,
-		sqlite        => 1,
-	);
-};
-ok(
-	!$@,
-	'Create tables',
-) || diag( "Error >$@<." );
+lives_ok(
+	sub
+	{
+		Queue::DBI::create_tables(
+			dbh           => $dbh,
+			drop_if_exist => 1,
+			sqlite        => 1,
+		);
+	},
+	'Create tables.',
+);
 
-eval
-{
-	$dbh->selectrow_array( q| SELECT * FROM queues | );
-};
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$dbh->selectrow_array( q| SELECT * FROM queues | );
+	},
 	'The queues table exists.',
-) || diag( "Error >$@<." );
+);
 
-eval
-{
-	$dbh->selectrow_array( q| SELECT * FROM queue_elements | );
-};
-ok(
-	!$@,
+lives_ok(
+	sub
+	{
+		$dbh->selectrow_array( q| SELECT * FROM queue_elements | );
+	},
 	'The queue elements table exists.',
-) || diag( "Error >$@<." );
+);
+

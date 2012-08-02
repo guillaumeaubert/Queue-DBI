@@ -5,6 +5,7 @@ use warnings;
 
 use Test::More;
 
+
 # Ensure a recent version of Test::Dist::VersionSync
 my $version_min = '1.0.0';
 eval "use Test::Dist::VersionSync $version_min";
