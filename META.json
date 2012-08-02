@@ -1,5 +1,5 @@
 {
-   "abstract" : "A queueing module with an emphasis on safety, using DBI as a",
+   "abstract" : "A queueing module with an emphasis on safety, using DBI as a storage system for queued data.",
    "author" : [
       "Guillaume Aubert <aubertg@cpan.org>"
    ],
