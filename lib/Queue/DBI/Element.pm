@@ -8,7 +8,7 @@ use Carp;
 
 =head1 NAME
 
-Queue::DBI::Element - An object representing an element pulled from the queue
+Queue::DBI::Element - An object representing an element pulled from the queue.
 
 
 =head1 VERSION
