@@ -11,8 +11,8 @@ META.json
 META.yml
 README
 t/00-load.t
-t/10-create_tables.t
-t/20-create_queues.t
+t/02-create_tables.t
+t/04-create_queues.t
 t/30-enqueue.t
 t/35-count.t
 t/40-next.t
