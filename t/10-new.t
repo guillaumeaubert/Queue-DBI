@@ -7,7 +7,6 @@ use Test::Exception;
 use Test::More tests => 4;
 
 use DBI;
-use Data::Dumper;
 use Queue::DBI;
 
 

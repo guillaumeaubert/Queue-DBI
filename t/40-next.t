@@ -4,10 +4,9 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 14;
+use Test::More tests => 13;
 
 use DBI;
-use Data::Dumper;
 use Queue::DBI;
 
 
@@ -36,11 +35,6 @@ lives_ok(
 		);
 	},
 	'Instantiate a new Queue::DBI object.',
-);
-isa_ok(
-	$queue,
-	'Queue::DBI',
-	'Object returned by Queue::DBI->new()',
 );
 
 # Clean up queue if needed.
@@ -114,7 +108,7 @@ for ( my $i = 0; $i < 5; $i++ )
 			ok(
 				defined( $data->{'count'} ) && ( $data->{'count'} == $i ),
 				'Find expected item.',
-			) || diag( "Data:\n" . Dumper( $data ) );
+			) || diag( "Data:\n" . explain( $data ) );
 		}
 	);
 }

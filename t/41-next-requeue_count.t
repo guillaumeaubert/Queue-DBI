@@ -4,10 +4,9 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 15;
+use Test::More tests => 13;
 
 use DBI;
-use Data::Dumper;
 use Queue::DBI;
 
 
@@ -42,11 +41,6 @@ ok(
 			);
 		},
 		'Create the queue object.',
-	);
-	isa_ok(
-		$queue,
-		'Queue::DBI',
-		'Object returned by Queue::DBI->new()',
 	);
 	
 	# Clean up queue if needed.
@@ -108,11 +102,6 @@ foreach my $try ( 1..6 )
 				},
 				'Create the queue object.',
 			);
-			isa_ok(
-				$queue,
-				'Queue::DBI',
-				'Object returned by Queue::DBI->new()',
-			);
 			
 			# Retrieve element.
 			my $queue_element;
@@ -171,11 +160,6 @@ foreach my $try ( 1..6 )
 		},
 		'Create the queue object.',
 	);
-	isa_ok(
-		$queue,
-		'Queue::DBI',
-		'Object returned by Queue::DBI->new()',
-	);
 	
 	# Retrieve element.
 	my $queue_element;
@@ -189,6 +173,6 @@ foreach my $try ( 1..6 )
 	ok(
 		!defined( $queue_element ),
 		'No element returned.',
-	) || diag( "Queue element returned:\n" . Dumper( $queue_element ) );
+	) || diag( "Queue element returned:\n" . explain( $queue_element ) );
 }
 

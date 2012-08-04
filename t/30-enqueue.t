@@ -4,10 +4,9 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 8;
+use Test::More tests => 7;
 
 use DBI;
-use Data::Dumper;
 use Queue::DBI;
 
 
@@ -36,11 +35,6 @@ lives_ok(
 		);
 	},
 	'Instantiate a new Queue::DBI object.',
-);
-isa_ok(
-	$queue,
-	'Queue::DBI',
-	'Object returned by new()',
 );
 
 # Insert data.
