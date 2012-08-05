@@ -556,12 +556,20 @@ sub retrieve_batch
 		? 'AND requeue_count <= ' . $dbh->quote( $max_requeue_count )
 		: '';
 	
-	# Retrieve the first available elements from the queue
-	carp "Retrieving data." if $verbose;
-	carp "Parameters:\n\tLast ID: $self->{'last_id'}\n\tMax ID: $self->{'max_id'}\n" if $verbose > 1;
+	# Make sure we don't use elements that exceed the specified lifetime.
+	my $lifetime = $self->lifetime();
+	my $sql_lifetime = defined( $lifetime ) && ( $lifetime != $IMMORTAL_LIFE )
+		? 'AND created >= ' . ( time() - $lifetime )
+		: '';
+	
+	# If specified, retrieve only those IDs.
 	my $ids = defined( $args{'search_in_ids'} )
 		? 'AND queue_element_id IN (' . join( ',', map { $dbh->quote( $_ ) } @{ $args{'search_in_ids' } } ) . ')'
 		: '';
+	
+	# Retrieve the first available elements from the queue.
+	carp "Retrieving data." if $verbose;
+	carp "Parameters:\n\tLast ID: $self->{'last_id'}\n\tMax ID: $self->{'max_id'}\n" if $verbose > 1;
 	my $data = $dbh->selectall_arrayref(
 		sprintf(
 			q|
@@ -573,12 +581,14 @@ sub retrieve_batch
 					AND queue_element_id <= ?
 					%s
 					%s
+					%s
 				ORDER BY queue_element_id ASC
 				LIMIT ?
 			|,
 			$dbh->quote_identifier( $self->get_queue_elements_table_name() ),
 			$ids,
 			$sql_max_requeue_count,
+			$sql_lifetime,
 		),
 		{},
 		$self->get_queue_id(),
