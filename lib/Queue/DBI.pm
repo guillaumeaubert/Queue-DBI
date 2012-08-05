@@ -573,7 +573,7 @@ sub retrieve_batch
 	my $data = $dbh->selectall_arrayref(
 		sprintf(
 			q|
-				SELECT queue_element_id, data, requeue_count
+				SELECT queue_element_id, data, requeue_count, created
 				FROM %s
 				WHERE queue_id = ?
 					AND lock_time IS NULL
@@ -754,6 +754,82 @@ sub cleanup
 	
 	carp "Leaving cleanup()." if $verbose;
 	return $queue_elements;
+}
+
+
+=head2 purge()
+
+Remove (permanently, caveat emptor!) queue elements based on how many times
+they've been requeued or how old they are.
+
+	# Remove permanently elements that have been requeued 10 times or more.
+	$queue->purge( max_requeue_count => 10 );
+	
+	# Remove permanently elements that were created over an hour ago.
+	$queue->purge( lifetime => 3600 );
+
+Important: locked elements are not purged even if they match the criteria, as
+they are presumed to be currently in process and purging them would create
+unexpected failures in the application processing them.
+
+Also note that I<max_requeue_count> and I<lifetime> cannot be combined.
+
+=cut
+
+sub purge
+{
+	my ( $self, %args ) = @_;
+	my $verbose = $self->verbose();
+	my $dbh = $self->get_dbh();
+	carp "Entering cleanup()." if $verbose;
+	
+	my $max_requeue_count = $args{'max_requeue_count'};
+	my $lifetime = $args{'lifetime'};
+	
+	# Check parameters.
+	croak 'Cleanup timeout must be an integer representing seconds'
+		if defined( $max_requeue_count ) && ( $max_requeue_count !~ m/^\d+$/ );
+	croak 'Lifetime must be an integer representing seconds'
+		if defined( $lifetime ) && ( $lifetime !~ m/^\d+$/ );
+	croak '"max_requeue_count" and "lifetime" cannot be combined, specify one OR the other'
+		if defined( $lifetime ) && defined( $max_requeue_count );
+	croak '"max_requeue_count" or "lifetime" must be specified'
+		if !defined( $lifetime ) && !defined( $max_requeue_count );
+	
+	# Prepare query clauses.
+	my $sql_lifetime = defined( $lifetime )
+		? 'AND created < ' . ( time() - $lifetime )
+		: '';
+	my $sql_max_requeue_count = defined( $max_requeue_count )
+		? 'AND requeue_count >= ' . $dbh->quote( $max_requeue_count )
+		: '';
+	
+	# Purge the queue.
+	my $rows_deleted = $dbh->do(
+		sprintf(
+			q|
+				DELETE
+				FROM %s
+				WHERE queue_id = ?
+					AND lock_time IS NULL
+					%s
+					%s
+			|,
+			$dbh->quote_identifier( $self->get_queue_elements_table_name() ),
+			$sql_lifetime,
+			$sql_max_requeue_count,
+		),
+		{},
+		$self->get_queue_id(),
+	);
+	croak 'Cannot execute SQL: ' . $dbh->errstr() if defined( $dbh->errstr() );
+	
+	carp "Leaving cleanup()." if $verbose;
+	# Account for '0E0' which means no rows affected, and translates into no
+	# rows deleted in our case.
+	return $rows_deleted eq '0E0'
+		? 0
+		: $rows_deleted;
 }
 
 
