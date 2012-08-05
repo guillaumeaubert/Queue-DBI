@@ -16,6 +16,7 @@ t/04-create_queues.t
 t/10-new.t
 t/15-get_dbh.t
 t/30-enqueue.t
+t/32-lifetime.t
 t/35-count.t
 t/40-next.t
 t/41-next-requeue_count.t
