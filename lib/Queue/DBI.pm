@@ -146,6 +146,12 @@ By default, Queue::DBI uses a table named 'queue_elements' to store the queued
 data. This allows using your own name, if you want to support separate queuing
 systems or legacy systems.
 
+=item * 'lifetime'
+
+By default, Queue:::DBI will fetch elements regardless of how old they are. Use
+this option to specify how old (in seconds) an element can be and still be
+retrieved for processing.
+
 =back
 
 =cut
@@ -162,6 +168,8 @@ sub new
 	}
 	croak 'Cleanup timeout must be an integer representing seconds'
 		if defined( $args{'cleanup_timeout'} ) && ( $args{'cleanup_timeout'} !~ m/^\d+$/ );
+	croak 'Lifetime must be an integer representing seconds'
+		if defined( $args{'lifetime'} ) && ( $args{'lifetime'} !~ m/^\d+$/ );
 	
 	# Create the object.
 	my $dbh = $args{'database_handle'};
@@ -203,6 +211,12 @@ sub new
 		defined( $args{'max_requeue_count'} )
 			? $args{'max_requeue_count'}
 			: $Queue::DBI::UNLIMITED_RETRIES
+	);
+	
+	$self->lifetime(
+		defined( $args{'lifetime'} )
+			? $args{'lifetime'}
+			: $Queue::DBI::IMMORTAL_LIFE
 	);
 	
 	$self->cleanup( $args{'cleanup_timeout'} )
