@@ -18,6 +18,7 @@ t/15-get_dbh.t
 t/30-enqueue.t
 t/32-lifetime.t
 t/35-count.t
+t/37-purge.t
 t/40-next.t
 t/41-next-requeue_count.t
 t/50-max_requeue_count.t
