@@ -373,7 +373,12 @@ sub enqueue
 	
 	carp "Element inserted, leaving enqueue()." if $verbose;
 	
-	return $dbh->{'mysql_insertid'};
+	return $dbh->last_insert_id(
+		undef,
+		undef,
+		$self->get_queue_elements_table_name(),
+		'queue_element_id',
+	);
 }
 
 
