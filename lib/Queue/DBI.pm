@@ -27,6 +27,8 @@ our $VERSION = '1.7.3';
 
 our $UNLIMITED_RETRIES = -1;
 
+our $IMMORTAL_LIFE = -1;
+
 our $DEFAULT_QUEUES_TABLE_NAME = 'queues';
 
 our $DEFAULT_QUEUE_ELEMENTS_TABLE_NAME = 'queue_elements';
@@ -237,6 +239,43 @@ sub verbose
 		if defined( $verbose );
 	
 	return $self->{'verbose'};
+}
+
+
+=head2 lifetime()
+
+Sets how old an element can be before it is ignored when retrieving elements.
+Set it to $Queue::DBI::IMMORTAL_LIFE to reset Queue::DBI back to its default
+behavior of retrieving elements without time limit.
+
+	# Don't pull queue elements that are more than an hour old.
+	$queue->lifetime( 3600 );
+	
+	# Keep pulling queue elements regardless of how old they are.
+	$queue->lifetime( $Queue::DBI::IMMORTAL_LIFE );
+	
+	# Find how old an element can be before the queue will stop retrieving it.
+	my $lifetime = $queue->lifetime();
+
+=cut
+
+sub lifetime
+{
+	my ( $self, $lifetime ) = @_;
+	
+	if ( defined( $lifetime ) )
+	{
+		if ( ( $lifetime =~ m/^\d+$/ ) || ( $lifetime eq $IMMORTAL_LIFE ) )
+		{
+			$self->{'lifetime'} = $lifetime;
+		}
+		else
+		{
+			croak 'lifetime must be an integer or $Queue::DBI::IMMORTAL_LIFE';
+		}
+	}
+	
+	return $self->{'lifetime'};
 }
 
 
