@@ -1,5 +1,13 @@
 Revision history for Queue-DBI
 
+v1.8.0  08/05/2012
+        * Added a 'lifetime' feature and a purge() function, thanks Sergey for
+          suggesting these improvements! (RT #78640)
+        * Added purge() to clean queues.
+        * Fixed how the last inserted ID is retrieved, for portability.
+        * Added tests and code cleanup.
+        * Refactored tests to use Test::Exception and subtests.
+
 v1.7.3  04/01/2012
         * (RT #76194) Fixed typo in table name, thanks Sergey!
 
