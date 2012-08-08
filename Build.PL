@@ -10,18 +10,18 @@ my $builder = Module::Build->new(
 	dist_version_from   => 'lib/Queue/DBI.pm',
 	build_requires      =>
 	{
+		'DBD::SQLite'     => 0,
+		'DBI'             => 0,
 		'Test::More'      => 0.94,
 		'Test::Exception' => 0,
+	},
+	requires            =>
+	{
+		'perl'            => 5.006,
 		'Data::Dumper'    => 0,
 		'Carp'            => 0,
 		'Storable'        => 0,
 		'MIME::Base64'    => 0,
-		'DBD::SQLite'     => 0,
-		'DBI'             => 0,
-	},
-	requires            =>
-	{
-		'perl' => 5.006,
 	},
 	add_to_cleanup      =>
 	[

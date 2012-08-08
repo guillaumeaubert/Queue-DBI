@@ -3,12 +3,8 @@ abstract: 'A queueing module with an emphasis on safety, using DBI as a storage 
 author:
   - 'Guillaume Aubert <aubertg@cpan.org>'
 build_requires:
-  Carp: 0
   DBD::SQLite: 0
   DBI: 0
-  Data::Dumper: 0
-  MIME::Base64: 0
-  Storable: 0
   Test::Exception: 0
   Test::More: 0.94
 configure_requires:
@@ -28,6 +24,10 @@ provides:
     file: lib/Queue/DBI/Element.pm
     version: v1.8.0
 requires:
+  Carp: 0
+  Data::Dumper: 0
+  MIME::Base64: 0
+  Storable: 0
   perl: 5.006
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/ReportBug.html?Queue=queue-dbi
