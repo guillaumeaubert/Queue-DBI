@@ -761,7 +761,7 @@ sub cleanup
 Remove (permanently, caveat emptor!) queue elements based on how many times
 they've been requeued or how old they are.
 
-	# Remove permanently elements that have been requeued 10 times or more.
+	# Remove permanently elements that have been requeued more than 10 times.
 	$queue->purge( max_requeue_count => 10 );
 	
 	# Remove permanently elements that were created over an hour ago.
@@ -800,7 +800,7 @@ sub purge
 		? 'AND created < ' . ( time() - $lifetime )
 		: '';
 	my $sql_max_requeue_count = defined( $max_requeue_count )
-		? 'AND requeue_count >= ' . $dbh->quote( $max_requeue_count )
+		? 'AND requeue_count > ' . $dbh->quote( $max_requeue_count )
 		: '';
 	
 	# Purge the queue.

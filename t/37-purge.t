@@ -142,7 +142,7 @@ subtest(
 	'Test purge() with "max_requeue_count" argument.',
 	sub
 	{
-		plan( tests => 7 );
+		plan( tests => 9 );
 		
 		# Make sure we start with an empty queue.
 		is(
@@ -191,7 +191,7 @@ subtest(
 					max_requeue_count => 20,
 				);
 			},
-			'Purge elements requeued 20 times or more.',
+			'Purge elements requeued more than 20 times.',
 		);
 		is(
 			$elements_purged,
@@ -206,7 +206,22 @@ subtest(
 					max_requeue_count => 10,
 				);
 			},
-			'Purge elements requeued 10 times or more.',
+			'Purge elements requeued more than 10 times.',
+		);
+		is(
+			$elements_purged,
+			0,
+			'Purged 0 elements.',
+		);
+		
+		lives_ok(
+			sub
+			{
+				$elements_purged = $queue->purge(
+					max_requeue_count => 9,
+				);
+			},
+			'Purge elements requeued more than 9 times.',
 		);
 		is(
 			$elements_purged,
