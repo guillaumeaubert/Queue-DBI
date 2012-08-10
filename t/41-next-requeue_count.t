@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use DBI;
 use Queue::DBI;
@@ -175,4 +175,43 @@ foreach my $try ( 1..6 )
 		'No element returned.',
 	) || diag( "Queue element returned:\n" . explain( $queue_element ) );
 }
+
+# Clean up queue.
+subtest(
+	'Empty the queue.',
+	sub
+	{
+		plan( tests => 2 );
+		
+		my $queue;
+		lives_ok(
+			sub
+			{
+				$queue = Queue::DBI->new(
+					'queue_name'        => 'test1',
+					'database_handle'   => $dbh,
+					'cleanup_timeout'   => 3600,
+					'verbose'           => 0,
+				);
+			},
+			'Create the queue object.',
+		);
+		
+		my $removed_elements = 0;
+		lives_ok(
+			sub
+			{
+				while ( my $queue_element = $queue->next() )
+				{
+					$queue_element->lock() || die 'Could not lock the queue element';
+					$queue_element->success() || die 'Could not mark as processed the queue element';
+					$removed_elements++;
+				}
+			},
+			'Remove queue elements.',
+		);
+		note( "Removed >$removed_elements< elements." )
+			if $removed_elements != 0;
+	}
+);
 
