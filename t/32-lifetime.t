@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 9;
+use Test::More tests => 10;
 
 use DBI;
 use Queue::DBI;
@@ -28,6 +28,44 @@ can_ok(
 );
 
 my $queue;
+subtest(
+	'Test no lifetime set.',
+	sub
+	{
+		plan( tests => 4 );
+		
+		lives_ok(
+			sub
+			{
+				$queue = Queue::DBI->new(
+					'queue_name'      => 'test1',
+					'database_handle' => $dbh,
+					'cleanup_timeout' => 3600,
+					'verbose'         => 0,
+				);
+			},
+			'Instantiate a new Queue::DBI object without a lifetime.',
+		);
+		
+		is(
+			$queue->lifetime(),
+			undef,
+			'lifetime() returns undef.',
+		);
+		
+		is(
+			$queue->lifetime( 5 ),
+			5,
+			'Change the lifetime to 5 seconds.',
+		);
+		
+		is(
+			$queue->lifetime(),
+			5,
+			'lifetime() returns the new lifetime value.',
+		);
+	}
+);
 subtest(
 	'Test setting the lifetime value.',
 	sub
