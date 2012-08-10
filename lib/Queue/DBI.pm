@@ -288,7 +288,9 @@ sub lifetime
 		}
 	}
 	
-	return $self->{'lifetime'};
+	return $self->{'lifetime'} eq $IMMORTAL_LIFE
+		? undef
+		: $self->{'lifetime'};
 }
 
 
