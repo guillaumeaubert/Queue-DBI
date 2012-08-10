@@ -258,7 +258,7 @@ sub success
 					FROM %s
 					WHERE queue_element_id = ?
 				|,
-				$dbh->quote_identifier( $self->get_queues_table_name() ),
+				$dbh->quote_identifier( $queue->get_queue_elements_table_name() ),
 			),
 			{},
 			$self->id(),
