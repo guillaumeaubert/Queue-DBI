@@ -6,6 +6,7 @@ use strict;
 use Data::Dumper;
 use Carp;
 
+
 =head1 NAME
 
 Queue::DBI::Element - An object representing an element pulled from the queue.
@@ -325,6 +326,7 @@ sub requeue_count
 	
 	return $self->{'requeue_count'};
 }
+
 
 =head2 id()
 
