@@ -328,7 +328,9 @@ sub max_requeue_count
 		}
 	}
 	
-	return $self->{'max_requeue_count'};
+	return $self->{'max_requeue_count'} == $UNLIMITED_RETRIES
+		? undef
+		: $self->{'max_requeue_count'};
 }
 
 
