@@ -29,7 +29,7 @@ can_ok(
 
 # Instantiate the queue object.
 subtest(
-	'Verify mandatory argments.',
+	'Verify mandatory arguments.',
 	sub
 	{
 		plan( tests => 2 );
