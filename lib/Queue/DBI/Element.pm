@@ -320,6 +320,8 @@ sub data
 
 Returns the number of times that the current element has been requeued.
 
+	my $requeue_count = $element->requeue_count();
+
 =cut
 
 sub requeue_count
@@ -351,6 +353,8 @@ sub id
 =head2 queue()
 
 Returns the Queue::DBI object used to pull the current element.
+
+	my $queue = $element->queue();
 
 =cut
 
