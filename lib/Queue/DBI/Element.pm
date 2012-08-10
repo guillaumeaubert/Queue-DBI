@@ -348,6 +348,22 @@ sub id
 }
 
 
+=head2 get_created_time()
+
+Returns the unixtime at which the element was originally created.
+
+	my $created = $element->get_created_time();
+
+=cut
+
+sub get_created_time
+{
+	my ( $self ) = @_;
+	
+	return $self->{'created'};
+}
+
+
 =head1 INTERNAL METHODS
 
 =head2 queue()
