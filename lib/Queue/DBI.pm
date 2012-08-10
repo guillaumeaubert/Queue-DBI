@@ -617,6 +617,7 @@ sub retrieve_batch
 				'data'          => Storable::thaw( MIME::Base64::decode_base64( $row->[1] ) ),
 				'id'            => $row->[0],
 				'requeue_count' => $row->[2],
+				'created'       => $row->[3],
 			)
 		);
 	}
@@ -683,6 +684,7 @@ sub get_element_by_id
 		'data'          => Storable::thaw( MIME::Base64::decode_base64( $data->{'data'} ) ),
 		'id'            => $data->{'queue_element_id'},
 		'requeue_count' => $data->{'requeue_count'},
+		'created'       => $data->{'created'},
 	);
 	
 	carp "Leaving get_element_by_id()." if $verbose;
