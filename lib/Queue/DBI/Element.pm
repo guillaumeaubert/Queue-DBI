@@ -36,6 +36,7 @@ Create a new Queue::DBI::Element object.
 		'data'          => $data,
 		'id'            => $id,
 		'requeue_count' => $requeue_count,
+		'created'       => $created,
 	);
 
 All parameters are mandatory and correspond respectively to the Queue::DBI
@@ -54,7 +55,7 @@ sub new
 	my ( $class, %args ) = @_;
 	
 	# Check parameters
-	foreach my $arg ( qw( data id requeue_count ) )
+	foreach my $arg ( qw( data id requeue_count created ) )
 	{
 		croak "Argument '$arg' is needed to create the Queue::DBI object"
 			if !defined( $args{$arg} ) || ( $args{$arg} eq '' );
@@ -69,6 +70,7 @@ sub new
 			'data'          => $args{'data'},
 			'id'            => $args{'id'},
 			'requeue_count' => $args{'requeue_count'},
+			'created'       => $args{'created'},
 		},
 		$class
 	);
