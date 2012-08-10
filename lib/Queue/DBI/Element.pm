@@ -364,6 +364,32 @@ sub get_created_time
 }
 
 
+=head2 is_over_lifetime()
+
+Returns a boolean indicating whether the current element is over the lifetime
+specified when instanciating the queue. This is especially helpful if you
+retrieve a large batch of elements and do long processing operations on each
+of them.
+
+	my $is_over_lifetime = $element->is_over_lifetime();
+
+=cut
+
+sub is_over_lifetime
+{
+	my ( $self ) = @_;
+	my $queue = $self->queue();
+	my $lifetime = $queue->lifetime();
+	
+	# If the queue doesn't a lifetime, an element will never "expire".
+	return 0 if !defined( $lifetime );
+	
+	# Check the time the element was created.
+	my $created_time = $self->get_created_time();
+	return time() - $created_time > $lifetime;
+}
+
+
 =head1 INTERNAL METHODS
 
 =head2 queue()
