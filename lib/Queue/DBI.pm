@@ -114,7 +114,7 @@ Mandatory, the name of the queue elements will be added to / removed from.
 
 =item * 'database handle'
 
-Mandatory, a DBI / DBD::Mysql object.
+Mandatory, a DBI object.
 
 =item * 'cleanup_timeout'
 
