@@ -1,8 +1,22 @@
 Revision history for Queue-DBI
 
+v1.8.1  08/12/2012
+        * (RT #78640) Added Queue::DBI::Element->is_over_lifetime().
+        * (RT #78640) Changed 'lifetime' parameter in Queue::DBI->purge() to be
+          more consistent with retrieve_batch() and 'max_requeue_count',
+          thanks Sergey for noticing!
+        * Fixed MySQL-specific reference when retrieving the inserted queue
+          element ID.
+        * Added Queue::DBI::Element->get_created_time().
+        * Fixed lifetime() to return undef if 'lifetime' is not set.
+        * Fixed max_requeue_count() to return undef when 'max_requeue_count' is
+          not set.
+        * Fixed incorrect table name used in a failure case of success().
+        * Cleaned up build_requires and requires.
+
 v1.8.0  08/05/2012
-        * Added a 'lifetime' feature and a purge() function, thanks Sergey for
-          suggesting these improvements! (RT #78640)
+        * (RT #78640) Added a 'lifetime' feature and a purge() function, thanks
+          Sergey for suggesting these improvements
         * Added purge() to clean queues.
         * Fixed how the last inserted ID is retrieved, for portability.
         * Added tests and code cleanup.

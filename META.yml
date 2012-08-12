@@ -19,10 +19,10 @@ name: Queue-DBI
 provides:
   Queue::DBI:
     file: lib/Queue/DBI.pm
-    version: v1.8.0
+    version: v1.8.1
   Queue::DBI::Element:
     file: lib/Queue/DBI/Element.pm
-    version: v1.8.0
+    version: v1.8.1
 requires:
   Carp: 0
   Data::Dumper: 0
@@ -34,4 +34,4 @@ resources:
   homepage: https://metacpan.org/release/Queue-DBI
   license: http://www.perlfoundation.org/artistic_license_1_0
   repository: https://sourceforge.net/p/queuedbiperl/code
-version: v1.8.0
+version: v1.8.1
