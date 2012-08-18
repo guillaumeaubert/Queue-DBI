@@ -462,6 +462,9 @@ provided the inspiration to write this full-fledged queueing system.
 
 Thanks to Jamie McCarthy for the locking mechanism improvements in version 1.1.0.
 
+Thanks to Sergey Bond for suggesting many features added in version 1.8.x
+(lifetime constraint, purge() function, get/set functions cleanup).
+
 
 =head1 COPYRIGHT & LICENSE
 
