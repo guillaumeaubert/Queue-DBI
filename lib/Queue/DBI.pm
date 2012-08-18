@@ -26,8 +26,6 @@ our $VERSION = '1.8.1';
 
 our $UNLIMITED_RETRIES = -1;
 
-our $IMMORTAL_LIFE = -1;
-
 our $DEFAULT_QUEUES_TABLE_NAME = 'queues';
 
 our $DEFAULT_QUEUE_ELEMENTS_TABLE_NAME = 'queue_elements';
@@ -210,58 +208,15 @@ sub new
 			: $Queue::DBI::UNLIMITED_RETRIES
 	);
 	
-	$self->lifetime(
-		defined( $args{'lifetime'} )
-			? $args{'lifetime'}
-			: $Queue::DBI::IMMORTAL_LIFE
-	);
 	# Set optional parameters.
 	$self->set_verbose( $args{'verbose'} );
+	$self->set_lifetime( $args{'lifetime'} );
 	
 	# Perform queue cleanup if a timeout is specified.
 	$self->cleanup( $args{'cleanup_timeout'} )
 		if defined( $args{'cleanup_timeout'} );
 	
 	return $self;
-}
-
-
-=head2 lifetime()
-
-Sets how old an element can be before it is ignored when retrieving elements.
-Set it to $Queue::DBI::IMMORTAL_LIFE to reset Queue::DBI back to its default
-behavior of retrieving elements without time limit.
-
-	# Don't pull queue elements that are more than an hour old.
-	$queue->lifetime( 3600 );
-	
-	# Keep pulling queue elements regardless of how old they are.
-	$queue->lifetime( $Queue::DBI::IMMORTAL_LIFE );
-	
-	# Find how old an element can be before the queue will stop retrieving it.
-	my $lifetime = $queue->lifetime();
-
-=cut
-
-sub lifetime
-{
-	my ( $self, $lifetime ) = @_;
-	
-	if ( defined( $lifetime ) )
-	{
-		if ( ( $lifetime =~ m/^\d+$/ ) || ( $lifetime eq $IMMORTAL_LIFE ) )
-		{
-			$self->{'lifetime'} = $lifetime;
-		}
-		else
-		{
-			croak 'lifetime must be an integer or $Queue::DBI::IMMORTAL_LIFE';
-		}
-	}
-	
-	return $self->{'lifetime'} eq $IMMORTAL_LIFE
-		? undef
-		: $self->{'lifetime'};
 }
 
 
@@ -531,8 +486,8 @@ sub retrieve_batch
 		: '';
 	
 	# Make sure we don't use elements that exceed the specified lifetime.
-	my $lifetime = $self->lifetime();
-	my $sql_lifetime = defined( $lifetime ) && ( $lifetime != $IMMORTAL_LIFE )
+	my $lifetime = $self->get_lifetime();
+	my $sql_lifetime = defined( $lifetime )
 		? 'AND created >= ' . ( time() - $lifetime )
 		: '';
 	
@@ -904,6 +859,51 @@ sub create_tables
 
 =head1 ACCESSORS
 
+=head2 get_lifetime()
+
+Return how old an element can be before it is ignored when retrieving elements.
+
+	# Find how old an element can be before the queue will stop retrieving it.
+	my $lifetime = $queue->get_lifetime();
+
+=cut
+
+sub get_lifetime
+{
+	my ( $self ) = @_;
+	
+	return $self->{'lifetime'};
+}
+
+
+=head2 set_lifetime()
+
+Set how old an element can be before it is ignored when retrieving elements.
+
+Set it to C<undef> to reset Queue::DBI back to its default behavior of
+retrieving elements without time limit.
+
+	# Don't pull queue elements that are more than an hour old.
+	$queue->set_lifetime( 3600 );
+	
+	# Pull elements without time limit.
+	$queue->set_lifetime( undef );
+
+=cut
+
+sub set_lifetime
+{
+	my ( $self, $lifetime ) = @_;
+	
+	croak 'lifetime must be an integer or undef'
+		if defined( $lifetime ) && ( $lifetime !~ /^\d+$/ );
+	
+	$self->{'lifetime'} = $lifetime;
+	
+	return;
+}
+
+
 =head2 get_verbose()
 
 Return the verbosity level, which is used in the module to determine when and
@@ -958,6 +958,18 @@ sub set_verbose
 
 
 =head1 DEPRECATED METHODS
+
+=head2 lifetime()
+
+Please use C<get_lifetime()> and C<set_lifetime()> instead.
+
+=cut
+
+sub lifetime
+{
+	croak 'lifetime() has been deprecated, please use get_lifetime() / set_lifetime() instead.';
+}
+
 
 =head2 verbose()
 

@@ -48,21 +48,23 @@ subtest(
 		);
 		
 		is(
-			$queue->lifetime(),
+			$queue->get_lifetime(),
 			undef,
-			'lifetime() returns undef.',
+			'get_lifetime() returns undef.',
 		);
 		
-		is(
-			$queue->lifetime( 5 ),
-			5,
+		lives_ok(
+			sub
+			{
+				$queue->set_lifetime( 5 );
+			},
 			'Change the lifetime to 5 seconds.',
 		);
 		
 		is(
-			$queue->lifetime(),
+			$queue->get_lifetime(),
 			5,
-			'lifetime() returns the new lifetime value.',
+			'get_lifetime() returns the new lifetime value.',
 		);
 	}
 );
@@ -87,21 +89,23 @@ subtest(
 		);
 		
 		is(
-			$queue->lifetime(),
+			$queue->get_lifetime(),
 			10,
-			'lifetime() returns the correct lifetime value.',
+			'get_lifetime() returns the correct lifetime value.',
 		);
 		
-		is(
-			$queue->lifetime( 5 ),
-			5,
+		lives_ok(
+			sub
+			{
+				$queue->set_lifetime( 5 );
+			},
 			'Change the lifetime to 5 seconds.',
 		);
 		
 		is(
-			$queue->lifetime(),
+			$queue->get_lifetime(),
 			5,
-			'lifetime() returns the new lifetime value.',
+			'get_lifetime() returns the new lifetime value.',
 		);
 	}
 );
