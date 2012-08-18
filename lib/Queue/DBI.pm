@@ -24,8 +24,6 @@ Version 1.8.1
 
 our $VERSION = '1.8.1';
 
-our $UNLIMITED_RETRIES = -1;
-
 our $DEFAULT_QUEUES_TABLE_NAME = 'queues';
 
 our $DEFAULT_QUEUE_ELEMENTS_TABLE_NAME = 'queue_elements';
@@ -202,14 +200,9 @@ sub new
 		unless defined( $queue[0] ) && ( $queue[0] =~ m/^\d+$/ );
 	$self->{'queue_id'} = $queue[0];
 	
-	$self->max_requeue_count(
-		defined( $args{'max_requeue_count'} )
-			? $args{'max_requeue_count'}
-			: $Queue::DBI::UNLIMITED_RETRIES
-	);
-	
 	# Set optional parameters.
 	$self->set_verbose( $args{'verbose'} );
+	$self->set_max_requeue_count( $args{'max_requeue_count'} );
 	$self->set_lifetime( $args{'lifetime'} );
 	
 	# Perform queue cleanup if a timeout is specified.
@@ -217,46 +210,6 @@ sub new
 		if defined( $args{'cleanup_timeout'} );
 	
 	return $self;
-}
-
-
-=head2 max_requeue_count()
-
-Sets the number of time an element can be requeued before it is ignored when
-retrieving elements. Set it to $Queue::DBI::UNLIMITED_RETRIES to reset
-Queue::DBI back to its default behavior of re-pulling elements without limit.
-
-	# Don't keep pulling the element if it has been requeued more than 5 times.
-	$queue->max_requeue_count( 5 );
-	
-	# Keep pulling elements regardless of the number of times they have been
-	# requeued.
-	$queue->max_requeue_count( $UNLIMITED_RETRIES );
-	
-	# Find how many times a queue object will try to requeue.
-	my $max_requeue_count = $queue->max_requeue_count();
-
-=cut
-
-sub max_requeue_count
-{
-	my ( $self, $max_requeue_count ) = @_;
-	
-	if ( defined( $max_requeue_count ) )
-	{
-		if ( ( $max_requeue_count =~ m/^\d+$/ ) || ( $max_requeue_count eq $UNLIMITED_RETRIES ) )
-		{
-			$self->{'max_requeue_count'} = $max_requeue_count;
-		}
-		else
-		{
-			croak 'max_requeue_count must be an integer or $Queue::DBI::UNLIMITED_RETRIES';
-		}
-	}
-	
-	return $self->{'max_requeue_count'} == $UNLIMITED_RETRIES
-		? undef
-		: $self->{'max_requeue_count'};
 }
 
 
@@ -480,8 +433,8 @@ sub retrieve_batch
 	}
 	
 	# Make sure we don't use requeued elements more times than specified.
-	my $max_requeue_count = $self->max_requeue_count();
-	my $sql_max_requeue_count = defined( $max_requeue_count ) && ( $max_requeue_count != $UNLIMITED_RETRIES )
+	my $max_requeue_count = $self->get_max_requeue_count();
+	my $sql_max_requeue_count = defined( $max_requeue_count )
 		? 'AND requeue_count <= ' . $dbh->quote( $max_requeue_count )
 		: '';
 	
@@ -859,6 +812,49 @@ sub create_tables
 
 =head1 ACCESSORS
 
+=head2 get_max_requeue_count()
+
+Return how many times an element can be requeued before it is ignored when
+retrieving elements.
+
+	my $max_requeue_count = $queue->get_max_requeue_count();
+
+=cut
+
+sub get_max_requeue_count
+{
+	my ( $self ) = @_;
+	
+	return $self->{'max_requeue_count'};
+}
+
+
+=head2 set_max_requeue_count()
+
+Set the number of time an element can be requeued before it is ignored when
+retrieving elements. Set it to C<undef> to disable the limit.
+
+	# Don't keep pulling the element if it has been requeued more than 5 times.
+	$queue->set_max_requeue_count( 5 );+
+	
+	# Retry without limit.
+	$queue->set_max_requeue_count( undef );
+
+=cut
+
+sub set_max_requeue_count
+{
+	my ( $self, $max_requeue_count ) = @_;
+	
+	croak 'max_requeue_count must be an integer or undef'
+		if defined( $max_requeue_count ) && ( $max_requeue_count !~ /^\d+$/ );
+	
+	$self->{'max_requeue_count'} = $max_requeue_count;
+	
+	return;
+}
+
+
 =head2 get_lifetime()
 
 Return how old an element can be before it is ignored when retrieving elements.
@@ -980,6 +976,18 @@ Please use C<get_verbose()> and C<set_verbose()> instead.
 sub verbose
 {
 	croak 'verbose() has been deprecated, please use get_verbose() / set_verbose() instead.';
+}
+
+
+=head2 max_requeue_count()
+
+Please use C<get_max_requeue_count()> and C<set_max_requeue_count()> instead.
+
+=cut
+
+sub max_requeue_count
+{
+	croak 'max_requeue_count() has been deprecated, please use get_max_requeue_count() / set_max_requeue_count() instead.';
 }
 
 

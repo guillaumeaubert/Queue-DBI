@@ -45,7 +45,7 @@ isa_ok(
 
 # Verify that max_requeue_count() returns the correct result.
 is(
-	$queue->max_requeue_count(),
+	$queue->get_max_requeue_count(),
 	5,
 	'Retrieve the max_requeue_count.',
 );
