@@ -98,7 +98,7 @@ of it
 sub lock ## no critic (Subroutines::ProhibitBuiltinHomonyms)
 {
 	my ( $self ) = @_;
-	my $queue = $self->queue();
+	my $queue = $self->get_queue();
 	my $verbose = $queue->get_verbose();
 	my $dbh = $queue->get_dbh();
 	carp "Entering lock()." if $verbose;
@@ -144,7 +144,7 @@ In case the processing of an element has failed
 sub requeue
 {
 	my ( $self ) = @_;
-	my $queue = $self->queue();
+	my $queue = $self->get_queue();
 	my $verbose = $queue->get_verbose();
 	my $dbh = $queue->get_dbh();
 	carp "Entering requeue()." if $verbose;
@@ -213,7 +213,7 @@ completed.
 sub success
 {
 	my ( $self ) = @_;
-	my $queue = $self->queue();
+	my $queue = $self->get_queue();
 	my $verbose = $queue->get_verbose();
 	my $dbh = $queue->get_dbh();
 	carp "Entering success()." if $verbose;
@@ -378,7 +378,7 @@ of them.
 sub is_over_lifetime
 {
 	my ( $self ) = @_;
-	my $queue = $self->queue();
+	my $queue = $self->get_queue();
 	my $lifetime = $queue->get_lifetime();
 	
 	# If the queue doesn't a lifetime, an element will never "expire".
@@ -392,15 +392,15 @@ sub is_over_lifetime
 
 =head1 INTERNAL METHODS
 
-=head2 queue()
+=head2 get_queue()
 
 Returns the Queue::DBI object used to pull the current element.
 
-	my $queue = $element->queue();
+	my $queue = $element->get_queue();
 
 =cut
 
-sub queue
+sub get_queue
 {
 	my ( $self ) = @_;
 	
