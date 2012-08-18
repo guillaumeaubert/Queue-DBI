@@ -40,11 +40,11 @@
    "provides" : {
       "Queue::DBI" : {
          "file" : "lib/Queue/DBI.pm",
-         "version" : "v1.8.1"
+         "version" : "v1.8.2"
       },
       "Queue::DBI::Element" : {
          "file" : "lib/Queue/DBI/Element.pm",
-         "version" : "v1.8.1"
+         "version" : "v1.8.2"
       }
    },
    "release_status" : "stable",
@@ -60,5 +60,5 @@
          "url" : "https://sourceforge.net/p/queuedbiperl/code"
       }
    },
-   "version" : "v1.8.1"
+   "version" : "v1.8.2"
 }

@@ -1,5 +1,13 @@
 Revision history for Queue-DBI
 
+v1.8.2  08/17/2012
+        * (RT #78640) Deprecated dual-purpose methods to change Queue::DBI
+          properties, replaced them with separate get and set methods:
+            - replace max_requeue_count() with {get,set}_max_requeue_count();
+            - replace lifetime() with {get,set}_lifetime();
+            - replace verbose() with {get,set}_verbose().
+        * Renamed Queue::DBI::Element->queue() into get_queue().
+
 v1.8.1  08/12/2012
         * (RT #78640) Added Queue::DBI::Element->is_over_lifetime().
         * (RT #78640) Changed 'lifetime' parameter in Queue::DBI->purge() to be
