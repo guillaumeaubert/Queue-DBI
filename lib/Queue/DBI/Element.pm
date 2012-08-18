@@ -99,7 +99,7 @@ sub lock ## no critic (Subroutines::ProhibitBuiltinHomonyms)
 {
 	my ( $self ) = @_;
 	my $queue = $self->queue();
-	my $verbose = $queue->verbose();
+	my $verbose = $queue->get_verbose();
 	my $dbh = $queue->get_dbh();
 	carp "Entering lock()." if $verbose;
 	
@@ -145,7 +145,7 @@ sub requeue
 {
 	my ( $self ) = @_;
 	my $queue = $self->queue();
-	my $verbose = $queue->verbose();
+	my $verbose = $queue->get_verbose();
 	my $dbh = $queue->get_dbh();
 	carp "Entering requeue()." if $verbose;
 	
@@ -214,7 +214,7 @@ sub success
 {
 	my ( $self ) = @_;
 	my $queue = $self->queue();
-	my $verbose = $queue->verbose();
+	my $verbose = $queue->get_verbose();
 	my $dbh = $queue->get_dbh();
 	carp "Entering success()." if $verbose;
 	
@@ -379,7 +379,7 @@ sub is_over_lifetime
 {
 	my ( $self ) = @_;
 	my $queue = $self->queue();
-	my $lifetime = $queue->lifetime();
+	my $lifetime = $queue->get_lifetime();
 	
 	# If the queue doesn't a lifetime, an element will never "expire".
 	return 0 if !defined( $lifetime );

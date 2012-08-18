@@ -124,7 +124,9 @@ that time.
 
 =item * 'verbose'
 
-Optional, see verbose() for options.
+Optional, control the verbosity of the warnings in the code. 0 will not display
+any warning; 1 will only give one line warnings about the current operation;
+2 will also usually output the SQL queries performed.
 
 =item * 'max_requeue_count'
 
@@ -181,7 +183,6 @@ sub new
 				'queues'         => $args{'queues_table_name'},
 				'queue_elements' => $args{'queue_elements_table_name'},
 			},
-			'verbose'     => 0,
 		},
 		$class
 	);
@@ -203,9 +204,6 @@ sub new
 		unless defined( $queue[0] ) && ( $queue[0] =~ m/^\d+$/ );
 	$self->{'queue_id'} = $queue[0];
 	
-	$self->verbose( $args{'verbose'} )
-		if defined( $args{'verbose'} );
-	
 	$self->max_requeue_count(
 		defined( $args{'max_requeue_count'} )
 			? $args{'max_requeue_count'}
@@ -217,41 +215,14 @@ sub new
 			? $args{'lifetime'}
 			: $Queue::DBI::IMMORTAL_LIFE
 	);
+	# Set optional parameters.
+	$self->set_verbose( $args{'verbose'} );
 	
+	# Perform queue cleanup if a timeout is specified.
 	$self->cleanup( $args{'cleanup_timeout'} )
 		if defined( $args{'cleanup_timeout'} );
 	
 	return $self;
-}
-
-
-=head2 verbose()
-
-Control the verbosity of the warnings in the code.
-
-	$queue->verbose(1); # turn on verbose information
-	
-	$queue->verbose(2); # be extra verbose
-	
-	$queue->verbose(0); # quiet now!
-	
-	warn 'Verbose' if $queue->verbose(); # getter-style
-	
-	warn 'Very verbose' if $queue->verbose() > 1;
-	
-0 will not display any warning, 1 will only give one line warnings about the
-current operation and 2 will also usually output the SQL queries performed.
-
-=cut
-
-sub verbose
-{
-	my ( $self, $verbose ) = @_;
-	
-	$self->{'verbose'} = ( $verbose || 0 )
-		if defined( $verbose );
-	
-	return $self->{'verbose'};
 }
 
 
@@ -359,7 +330,7 @@ Returns the number of elements in the queue.
 sub count
 {
 	my ( $self ) = @_;
-	my $verbose = $self->verbose();
+	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering count()." if $verbose;
 	
@@ -399,7 +370,7 @@ as it is serialized for storage in the database.
 sub enqueue
 {
 	my ( $self, $data ) = @_;
-	my $verbose = $self->verbose();
+	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering enqueue()." if $verbose;
 	carp "Data is: " . Dumper( $data ) if $verbose > 1;
@@ -460,7 +431,7 @@ elements can be specified using 'search_in_ids':
 sub next ## no critic (Subroutines::ProhibitBuiltinHomonyms)
 {
 	my ( $self, %args ) = @_;
-	my $verbose = $self->verbose();
+	my $verbose = $self->get_verbose();
 	carp "Entering next()." if $verbose;
 	
 	my $elements = $self->retrieve_batch(
@@ -506,7 +477,7 @@ elements can be specified using 'search_in_ids':
 sub retrieve_batch
 {
 	my ( $self, $number_of_elements_to_retrieve, %args ) = @_;
-	my $verbose = $self->verbose();
+	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering retrieve_batch()." if $verbose;
 	
@@ -647,7 +618,7 @@ This method requires a queue element ID to be passed as parameter.
 sub get_element_by_id
 {
 	my ( $self, $queue_element_id ) = @_;
-	my $verbose = $self->verbose();
+	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering get_element_by_id()." if $verbose;
 	
@@ -710,7 +681,7 @@ Returns the items requeued so that a specific action can be taken on them.
 sub cleanup
 {
 	my ( $self, $time_in_seconds ) = @_;
-	my $verbose = $self->verbose();
+	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering cleanup()." if $verbose;
 	
@@ -784,7 +755,7 @@ Also note that I<max_requeue_count> and I<lifetime> cannot be combined.
 sub purge
 {
 	my ( $self, %args ) = @_;
-	my $verbose = $self->verbose();
+	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering cleanup()." if $verbose;
 	
@@ -928,6 +899,75 @@ sub create_tables
 	);
 	
 	return 1;
+}
+
+
+=head1 ACCESSORS
+
+=head2 get_verbose()
+
+Return the verbosity level, which is used in the module to determine when and
+what type of debugging statements / information should be warned out.
+
+See C<set_verbose()> for the possible values this function can return.
+
+	warn 'Verbose' if $queue->get_verbose();
+	
+	warn 'Very verbose' if $queue->get_verbose() > 1;
+
+=cut
+
+sub get_verbose
+{
+	my ( $self ) = @_;
+	
+	return $self->{'verbose'};
+}
+
+
+=head2 set_verbose()
+
+Control the verbosity of the warnings in the code:
+
+=over 4
+
+=item * 0 will not display any warning;
+
+=item * 1 will only give one line warnings about the current operation;
+
+=item * 2 will also usually output the SQL queries performed.
+
+=back
+
+	$queue->set_verbose(1); # turn on verbose information
+	
+	$queue->set_verbose(2); # be extra verbose
+	
+	$queue->set_verbose(0); # quiet now!
+
+=cut
+
+sub set_verbose
+{
+	my ( $self, $verbose ) = @_;
+	
+	$self->{'verbose'} = ( $verbose || 0 );
+	
+	return;
+}
+
+
+=head1 DEPRECATED METHODS
+
+=head2 verbose()
+
+Please use C<get_verbose()> and C<set_verbose()> instead.
+
+=cut
+
+sub verbose
+{
+	croak 'verbose() has been deprecated, please use get_verbose() / set_verbose() instead.';
 }
 
 
