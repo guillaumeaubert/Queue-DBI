@@ -312,6 +312,44 @@ sub has_queue
 }
 
 
+=head2 retrieve_queue()
+
+Retrieve a queue.
+
+	my $queue = $queues_admin->retrieve_queue( $queue_name );
+
+	# See Queue::DBI->new() for all the available options.
+	my $queue = $queues_admin->retrieve_queue(
+		$queue_name,
+		'cleanup_timeout'   => 3600,
+		'verbose'           => 1,
+		'max_requeue_count' => 5,
+	);
+
+=cut
+
+sub retrieve_queue
+{
+	my ( $self, $queue_name, %args ) = @_;
+	my $database_handle = $self->get_database_handle();
+	
+	# Verify parameters.
+	croak 'The first parameter must be a queue name'
+		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	# Instantiate a Queue::DBI object.
+	my $queue = Queue::DBI->new(
+		database_handle           => $database_handle,
+		queue_name                => $queue_name,
+		queues_table_name         => $self->get_queues_table_name(),
+		queue_elements_table_name => $self->get_queue_elements_table_name(),
+		%args
+	);
+	
+	return $queue;
+}
+
+
 =head1 INTERNAL METHODS
 
 =head2 get_database_handle()
