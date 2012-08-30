@@ -55,6 +55,72 @@ our $VERSION = '1.8.2';
 
 =head1 METHODS
 
+=head2 new()
+
+Create a new Queue::DBI::Admin object.
+
+	my $queues_admin = Queue::DBI::Admin->new(
+		database_handle => $database_handle,
+	);
+
+The 'database_handle' parameter is mandatory and must correspond to a
+DBI connection handle object.
+
+Optional parameters:
+
+=over 4
+
+=item * 'queues_table_name'
+
+By default, Queue::DBI uses a table named 'queues' to store the queue
+definitions. This allows using your own name, if you want to support separate
+queuing systems or legacy systems.
+
+=item * 'queue_elements_table_name'
+
+By default, Queue::DBI uses a table named 'queue_elements' to store the queued
+data. This allows using your own name, if you want to support separate queuing
+systems or legacy systems.
+
+=back
+
+	my $queues_admin = Queue::DBI::Admin->new(
+		database_handle           => $database_handle,
+		queues_table_name         => $custom_queues_table_name,
+		queue_elements_table_name => $custom_queue_elements_table_name,
+	);
+
+=cut
+
+sub new
+{
+	my ( $class, %args ) = @_;
+	my $database_handle = delete( $args{'database_handle'} );
+	my $queues_table_name = delete( $args{'queues_table_name'} );
+	my $queue_elements_table_name = delete( $args{'queue_elements_table_name'} );
+	
+	croak 'Unrecognized arguments: ' . join( ', ', keys %args )
+		if scalar( keys %args ) != 0;
+	
+	# Verify arguments.
+	croak 'The argument "database_handle" must be a DBI connection handle object'
+		if !Data::Validate::Type::is_instance( $database_handle, class => 'DBI::db' );
+	
+	my $self = bless(
+		{
+			database_handle => $database_handle,
+			table_names     =>
+			{
+				'queues'         => $queues_table_name,
+				'queue_elements' => $queue_elements_table_name,
+			},
+		},
+		$class
+	);
+	
+	return $self;
+}
+
 
 =head1 AUTHOR
 
