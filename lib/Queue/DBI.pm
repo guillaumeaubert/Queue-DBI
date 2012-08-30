@@ -717,99 +717,6 @@ sub purge
 }
 
 
-=head2 create_tables()
-
-Creates the tables in the database the database handle passed as parameter
-points to. This allows setting up Queue::DBI's underlying database structure
-quickly.
-
-	Queue::DBI::create_tables(
-		dbh           => $dbh,
-		drop_if_exist => $boolean,
-		sqlite        => $boolean,
-	);
-
-By default, it won't drop any table but you can force that by setting
-'drop_if_exist' to 1. 'sqlite' is also set to 0 by default, as this parameter
-is used only for testing.
-
-=cut
-
-sub create_tables
-{
-	my ( %args ) = @_;
-	
-	# Check arguments.
-	croak 'Missing database handle'
-		unless defined( $args{'dbh'} );
-	
-	foreach my $arg ( qw( drop_if_exist sqlite ) )
-	{
-		$args{$arg} = 0
-			unless defined( $args{$arg} ) && $args{$arg};
-	}
-	
-	# Create the list of queues.
-	$args{'dbh'}->do( q|DROP TABLE IF EXISTS `queues`| )
-		if $args{'drop_if_exist'};
-	$args{'dbh'}->do(
-		$args{'sqlite'}
-		? q|
-			CREATE TABLE `queues`
-			(
-				`queue_id` INTEGER PRIMARY KEY AUTOINCREMENT,
-				`name` VARCHAR(255) NOT NULL UNIQUE
-			)
-		|
-		: q|
-			CREATE TABLE `queues`
-			(
-				`queue_id` INT(11) NOT NULL AUTO_INCREMENT,
-				`name` VARCHAR(255) NOT NULL,
-				PRIMARY KEY (`queue_id`),
-				UNIQUE KEY `name` (`name`)
-			)
-			ENGINE=InnoDB
-		|
-	);
-	
-	# Create the table that will hold the queue elements.
-	$args{'dbh'}->do( q|DROP TABLE IF EXISTS `queue_elements`| )
-		if $args{'drop_if_exist'};
-	$args{'dbh'}->do(
-		$args{'sqlite'}
-		? q|
-			CREATE TABLE `queue_elements`
-			(
-				`queue_element_id` INTEGER PRIMARY KEY AUTOINCREMENT,
-				`queue_id` INTEGER NOT NULL,
-				`data` TEXT,
-				`lock_time` INT(10) DEFAULT NULL,
-				`requeue_count` INT(3) DEFAULT '0',
-				`created` INT(10) NOT NULL DEFAULT '0'
-			)
-		|
-		: q|
-			CREATE TABLE `queue_elements`
-			(
-				`queue_element_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-				`queue_id` INT(11) NOT NULL,
-				`data` TEXT,
-				`lock_time` INT(10) UNSIGNED DEFAULT NULL,
-				`requeue_count` INT(3) UNSIGNED DEFAULT '0',
-				`created` INT(10) UNSIGNED NOT NULL DEFAULT '0',
-				PRIMARY KEY (`queue_element_id`),
-				KEY `idx_fk_queue_id` (`queue_id`),
-				CONSTRAINT `queue_element_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `queues` (`queue_id`)
-			)
-			ENGINE=InnoDB
-		|
-	);
-	
-	return 1;
-}
-
-
 =head1 ACCESSORS
 
 =head2 get_max_requeue_count()
@@ -954,6 +861,35 @@ sub set_verbose
 
 
 =head1 DEPRECATED METHODS
+
+=head2 create_tables()
+
+Please use C<create_tables()> in C<Queue::DBI::Admin> instead.
+
+Here is an example that shows how to refactor your call to this deprecated
+function:
+
+	# Load the admin module.
+	use Queue::DBI::Admin;
+	
+	# Create the object which will allow managing the queues.
+	my $queues_admin = Queue::DBI::Admin->new(
+		database_handle => $dbh,
+	);
+	
+	# Create the tables required by Queue::DBI to store the queues and data.
+	$queues_admin->create_tables(
+		drop_if_exist => $boolean,
+		sqlite        => $boolean,
+	);
+
+=cut
+
+sub create_tables
+{
+	croak 'create_tables() in Queue::DBI has been deprecated, please use create_tables() in Queue::DBI::Admin instead.';
+}
+
 
 =head2 lifetime()
 
