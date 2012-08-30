@@ -63,7 +63,7 @@ sub test_retrieve_queue
 	die 'The queue name must be specified'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
 	
-	plan( tests => 2 );
+	plan( tests => 4 );
 	
 	my $queue_admin;
 	lives_ok(
@@ -85,5 +85,28 @@ sub test_retrieve_queue
 			);
 		},
 		"Delete queue >$queue_name<.",
+	);
+	
+	ok(
+		defined(
+			my $queues_table_name = $queue_admin->get_queues_table_name()
+		),
+		'Retrieve the name of the queues table.',
+	);
+	
+	dies_ok(
+		sub
+		{
+			# Disable printing errors out since we expect the test to fail.
+			local $dbh->{'PrintError'} = 0;
+			
+			$dbh->selectrow_array(
+				sprintf(
+					q| SELECT * FROM %s |,
+					$queues_table_name,
+				)
+			);
+		},
+		'The queues table does not exist.',
 	);
 }
