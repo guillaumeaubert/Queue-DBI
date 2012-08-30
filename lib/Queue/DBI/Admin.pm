@@ -294,6 +294,23 @@ sub get_database_handle
 }
 
 
+=head2 get_queues_table_name()
+
+Returns the name of the table used to store queue definitions.
+
+	my $queues_table_name = $queue->get_queues_table_name();
+
+=cut
+
+sub get_queues_table_name
+{
+	my ( $self ) = @_;
+	
+	return defined( $self->{'table_names'}->{'queues'} ) && ( $self->{'table_names'}->{'queues'} ne '' )
+		? $self->{'table_names'}->{'queues'}
+		: $Queue::DBI::DEFAULT_QUEUES_TABLE_NAME;
+}
+
 
 =head1 AUTHOR
 
