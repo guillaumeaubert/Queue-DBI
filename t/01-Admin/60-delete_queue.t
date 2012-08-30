@@ -97,16 +97,10 @@ sub test_delete_queue
 	dies_ok(
 		sub
 		{
-			# Disable printing errors out since we expect the test to fail.
-			local $dbh->{'PrintError'} = 0;
-			
-			$dbh->selectrow_array(
-				sprintf(
-					q| SELECT * FROM %s |,
-					$queues_table_name,
-				)
+			my $queue = $queue_admin->retrieve_queue(
+				$queue_name,
 			);
 		},
-		'The queues table does not exist.',
+		"Retrieve queue >$queue_name< fails because the queue doesn't exist anymore.",
 	);
 }
