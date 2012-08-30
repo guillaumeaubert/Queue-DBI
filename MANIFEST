@@ -4,6 +4,7 @@ Build.PL
 Changes
 ignore.txt
 lib/Queue/DBI.pm
+lib/Queue/DBI/Admin.pm
 lib/Queue/DBI/Element.pm
 Makefile.PL
 MANIFEST			This list of files
@@ -12,6 +13,17 @@ META.json
 META.yml
 README
 t/00-load.t
+t/01-Admin/00-load.t
+t/01-Admin/10-new.t
+t/01-Admin/12-get_database_handle.t
+t/01-Admin/14-get_queues_table_name.t
+t/01-Admin/16-get_queue_elements_table_name.t
+t/01-Admin/20-create_tables.t
+t/01-Admin/30-create_queue.t
+t/01-Admin/40-has_queue.t
+t/01-Admin/50-retrieve_queue.t
+t/01-Admin/60-delete_queue.t
+t/01-Admin/99-cleanup.t
 t/02-create_tables.t
 t/04-create_queues.t
 t/10-new.t
