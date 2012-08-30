@@ -31,7 +31,7 @@ subtest(
 	'Test using default tables.',
 	sub
 	{
-		test_retrieve_queue(
+		test_delete_queue(
 			new_args   => {},
 			queue_name => 'test_queue',
 		);
@@ -42,7 +42,7 @@ subtest(
 	'Test using custom tables.',
 	sub
 	{
-		test_retrieve_queue(
+		test_delete_queue(
 			new_args   =>
 			{
 				'queues_table_name'         => 'test_queues',
@@ -54,7 +54,7 @@ subtest(
 );
 
 
-sub test_retrieve_queue
+sub test_delete_queue
 {
 	my ( %args ) = @_;
 	my $new_args = delete( $args{'new_args'} ) || {};
