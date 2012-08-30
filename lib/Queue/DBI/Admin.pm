@@ -278,6 +278,22 @@ sub create_queue
 
 =head1 INTERNAL METHODS
 
+=head2 get_database_handle()
+
+Returns the database handle associated with the C<Queue::DBI::Admin>.
+
+	my $database_handle = $queue->get_database_handle();
+
+=cut
+
+sub get_database_handle
+{
+	my ( $self ) = @_;
+	
+	return $self->{'database_handle'};
+}
+
+
 
 =head1 AUTHOR
 
