@@ -28,7 +28,7 @@ can_ok(
 );
 
 subtest(
-	'Create default tables.',
+	'Create queue using default tables.',
 	sub
 	{
 		test_create_queue(
@@ -39,7 +39,7 @@ subtest(
 );
 
 subtest(
-	'Create custom tables.',
+	'Create queue using custom tables.',
 	sub
 	{
 		test_create_queue(
