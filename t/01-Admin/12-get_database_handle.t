@@ -12,7 +12,7 @@ use Queue::DBI::Admin;
 
 ok(
 	my $dbh = DBI->connect(
-		'dbi:SQLite:dbname=t/test_database',
+		'dbi:SQLite:dbname=t/01-Admin/test_database',
 		'',
 		'',
 		{
