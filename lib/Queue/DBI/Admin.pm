@@ -276,6 +276,42 @@ sub create_queue
 }
 
 
+=head2 has_queue()
+
+Test if a queue exists.
+
+	if ( $queues_admin->has_queue( $queue_name ) )
+	{
+		...
+	}
+
+=cut
+
+sub has_queue
+{
+	my ( $self, $queue_name ) = @_;
+	my $database_handle = $self->get_database_handle();
+	
+	# Verify parameters.
+	croak 'The first parameter must be a queue name'
+		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	return try
+	{
+		my $queue = $self->retrieve_queue( $queue_name );
+		
+		croak 'The queue does not exist'
+			if !defined( $queue );
+		
+		return 1;
+	}
+	catch
+	{
+		return 0;
+	};
+}
+
+
 =head1 INTERNAL METHODS
 
 =head2 get_database_handle()
