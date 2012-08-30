@@ -238,6 +238,44 @@ sub create_tables
 }
 
 
+=head2 create_queue()
+
+Create a new queue.
+
+	$queues_admin->create_queue( $queue_name );
+
+=cut
+
+sub create_queue
+{
+	my ( $self, $queue_name ) = @_;
+	my $database_handle = $self->get_database_handle();
+	
+	# Verify parameters.
+	croak 'The first parameter must be a queue name'
+		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	my $queues_table_name = $database_handle->quote_identifier(
+		$self->get_queues_table_name()
+	);
+	
+	# Create the queue.
+	$database_handle->do(
+		sprintf(
+			q|
+				INSERT INTO %s ( name )
+				VALUES ( ? )
+			|,
+			$queues_table_name,
+		),
+		{},
+		$queue_name,
+	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
+	
+	return;
+}
+
+
 =head1 AUTHOR
 
 Guillaume Aubert, C<< <aubertg at cpan.org> >>.
