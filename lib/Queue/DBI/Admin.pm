@@ -122,6 +122,122 @@ sub new
 }
 
 
+=head2 create_tables()
+
+Create the tables required by Queue::DBI to store the queues and data.
+
+	$queues_admin->create_tables(
+		drop_if_exist => $boolean,
+		sqlite        => $boolean,
+	);
+
+By default, it won't drop any table but you can force that by setting
+'drop_if_exist' to 1. 'sqlite' is also set to 0 by default, as this parameter
+is used only for testing.
+
+=cut
+
+sub create_tables
+{
+	my ( $self, %args ) = @_;
+	my $drop_if_exist = delete( $args{'drop_if_exist'} ) || 0;
+	my $sqlite = delete( $args{'sqlite'} ) || 0;
+	croak 'Unrecognized arguments: ' . join( ', ', keys %args )
+		if scalar( keys %args ) != 0;
+	
+	my $database_handle = $self->get_database_handle();
+	
+	# Create the list of queues.
+	my $queues_table_name = $database_handle->quote_identifier(
+		$self->get_queues_table_name()
+	);
+	
+	if ( $drop_if_exist )
+	{
+		$database_handle->do(
+			sprintf(
+				q|DROP TABLE IF EXISTS %s|,
+				$queues_table_name,
+			)
+		);
+	}
+	
+	$database_handle->do(
+		sprintf(
+			$sqlite
+				? q|
+					CREATE TABLE %s
+					(
+						`queue_id` INTEGER PRIMARY KEY AUTOINCREMENT,
+						`name` VARCHAR(255) NOT NULL UNIQUE
+					)
+				|
+				: q|
+					CREATE TABLE %s
+					(
+						`queue_id` INT(11) NOT NULL AUTO_INCREMENT,
+						`name` VARCHAR(255) NOT NULL,
+						PRIMARY KEY (`queue_id`),
+						UNIQUE KEY `name` (`name`)
+					)
+					ENGINE=InnoDB
+				|,
+			$queues_table_name,
+		)
+	);
+	
+	# Create the table that will hold the queue elements.
+	my $queue_elements_table_name = $database_handle->quote_identifier(
+		$self->get_queue_elements_table_name()
+	);
+	
+	if ( $drop_if_exist )
+	{
+		$database_handle->do(
+			sprintf(
+				q|DROP TABLE IF EXISTS %s|,
+				$queue_elements_table_name,
+			)
+		);
+	}
+	
+	$database_handle->do(
+		sprintf(
+			$sqlite
+				? q|
+					CREATE TABLE %s
+					(
+						`queue_element_id` INTEGER PRIMARY KEY AUTOINCREMENT,
+						`queue_id` INTEGER NOT NULL,
+						`data` TEXT,
+						`lock_time` INT(10) DEFAULT NULL,
+						`requeue_count` INT(3) DEFAULT '0',
+						`created` INT(10) NOT NULL DEFAULT '0'
+					)
+				|
+				: q|
+					CREATE TABLE %s
+					(
+						`queue_element_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+						`queue_id` INT(11) NOT NULL,
+						`data` TEXT,
+						`lock_time` INT(10) UNSIGNED DEFAULT NULL,
+						`requeue_count` INT(3) UNSIGNED DEFAULT '0',
+						`created` INT(10) UNSIGNED NOT NULL DEFAULT '0',
+						PRIMARY KEY (`queue_element_id`),
+						KEY `idx_fk_queue_id` (`queue_id`),
+						CONSTRAINT `queue_element_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `queues` (`queue_id`)
+					)
+					ENGINE=InnoDB
+				|,
+			$queue_elements_table_name,
+		)
+	);
+	
+	return;
+}
+
+
 =head1 AUTHOR
 
 Guillaume Aubert, C<< <aubertg at cpan.org> >>.
