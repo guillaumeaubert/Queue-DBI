@@ -350,6 +350,30 @@ sub retrieve_queue
 }
 
 
+=head2 delete_queue()
+
+Delete a queue and all associated data, permanently. Use this function at your
+own risk!
+
+	$queues_admin->delete_queue( $queue_name );
+
+=cut
+
+sub delete_queue
+{
+	my ( $self, $queue_name ) = @_;
+	my $database_handle = $self->get_database_handle();
+	
+	# Verify parameters.
+	croak 'The first parameter must be a queue name'
+		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	# TODO: implement
+	
+	return;
+}
+
+
 =head1 INTERNAL METHODS
 
 =head2 get_database_handle()
