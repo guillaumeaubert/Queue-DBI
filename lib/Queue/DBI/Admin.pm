@@ -312,6 +312,24 @@ sub get_queues_table_name
 }
 
 
+=head2 get_queue_elements_table_name()
+
+Returns the name of the table used to store queue definitions.
+
+	my $queue_elements_table_name = $queue->get_queue_elements_table_name();
+
+=cut
+
+sub get_queue_elements_table_name
+{
+	my ( $self ) = @_;
+	
+	return defined( $self->{'table_names'}->{'queue_elements'} ) && ( $self->{'table_names'}->{'queue_elements'} ne '' )
+		? $self->{'table_names'}->{'queue_elements'}
+		: $Queue::DBI::DEFAULT_QUEUE_ELEMENTS_TABLE_NAME;
+}
+
+
 =head1 AUTHOR
 
 Guillaume Aubert, C<< <aubertg at cpan.org> >>.
