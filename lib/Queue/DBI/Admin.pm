@@ -276,6 +276,9 @@ sub create_queue
 }
 
 
+=head1 INTERNAL METHODS
+
+
 =head1 AUTHOR
 
 Guillaume Aubert, C<< <aubertg at cpan.org> >>.
