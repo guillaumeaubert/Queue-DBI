@@ -1,3 +1,4 @@
+.gitignore
 .perlcriticrc
 Build.PL
 Changes
