@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 use DBI;
 use Queue::DBI;
@@ -44,13 +44,25 @@ dies_ok(
 	'The queue elements table does not exist yet.',
 );
 
+use_ok( 'Queue::DBI::Admin' );
+
+my $queue_admin;
 lives_ok(
 	sub
 	{
-		Queue::DBI::create_tables(
-			dbh           => $dbh,
-			drop_if_exist => 1,
-			sqlite        => 1,
+		$queue_admin = Queue::DBI::Admin->new(
+			'database_handle' => $dbh,
+		);
+	},
+	'Instantiate a new Queue::DBI::Admin object.',
+);
+
+lives_ok(
+	sub
+	{
+		$queue_admin->create_tables(
+			drop_if_exists  => 1,
+			sqlite          => 1,
 		);
 	},
 	'Create tables.',
