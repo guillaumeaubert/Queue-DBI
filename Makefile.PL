@@ -10,6 +10,7 @@ WriteMakefile
                            'DBD::SQLite' => 0,
                            'DBI' => 0,
                            'Data::Dumper' => 0,
+                           'Data::Validate::Type' => 0,
                            'MIME::Base64' => 0,
                            'Storable' => 0,
                            'Test::Exception' => 0,
