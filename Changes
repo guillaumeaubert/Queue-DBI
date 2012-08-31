@@ -1,5 +1,9 @@
 Revision history for Queue-DBI
 
+v2.0.0  08/31/2012
+        * (RT #78985) Added Queue::DBI::Admin, an interface to manage queues
+          themselves. Thanks Sergey for suggesting this great extension!
+
 v1.8.2  08/17/2012
         * (RT #78640) Deprecated dual-purpose methods to change Queue::DBI
           properties, replaced them with separate get and set methods:
