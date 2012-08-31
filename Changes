@@ -28,7 +28,7 @@ v1.8.1  08/12/2012
 
 v1.8.0  08/05/2012
         * (RT #78640) Added a 'lifetime' feature and a purge() function, thanks
-          Sergey for suggesting these improvements
+          Sergey for suggesting these improvements.
         * Added purge() to clean queues.
         * Fixed how the last inserted ID is retrieved, for portability.
         * Added tests and code cleanup.
