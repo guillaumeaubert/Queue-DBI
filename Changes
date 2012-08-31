@@ -1,5 +1,8 @@
 Revision history for Queue-DBI
 
+v2.0.1  08/31/2012
+        * Added missing prerequisite.
+
 v2.0.0  08/31/2012
         * (RT #78985) Added Queue::DBI::Admin, an interface to manage queues
           themselves. Thanks Sergey for suggesting this great extension!
