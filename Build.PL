@@ -23,6 +23,7 @@ my $builder = Module::Build->new(
 		'Storable'             => 0,
 		'MIME::Base64'         => 0,
 		'Data::Validate::Type' => 0,
+		'Try::Tiny'            => 0,
 	},
 	add_to_cleanup      =>
 	[

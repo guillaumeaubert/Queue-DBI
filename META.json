@@ -34,6 +34,7 @@
             "Data::Validate::Type" : "0",
             "MIME::Base64" : "0",
             "Storable" : "0",
+            "Try::Tiny" : "0",
             "perl" : "5.006"
          }
       }
