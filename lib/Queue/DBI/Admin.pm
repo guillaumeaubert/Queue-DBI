@@ -368,7 +368,44 @@ sub delete_queue
 	croak 'The first parameter must be a queue name'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
 	
-	# TODO: implement
+	# Retrieve the queue object, to get the queue ID.
+	my $queue = $self->retrieve_queue( $queue_name );
+	
+	# Delete queue elements.
+	my $queue_elements_table_name = $database_handle->quote_identifier(
+		$self->get_queue_elements_table_name()
+	);
+	
+	$database_handle->do(
+		sprintf(
+			q|
+				DELETE
+				FROM %s
+				WHERE queue_id = ?
+			|,
+			$queue_elements_table_name,
+		),
+		{},
+		$queue->get_queue_id(),
+	);
+	
+	# Delete the queue.
+	my $queues_table_name = $database_handle->quote_identifier(
+		$self->get_queues_table_name()
+	);
+	
+	$database_handle->do(
+		sprintf(
+			q|
+				DELETE
+				FROM %s
+				WHERE queue_id = ?
+			|,
+			$queues_table_name,
+		),
+		{},
+		$queue->get_queue_id(),
+	);
 	
 	return;
 }
