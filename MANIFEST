@@ -2,16 +2,17 @@
 .perlcriticrc
 Build.PL
 Changes
+LICENSE
+MANIFEST
+MANIFEST.SKIP
+META.json
+META.yml
+Makefile.PL
+README
 ignore.txt
 lib/Queue/DBI.pm
 lib/Queue/DBI/Admin.pm
 lib/Queue/DBI/Element.pm
-Makefile.PL
-MANIFEST			This list of files
-MANIFEST.SKIP
-META.json
-META.yml
-README
 t/00-load.t
 t/01-Admin/00-load.t
 t/01-Admin/10-new.t
@@ -42,5 +43,5 @@ t/99-cleanup.t
 t/manifest.t
 t/module_versions.t
 t/perlcritic.t
-t/pod.t
 t/pod-coverage.t
+t/pod.t
