@@ -1,5 +1,8 @@
 Revision history for Queue-DBI
 
+v2.1.0  09/08/2012
+        * Re-licensed as GPLv3, to allow inclusion in Fedora.
+
 v2.0.2  08/31/2012
         * Added missing prerequisite.
 
