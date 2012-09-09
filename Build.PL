@@ -5,7 +5,7 @@ use Module::Build;
 
 my $builder = Module::Build->new(
 	module_name         => 'Queue::DBI',
-	license             => 'artistic',
+	license             => 'GPL_3',
 	dist_author         => q{Guillaume Aubert <aubertg@cpan.org>},
 	dist_version_from   => 'lib/Queue/DBI.pm',
 	build_requires      =>
