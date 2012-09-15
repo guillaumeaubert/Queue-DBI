@@ -602,7 +602,7 @@ sub cleanup
 	my $rows = $dbh->selectall_arrayref(
 		sprintf(
 			q|
-				SELECT queue_element_id, data, requeue_count
+				SELECT queue_element_id, data, requeue_count, created
 				FROM %s
 				WHERE queue_id = ?
 					AND lock_time < ?
@@ -627,6 +627,7 @@ sub cleanup
 			'data'          => Storable::thaw( MIME::Base64::decode_base64( $row->[1] ) ),
 			'id'            => $row->[0],
 			'requeue_count' => $row->[2],
+			'created'       => $row->[3],
 		);
 		# If this item was requeued by another process since its
 		# being SELECTed a moment ago, requeue() will return failure
