@@ -37,6 +37,7 @@ t/40-next.t
 t/41-next-requeue_count.t
 t/50-max_requeue_count.t
 t/60-get_element_by_id.t
+t/70-cleanup.t
 t/90-Element/00-load.t
 t/90-Element/30-is_over_lifetime.t
 t/99-cleanup.t
