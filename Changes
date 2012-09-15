@@ -1,5 +1,8 @@
 Revision history for Queue-DBI
 
+v2.1.1  09/15/2012
+        * (RT #78640) Fixed bug in Queue::DBI->cleanup().
+
 v2.1.0  09/08/2012
         * Re-licensed as GPLv3, to allow inclusion in Fedora.
 
