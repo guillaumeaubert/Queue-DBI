@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 9;
+use Test::More tests => 11;
 
 use DBI;
 use Queue::DBI;
@@ -116,5 +116,15 @@ is(
 	defined( $cleaned_up_element ) ? $cleaned_up_element->id() : undef,
 	$queue_element_id,
 	'The cleaned up element matches the ID of the element inserted.',
+);
+
+ok(
+	$cleaned_up_element->lock(),
+	'Lock the element.',
+);
+
+ok(
+	$cleaned_up_element->success(),
+	'Indicate that the element has been successfully processed.',
 );
 
