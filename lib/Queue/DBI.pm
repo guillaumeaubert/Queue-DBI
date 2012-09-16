@@ -672,9 +672,9 @@ sub purge
 	my $lifetime = $args{'lifetime'};
 	
 	# Check parameters.
-	croak 'Cleanup timeout must be an integer representing seconds'
+	croak '"max_requeue_count" must be an integer'
 		if defined( $max_requeue_count ) && ( $max_requeue_count !~ m/^\d+$/ );
-	croak 'Lifetime must be an integer representing seconds'
+	croak '"lifetime" must be an integer representing seconds'
 		if defined( $lifetime ) && ( $lifetime !~ m/^\d+$/ );
 	croak '"max_requeue_count" and "lifetime" cannot be combined, specify one OR the other'
 		if defined( $lifetime ) && defined( $max_requeue_count );
