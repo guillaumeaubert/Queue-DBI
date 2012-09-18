@@ -75,6 +75,22 @@ mechanism without having to use transactions.
 	$queue->cleanup( 6 * 3600 );
 
 
+=head1 SUPPORTED DATABASES
+
+This distribution currently supports:
+
+=over 4
+
+=item * SQLite
+
+=item * MySQL
+
+=back
+
+Please contact me if you need support for another database type, I'm always
+glad to add extensions if you can help me with testing.
+
+
 =head1 METHODS
 
 =head2 new()
