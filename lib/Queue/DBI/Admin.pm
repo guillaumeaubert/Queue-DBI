@@ -168,17 +168,17 @@ sub create_tables
 				? q|
 					CREATE TABLE %s
 					(
-						`queue_id` INTEGER PRIMARY KEY AUTOINCREMENT,
-						`name` VARCHAR(255) NOT NULL UNIQUE
+						queue_id INTEGER PRIMARY KEY AUTOINCREMENT,
+						name VARCHAR(255) NOT NULL UNIQUE
 					)
 				|
 				: q|
 					CREATE TABLE %s
 					(
-						`queue_id` INT(11) NOT NULL AUTO_INCREMENT,
-						`name` VARCHAR(255) NOT NULL,
-						PRIMARY KEY (`queue_id`),
-						UNIQUE KEY `name` (`name`)
+						queue_id INT(11) NOT NULL AUTO_INCREMENT,
+						name VARCHAR(255) NOT NULL,
+						PRIMARY KEY (queue_id),
+						UNIQUE KEY name (name)
 					)
 					ENGINE=InnoDB
 				|,
@@ -207,26 +207,26 @@ sub create_tables
 				? q|
 					CREATE TABLE %s
 					(
-						`queue_element_id` INTEGER PRIMARY KEY AUTOINCREMENT,
-						`queue_id` INTEGER NOT NULL,
-						`data` TEXT,
-						`lock_time` INT(10) DEFAULT NULL,
-						`requeue_count` INT(3) DEFAULT '0',
-						`created` INT(10) NOT NULL DEFAULT '0'
+						queue_element_id INTEGER PRIMARY KEY AUTOINCREMENT,
+						queue_id INTEGER NOT NULL,
+						data TEXT,
+						lock_time INT(10) DEFAULT NULL,
+						requeue_count INT(3) DEFAULT '0',
+						created INT(10) NOT NULL DEFAULT '0'
 					)
 				|
 				: q|
 					CREATE TABLE %s
 					(
-						`queue_element_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-						`queue_id` INT(11) NOT NULL,
-						`data` TEXT,
-						`lock_time` INT(10) UNSIGNED DEFAULT NULL,
-						`requeue_count` INT(3) UNSIGNED DEFAULT '0',
-						`created` INT(10) UNSIGNED NOT NULL DEFAULT '0',
-						PRIMARY KEY (`queue_element_id`),
-						KEY `idx_fk_queue_id` (`queue_id`),
-						CONSTRAINT `queue_element_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `queues` (`queue_id`)
+						queue_element_id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+						queue_id INT(11) NOT NULL,
+						data TEXT,
+						lock_time INT(10) UNSIGNED DEFAULT NULL,
+						requeue_count INT(3) UNSIGNED DEFAULT '0',
+						created INT(10) UNSIGNED NOT NULL DEFAULT '0',
+						PRIMARY KEY (queue_element_id),
+						KEY idx_fk_queue_id (queue_id),
+						CONSTRAINT queue_element_ibfk_1 FOREIGN KEY (queue_id) REFERENCES queues (queue_id)
 					)
 					ENGINE=InnoDB
 				|,
