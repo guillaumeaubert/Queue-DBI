@@ -47,9 +47,7 @@ subtest(
 		lives_ok(
 			sub
 			{
-				$queue_admin->create_tables(
-					sqlite => 1,
-				);
+				$queue_admin->create_tables();
 			},
 			'Create the default tables.',
 		);
@@ -78,9 +76,7 @@ subtest(
 		lives_ok(
 			sub
 			{
-				$queue_admin->create_tables(
-					sqlite => 1,
-				);
+				$queue_admin->create_tables();
 			},
 			'Create the default tables.',
 		);

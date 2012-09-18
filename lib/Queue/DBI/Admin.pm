@@ -128,12 +128,10 @@ Create the tables required by Queue::DBI to store the queues and data.
 
 	$queues_admin->create_tables(
 		drop_if_exist => $boolean,
-		sqlite        => $boolean,
 	);
 
 By default, it won't drop any table but you can force that by setting
-'drop_if_exist' to 1. 'sqlite' is also set to 0 by default, as this parameter
-is used only for testing.
+'drop_if_exist' to 1.
 
 =cut
 
@@ -141,11 +139,14 @@ sub create_tables
 {
 	my ( $self, %args ) = @_;
 	my $drop_if_exist = delete( $args{'drop_if_exist'} ) || 0;
-	my $sqlite = delete( $args{'sqlite'} ) || 0;
 	croak 'Unrecognized arguments: ' . join( ', ', keys %args )
 		if scalar( keys %args ) != 0;
 	
+	# Check the database type.
 	my $database_handle = $self->get_database_handle();
+	my $database_type = $database_handle->{'Driver'}->{'Name'} || '';
+	croak "This database type ($database_type) is not supported yet, please email the maintainer of the module for help"
+		if $database_type !~ m/^(?:SQLite|MySQL)$/;
 	
 	# Create the list of queues.
 	my $queues_table_name = $database_handle->quote_identifier(
@@ -162,17 +163,26 @@ sub create_tables
 		);
 	}
 	
-	$database_handle->do(
-		sprintf(
-			$sqlite
-				? q|
+	if ( $database_type eq 'SQLite' )
+	{
+		$database_handle->do(
+			sprintf(
+				q|
 					CREATE TABLE %s
 					(
 						queue_id INTEGER PRIMARY KEY AUTOINCREMENT,
 						name VARCHAR(255) NOT NULL UNIQUE
 					)
-				|
-				: q|
+				|,
+				$queues_table_name,
+			)
+		);
+	}
+	else
+	{
+		$database_handle->do(
+			sprintf(
+				q|
 					CREATE TABLE %s
 					(
 						queue_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -182,9 +192,10 @@ sub create_tables
 					)
 					ENGINE=InnoDB
 				|,
-			$queues_table_name,
-		)
-	);
+				$queues_table_name,
+			)
+		);
+	}
 	
 	# Create the table that will hold the queue elements.
 	my $queue_elements_table_name = $database_handle->quote_identifier(
@@ -201,10 +212,11 @@ sub create_tables
 		);
 	}
 	
-	$database_handle->do(
-		sprintf(
-			$sqlite
-				? q|
+	if ( $database_type eq 'SQLite' )
+	{
+		$database_handle->do(
+			sprintf(
+				q|
 					CREATE TABLE %s
 					(
 						queue_element_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -214,8 +226,16 @@ sub create_tables
 						requeue_count INT(3) DEFAULT '0',
 						created INT(10) NOT NULL DEFAULT '0'
 					)
-				|
-				: q|
+				|,
+				$queue_elements_table_name,
+			)
+		);
+	}
+	else
+	{
+		$database_handle->do(
+			sprintf(
+				q|
 					CREATE TABLE %s
 					(
 						queue_element_id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -230,9 +250,10 @@ sub create_tables
 					)
 					ENGINE=InnoDB
 				|,
-			$queue_elements_table_name,
-		)
-	);
+				$queue_elements_table_name,
+			)
+		);
+	}
 	
 	return;
 }

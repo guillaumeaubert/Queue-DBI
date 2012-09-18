@@ -62,7 +62,6 @@ lives_ok(
 	{
 		$queue_admin->create_tables(
 			drop_if_exist => 1,
-			sqlite        => 1,
 		);
 	},
 	'Create tables.',

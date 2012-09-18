@@ -881,7 +881,6 @@ function:
 	# Create the tables required by Queue::DBI to store the queues and data.
 	$queues_admin->create_tables(
 		drop_if_exist => $boolean,
-		sqlite        => $boolean,
 	);
 
 =cut
