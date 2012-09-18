@@ -277,13 +277,14 @@ sub create_tables
 						created INT(10) UNSIGNED NOT NULL DEFAULT '0',
 						PRIMARY KEY (queue_element_id),
 						KEY %s (queue_id),
-						CONSTRAINT %s FOREIGN KEY (queue_id) REFERENCES queues (queue_id)
+						CONSTRAINT %s FOREIGN KEY (queue_id) REFERENCES %s (queue_id)
 					)
 					ENGINE=InnoDB
 				|,
 				$quoted_queue_elements_table_name,
 				$queue_id_index_name,
 				$queue_id_foreign_key_name,
+				$quoted_queues_table_name,
 			)
 		);
 	}
