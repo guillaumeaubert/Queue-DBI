@@ -149,16 +149,15 @@ sub create_tables
 		if $database_type !~ m/^(?:SQLite|MySQL)$/;
 	
 	# Create the list of queues.
-	my $queues_table_name = $database_handle->quote_identifier(
-		$self->get_queues_table_name()
-	);
+	my $queues_table_name = $self->get_queues_table_name();
+	my $quoted_queues_table_name = $database_handle->quote_identifier( $queues_table_name );
 	
 	if ( $drop_if_exist )
 	{
 		$database_handle->do(
 			sprintf(
 				q|DROP TABLE IF EXISTS %s|,
-				$queues_table_name,
+				$quoted_queues_table_name,
 			)
 		);
 	}
@@ -174,12 +173,16 @@ sub create_tables
 						name VARCHAR(255) NOT NULL UNIQUE
 					)
 				|,
-				$queues_table_name,
+				$quoted_queues_table_name,
 			)
 		);
 	}
 	else
 	{
+		my $unique_index_name = $database_handle->quote_identifier(
+			'unq_' . $queues_table_name . '_name',
+		);
+		
 		$database_handle->do(
 			sprintf(
 				q|
@@ -188,18 +191,20 @@ sub create_tables
 						queue_id INT(11) NOT NULL AUTO_INCREMENT,
 						name VARCHAR(255) NOT NULL,
 						PRIMARY KEY (queue_id),
-						UNIQUE KEY name (name)
+						UNIQUE KEY %s (name)
 					)
 					ENGINE=InnoDB
 				|,
-				$queues_table_name,
+				$quoted_queues_table_name,
+				$unique_index_name,
 			)
 		);
 	}
 	
 	# Create the table that will hold the queue elements.
-	my $queue_elements_table_name = $database_handle->quote_identifier(
-		$self->get_queue_elements_table_name()
+	my $queue_elements_table_name = $self->get_queue_elements_table_name();
+	my $quoted_queue_elements_table_name = $database_handle->quote_identifier(
+		$queue_elements_table_name
 	);
 	
 	if ( $drop_if_exist )
@@ -207,7 +212,7 @@ sub create_tables
 		$database_handle->do(
 			sprintf(
 				q|DROP TABLE IF EXISTS %s|,
-				$queue_elements_table_name,
+				$quoted_queue_elements_table_name,
 			)
 		);
 	}
@@ -227,12 +232,19 @@ sub create_tables
 						created INT(10) NOT NULL DEFAULT '0'
 					)
 				|,
-				$queue_elements_table_name,
+				$quoted_queue_elements_table_name,
 			)
 		);
 	}
 	else
 	{
+		my $queue_id_index_name = $database_handle->quote_identifier(
+			'idx_' . $queue_elements_table_name . '_queue_id'
+		);
+		my $queue_id_foreign_key_name = $database_handle->quote_identifier(
+			'fk_' . $queue_elements_table_name . '_queue_id'
+		);
+		
 		$database_handle->do(
 			sprintf(
 				q|
@@ -245,12 +257,14 @@ sub create_tables
 						requeue_count INT(3) UNSIGNED DEFAULT '0',
 						created INT(10) UNSIGNED NOT NULL DEFAULT '0',
 						PRIMARY KEY (queue_element_id),
-						KEY idx_fk_queue_id (queue_id),
-						CONSTRAINT queue_element_ibfk_1 FOREIGN KEY (queue_id) REFERENCES queues (queue_id)
+						KEY %s (queue_id),
+						CONSTRAINT %s FOREIGN KEY (queue_id) REFERENCES queues (queue_id)
 					)
 					ENGINE=InnoDB
 				|,
-				$queue_elements_table_name,
+				$quoted_queue_elements_table_name,
+				$queue_id_index_name,
+				$queue_id_foreign_key_name,
 			)
 		);
 	}
