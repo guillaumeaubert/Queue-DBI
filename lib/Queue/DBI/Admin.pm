@@ -164,12 +164,29 @@ sub create_tables
 	croak "This database type ($database_type) is not supported yet, please email the maintainer of the module for help"
 		if $database_type !~ m/^(?:SQLite|MySQL)$/i;
 	
-	# Create the list of queues.
+	# Prepare the name of the tables.
 	my $queues_table_name = $self->get_queues_table_name();
-	my $quoted_queues_table_name = $database_handle->quote_identifier( $queues_table_name );
+	my $quoted_queues_table_name = $database_handle->quote_identifier(
+		$queues_table_name
+	);
 	
+	my $queue_elements_table_name = $self->get_queue_elements_table_name();
+	my $quoted_queue_elements_table_name = $database_handle->quote_identifier(
+		$queue_elements_table_name
+	);
+	
+	# Drop the tables, if requested.
+	# Note: due to foreign key constraints, we need to drop the tables in the
+	# reverse order in which they are created.
 	if ( $drop_if_exist )
 	{
+		$database_handle->do(
+			sprintf(
+				q|DROP TABLE IF EXISTS %s|,
+				$quoted_queue_elements_table_name,
+			)
+		);
+		
 		$database_handle->do(
 			sprintf(
 				q|DROP TABLE IF EXISTS %s|,
@@ -178,6 +195,7 @@ sub create_tables
 		);
 	}
 	
+	# Create the list of queues.
 	if ( $database_type eq 'SQLite' )
 	{
 		$database_handle->do(
@@ -218,21 +236,6 @@ sub create_tables
 	}
 	
 	# Create the table that will hold the queue elements.
-	my $queue_elements_table_name = $self->get_queue_elements_table_name();
-	my $quoted_queue_elements_table_name = $database_handle->quote_identifier(
-		$queue_elements_table_name
-	);
-	
-	if ( $drop_if_exist )
-	{
-		$database_handle->do(
-			sprintf(
-				q|DROP TABLE IF EXISTS %s|,
-				$quoted_queue_elements_table_name,
-			)
-		);
-	}
-	
 	if ( $database_type eq 'SQLite' )
 	{
 		$database_handle->do(
