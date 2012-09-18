@@ -162,7 +162,7 @@ sub create_tables
 	my $database_handle = $self->get_database_handle();
 	my $database_type = $database_handle->{'Driver'}->{'Name'} || '';
 	croak "This database type ($database_type) is not supported yet, please email the maintainer of the module for help"
-		if $database_type !~ m/^(?:SQLite|MySQL)$/;
+		if $database_type !~ m/^(?:SQLite|MySQL)$/i;
 	
 	# Create the list of queues.
 	my $queues_table_name = $self->get_queues_table_name();
