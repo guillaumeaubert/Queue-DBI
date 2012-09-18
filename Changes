@@ -1,5 +1,17 @@
 Revision history for Queue-DBI
 
+v2.2.0  09/18/2012
+        * (RT #78640) Fixed error message.
+        * Removed non-standard quotes for identifiers when creating tables.
+        * (RT #79676) Removed 'sqlite' parameter, create_tables() now detects
+          automatically the database type.
+        * (RT #79676) Fixed index names, to prevent conflicts.
+        * (RT #79676) Added list of supported database types in documentation.
+        * Drop tables in reverse creation order in create_tables(), to prevent
+          issues with constraints.
+        * (RT #79676) Fixed foreign key constraint when creating elements table
+          to refer to the actual queues table name.
+
 v2.1.1  09/15/2012
         * (RT #78640) Fixed bug in Queue::DBI->cleanup().
 
