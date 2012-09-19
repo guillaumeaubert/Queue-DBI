@@ -64,7 +64,7 @@
          "http://www.gnu.org/licenses/gpl-3.0.txt"
       ],
       "repository" : {
-         "url" : "https://sourceforge.net/p/queuedbiperl/code"
+         "url" : "https://github.com/guillaumeaubert/Queue-DBI"
       }
    },
    "version" : "v2.2.0"
