@@ -1,5 +1,8 @@
 Revision history for Queue-DBI
 
+v2.2.1  09/19/2012
+        * Moved repository to GitHub.
+
 v2.2.0  09/18/2012
         * (RT #78640) Fixed error message.
         * Removed non-standard quotes for identifiers when creating tables.
