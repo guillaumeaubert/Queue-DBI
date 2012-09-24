@@ -722,8 +722,7 @@ sub purge
 		),
 		{},
 		$self->get_queue_id(),
-	);
-	croak 'Cannot execute SQL: ' . $dbh->errstr() if defined( $dbh->errstr() );
+	) || croak 'Cannot execute SQL: ' . $dbh->errstr();
 	
 	carp "Leaving cleanup()." if $verbose;
 	# Account for '0E0' which means no rows affected, and translates into no
