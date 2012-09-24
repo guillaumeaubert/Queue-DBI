@@ -661,13 +661,14 @@ sub cleanup
 =head2 purge()
 
 Remove (permanently, caveat emptor!) queue elements based on how many times
-they've been requeued or how old they are.
+they've been requeued or how old they are, and return the number of elements
+deleted.
 
 	# Remove permanently elements that have been requeued more than 10 times.
-	$queue->purge( max_requeue_count => 10 );
+	my $deleted_elements_count = $queue->purge( max_requeue_count => 10 );
 	
 	# Remove permanently elements that were created over an hour ago.
-	$queue->purge( lifetime => 3600 );
+	my $deleted_elements_count = $queue->purge( lifetime => 3600 );
 
 Important: locked elements are not purged even if they match the criteria, as
 they are presumed to be currently in process and purging them would create
