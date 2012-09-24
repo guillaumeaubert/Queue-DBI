@@ -185,14 +185,14 @@ sub create_tables
 				q|DROP TABLE IF EXISTS %s|,
 				$quoted_queue_elements_table_name,
 			)
-		);
+		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 		
 		$database_handle->do(
 			sprintf(
 				q|DROP TABLE IF EXISTS %s|,
 				$quoted_queues_table_name,
 			)
-		);
+		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	}
 	
 	# Create the list of queues.
@@ -209,7 +209,7 @@ sub create_tables
 				|,
 				$quoted_queues_table_name,
 			)
-		);
+		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	}
 	else
 	{
@@ -232,7 +232,7 @@ sub create_tables
 				$quoted_queues_table_name,
 				$unique_index_name,
 			)
-		);
+		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	}
 	
 	# Create the table that will hold the queue elements.
@@ -253,7 +253,7 @@ sub create_tables
 				|,
 				$quoted_queue_elements_table_name,
 			)
-		);
+		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	}
 	else
 	{
@@ -286,7 +286,7 @@ sub create_tables
 				$queue_id_foreign_key_name,
 				$quoted_queues_table_name,
 			)
-		);
+		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	}
 	
 	return;
@@ -442,7 +442,7 @@ sub delete_queue
 		),
 		{},
 		$queue->get_queue_id(),
-	);
+	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	
 	# Delete the queue.
 	my $queues_table_name = $database_handle->quote_identifier(
@@ -460,7 +460,7 @@ sub delete_queue
 		),
 		{},
 		$queue->get_queue_id(),
-	);
+	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	
 	return;
 }
