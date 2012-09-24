@@ -15,7 +15,7 @@ lib/Queue/DBI/Admin.pm
 lib/Queue/DBI/Element.pm
 t/00-load.t
 t/01-Admin/00-load.t
-t/01-Admin/10-new.t
+t/01-Admin/07-new.t
 t/01-Admin/10-get_database_handle.t
 t/01-Admin/14-get_queues_table_name.t
 t/01-Admin/16-get_queue_elements_table_name.t
