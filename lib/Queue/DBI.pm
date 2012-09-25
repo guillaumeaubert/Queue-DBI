@@ -881,7 +881,7 @@ sub set_verbose
 
 =head2 create_tables()
 
-Please use C<create_tables()> in C<Queue::DBI::Admin> instead.
+Please use C<create_tables()> in L<Queue::DBI::Admin> instead.
 
 Here is an example that shows how to refactor your call to this deprecated
 function:

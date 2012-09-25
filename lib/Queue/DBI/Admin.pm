@@ -140,7 +140,7 @@ sub new
 
 =head2 has_tables()
 
-Determine if the tables required for C<Queue::DBI> to operate exist.
+Determine if the tables required for L<Queue::DBI> to operate exist.
 
 In scalar context, this method returns a boolean indicating whether all the
 necessary tables exist:
@@ -218,15 +218,15 @@ sub has_tables
 
 =head2 create_tables()
 
-Create the tables required by C<Queue::DBI> to store the queues and data.
+Create the tables required by L<Queue::DBI> to store the queues and data.
 
 	$queues_admin->create_tables(
 		drop_if_exist => $boolean,
 	);
 
 By default, it won't drop any table but you can force that by setting
-'drop_if_exist' to 1. See C<Queue::DBI::Admin->drop_tables()> for more
-information on how tables are dropped.
+'drop_if_exist' to 1. See C<drop_tables()> for more information on how tables
+are dropped.
 
 =cut
 
@@ -575,7 +575,7 @@ sub delete_queue
 
 =head2 get_database_handle()
 
-Return the database handle associated with the C<Queue::DBI::Admin>.
+Return the database handle associated with the L<Queue::DBI::Admin> object.
 
 	my $database_handle = $queue->get_database_handle();
 
@@ -698,7 +698,7 @@ sub assert_database_type_supported
 =head2 get_database_type()
 
 Return the database type corresponding to the database handle associated
-with the C<Queue::DBI::Admin> object.
+with the L<Queue::DBI::Admin> object.
 
 	my $database_type = $queues_admin->get_database_type();
 
