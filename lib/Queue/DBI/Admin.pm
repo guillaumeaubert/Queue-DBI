@@ -138,6 +138,84 @@ sub new
 }
 
 
+=head2 has_tables()
+
+Determine if the tables required for C<Queue::DBI> to operate exist.
+
+In scalar context, this method returns a boolean indicating whether all the
+necessary tables exist:
+
+	# Determine if the tables exist.
+	my $tables_exist = $queues_admin->has_tables();
+
+In list context, this method returns a boolean indicating whether all the
+necessary tables exist, and an arrayref of the name of the missing table(s) if
+any:
+
+	# Determine if the tables exist, and the missing one(s).
+	my ( $tables_exist, $missing_tables ) = $queues_admin->has_tables();
+
+=cut
+
+sub has_tables
+{
+	my ( $self ) = @_;
+	my $missing_tables = [];
+	
+	my $database_handle = $self->get_database_handle();
+	
+	# Check the database type.
+	$self->assert_database_type_supported();
+	
+	# Check if the queues table exists.
+	try
+	{
+		# Disable printing errors out since we expect the statement to fail.
+		local $database_handle->{'PrintError'} = 0;
+		
+		$database_handle->selectrow_array(
+			sprintf(
+				q|
+					SELECT *
+					FROM %s
+				|,
+				$self->get_quoted_queues_table_name(),
+			)
+		);
+	}
+	catch
+	{
+		push( @$missing_tables, $self->get_queues_table_name() );
+	};
+	
+	# Check if the queue elements table exists.
+	try
+	{
+		# Disable printing errors out since we expect the statement to fail.
+		local $database_handle->{'PrintError'} = 0;
+		
+		$database_handle->selectrow_array(
+			sprintf(
+				q|
+					SELECT *
+					FROM %s
+				|,
+				$self->get_quoted_queue_elements_table_name(),
+			)
+		);
+	}
+	catch
+	{
+		push( @$missing_tables, $self->get_queue_elements_table_name() );
+	};
+	
+	my $tables_exist = scalar( @$missing_tables ) == 0 ? 1 : 0;
+	return wantarray()
+		? ( $tables_exist, $missing_tables )
+		: $tables_exist;
+}
+
+
 =head2 create_tables()
 
 Create the tables required by Queue::DBI to store the queues and data.
