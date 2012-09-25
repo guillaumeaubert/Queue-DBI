@@ -78,7 +78,7 @@ subtest(
 			{
 				$queue_admin->create_tables();
 			},
-			'Create the default tables.',
+			'Create the custom tables.',
 		);
 	}
 );
