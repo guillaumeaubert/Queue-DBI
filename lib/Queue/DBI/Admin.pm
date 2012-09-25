@@ -371,6 +371,53 @@ sub create_tables
 }
 
 
+=head2 drop_tables()
+
+Drop the tables used to store the queues and queue data.
+
+Warning: there is no undo for this operation. Make sure you really want to drop
+the tables before using this method.
+
+	$queues_admin->drop_tables();
+
+Note: due to foreign key constraints, the tables are dropped in the reverse
+order in which they are created.
+
+=cut
+
+sub drop_tables
+{
+	my ( $self ) = @_;
+	my $database_handle = $self->get_database_handle();
+	
+	# Check the database type.
+	$self->assert_database_type_supported();
+	
+	# Prepare the name of the tables.
+	my $quoted_queues_table_name = $self->get_quoted_queues_table_name();
+	my $quoted_queue_elements_table_name = $self->get_quoted_queue_elements_table_name();
+	
+	# Drop the tables.
+	# Note: due to foreign key constraints, we need to drop the tables in the
+	# reverse order in which they are created.
+	$database_handle->do(
+		sprintf(
+			q|DROP TABLE IF EXISTS %s|,
+			$quoted_queue_elements_table_name,
+		)
+	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
+	
+	$database_handle->do(
+		sprintf(
+			q|DROP TABLE IF EXISTS %s|,
+			$quoted_queues_table_name,
+		)
+	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
+	
+	return;
+}
+
+
 =head2 create_queue()
 
 Create a new queue.
