@@ -69,7 +69,7 @@ Please contact me if you need support for another database type, I'm always
 glad to add extensions if you can help me with testing.
 
 
-=head1 METHODS
+=head1 QUEUES ADMINISTRATION METHODS
 
 =head2 new()
 
@@ -137,6 +137,181 @@ sub new
 	return $self;
 }
 
+
+=head2 create_queue()
+
+Create a new queue.
+
+	$queues_admin->create_queue( $queue_name );
+
+=cut
+
+sub create_queue
+{
+	my ( $self, $queue_name ) = @_;
+	my $database_handle = $self->get_database_handle();
+	
+	# Verify parameters.
+	croak 'The first parameter must be a queue name'
+		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	my $queues_table_name = $database_handle->quote_identifier(
+		$self->get_queues_table_name()
+	);
+	
+	# Create the queue.
+	$database_handle->do(
+		sprintf(
+			q|
+				INSERT INTO %s ( name )
+				VALUES ( ? )
+			|,
+			$queues_table_name,
+		),
+		{},
+		$queue_name,
+	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
+	
+	return;
+}
+
+
+=head2 has_queue()
+
+Test if a queue exists.
+
+	if ( $queues_admin->has_queue( $queue_name ) )
+	{
+		...
+	}
+
+=cut
+
+sub has_queue
+{
+	my ( $self, $queue_name ) = @_;
+	my $database_handle = $self->get_database_handle();
+	
+	# Verify parameters.
+	croak 'The first parameter must be a queue name'
+		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	return try
+	{
+		my $queue = $self->retrieve_queue( $queue_name );
+		
+		croak 'The queue does not exist'
+			if !defined( $queue );
+		
+		return 1;
+	}
+	catch
+	{
+		return 0;
+	};
+}
+
+
+=head2 retrieve_queue()
+
+Retrieve a queue.
+
+	my $queue = $queues_admin->retrieve_queue( $queue_name );
+
+	# See Queue::DBI->new() for all the available options.
+	my $queue = $queues_admin->retrieve_queue(
+		$queue_name,
+		'cleanup_timeout'   => 3600,
+		'verbose'           => 1,
+		'max_requeue_count' => 5,
+	);
+
+=cut
+
+sub retrieve_queue
+{
+	my ( $self, $queue_name, %args ) = @_;
+	my $database_handle = $self->get_database_handle();
+	
+	# Verify parameters.
+	croak 'The first parameter must be a queue name'
+		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	# Instantiate a Queue::DBI object.
+	my $queue = Queue::DBI->new(
+		database_handle           => $database_handle,
+		queue_name                => $queue_name,
+		queues_table_name         => $self->get_queues_table_name(),
+		queue_elements_table_name => $self->get_queue_elements_table_name(),
+		%args
+	);
+	
+	return $queue;
+}
+
+
+=head2 delete_queue()
+
+Delete a queue and all associated data, permanently. Use this function at your
+own risk!
+
+	$queues_admin->delete_queue( $queue_name );
+
+=cut
+
+sub delete_queue
+{
+	my ( $self, $queue_name ) = @_;
+	my $database_handle = $self->get_database_handle();
+	
+	# Verify parameters.
+	croak 'The first parameter must be a queue name'
+		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	# Retrieve the queue object, to get the queue ID.
+	my $queue = $self->retrieve_queue( $queue_name );
+	
+	# Delete queue elements.
+	my $queue_elements_table_name = $database_handle->quote_identifier(
+		$self->get_queue_elements_table_name()
+	);
+	
+	$database_handle->do(
+		sprintf(
+			q|
+				DELETE
+				FROM %s
+				WHERE queue_id = ?
+			|,
+			$queue_elements_table_name,
+		),
+		{},
+		$queue->get_queue_id(),
+	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
+	
+	# Delete the queue.
+	my $queues_table_name = $database_handle->quote_identifier(
+		$self->get_queues_table_name()
+	);
+	
+	$database_handle->do(
+		sprintf(
+			q|
+				DELETE
+				FROM %s
+				WHERE queue_id = ?
+			|,
+			$queues_table_name,
+		),
+		{},
+		$queue->get_queue_id(),
+	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
+	
+	return;
+}
+
+
+=head1 DATABASE SETUP METHODS
 
 =head2 has_tables()
 
@@ -392,179 +567,6 @@ sub drop_tables
 			q|DROP TABLE IF EXISTS %s|,
 			$quoted_queues_table_name,
 		)
-	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-	
-	return;
-}
-
-
-=head2 create_queue()
-
-Create a new queue.
-
-	$queues_admin->create_queue( $queue_name );
-
-=cut
-
-sub create_queue
-{
-	my ( $self, $queue_name ) = @_;
-	my $database_handle = $self->get_database_handle();
-	
-	# Verify parameters.
-	croak 'The first parameter must be a queue name'
-		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
-	my $queues_table_name = $database_handle->quote_identifier(
-		$self->get_queues_table_name()
-	);
-	
-	# Create the queue.
-	$database_handle->do(
-		sprintf(
-			q|
-				INSERT INTO %s ( name )
-				VALUES ( ? )
-			|,
-			$queues_table_name,
-		),
-		{},
-		$queue_name,
-	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-	
-	return;
-}
-
-
-=head2 has_queue()
-
-Test if a queue exists.
-
-	if ( $queues_admin->has_queue( $queue_name ) )
-	{
-		...
-	}
-
-=cut
-
-sub has_queue
-{
-	my ( $self, $queue_name ) = @_;
-	my $database_handle = $self->get_database_handle();
-	
-	# Verify parameters.
-	croak 'The first parameter must be a queue name'
-		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
-	return try
-	{
-		my $queue = $self->retrieve_queue( $queue_name );
-		
-		croak 'The queue does not exist'
-			if !defined( $queue );
-		
-		return 1;
-	}
-	catch
-	{
-		return 0;
-	};
-}
-
-
-=head2 retrieve_queue()
-
-Retrieve a queue.
-
-	my $queue = $queues_admin->retrieve_queue( $queue_name );
-
-	# See Queue::DBI->new() for all the available options.
-	my $queue = $queues_admin->retrieve_queue(
-		$queue_name,
-		'cleanup_timeout'   => 3600,
-		'verbose'           => 1,
-		'max_requeue_count' => 5,
-	);
-
-=cut
-
-sub retrieve_queue
-{
-	my ( $self, $queue_name, %args ) = @_;
-	my $database_handle = $self->get_database_handle();
-	
-	# Verify parameters.
-	croak 'The first parameter must be a queue name'
-		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
-	# Instantiate a Queue::DBI object.
-	my $queue = Queue::DBI->new(
-		database_handle           => $database_handle,
-		queue_name                => $queue_name,
-		queues_table_name         => $self->get_queues_table_name(),
-		queue_elements_table_name => $self->get_queue_elements_table_name(),
-		%args
-	);
-	
-	return $queue;
-}
-
-
-=head2 delete_queue()
-
-Delete a queue and all associated data, permanently. Use this function at your
-own risk!
-
-	$queues_admin->delete_queue( $queue_name );
-
-=cut
-
-sub delete_queue
-{
-	my ( $self, $queue_name ) = @_;
-	my $database_handle = $self->get_database_handle();
-	
-	# Verify parameters.
-	croak 'The first parameter must be a queue name'
-		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
-	# Retrieve the queue object, to get the queue ID.
-	my $queue = $self->retrieve_queue( $queue_name );
-	
-	# Delete queue elements.
-	my $queue_elements_table_name = $database_handle->quote_identifier(
-		$self->get_queue_elements_table_name()
-	);
-	
-	$database_handle->do(
-		sprintf(
-			q|
-				DELETE
-				FROM %s
-				WHERE queue_id = ?
-			|,
-			$queue_elements_table_name,
-		),
-		{},
-		$queue->get_queue_id(),
-	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-	
-	# Delete the queue.
-	my $queues_table_name = $database_handle->quote_identifier(
-		$self->get_queues_table_name()
-	);
-	
-	$database_handle->do(
-		sprintf(
-			q|
-				DELETE
-				FROM %s
-				WHERE queue_id = ?
-			|,
-			$queues_table_name,
-		),
-		{},
-		$queue->get_queue_id(),
 	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	
 	return;
