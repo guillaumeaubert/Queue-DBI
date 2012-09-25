@@ -218,14 +218,15 @@ sub has_tables
 
 =head2 create_tables()
 
-Create the tables required by Queue::DBI to store the queues and data.
+Create the tables required by C<Queue::DBI> to store the queues and data.
 
 	$queues_admin->create_tables(
 		drop_if_exist => $boolean,
 	);
 
 By default, it won't drop any table but you can force that by setting
-'drop_if_exist' to 1.
+'drop_if_exist' to 1. See C<Queue::DBI::Admin->drop_tables()> for more
+information on how tables are dropped.
 
 =cut
 
@@ -236,42 +237,21 @@ sub create_tables
 	croak 'Unrecognized arguments: ' . join( ', ', keys %args )
 		if scalar( keys %args ) != 0;
 	
-	# Check the database type.
 	my $database_handle = $self->get_database_handle();
-	my $database_type = $database_handle->{'Driver'}->{'Name'} || '';
-	croak "This database type ($database_type) is not supported yet, please email the maintainer of the module for help"
-		if $database_type !~ m/^(?:SQLite|MySQL)$/i;
+	
+	# Check the database type.
+	my $database_type = $self->assert_database_type_supported();
 	
 	# Prepare the name of the tables.
 	my $queues_table_name = $self->get_queues_table_name();
-	my $quoted_queues_table_name = $database_handle->quote_identifier(
-		$queues_table_name
-	);
+	my $quoted_queues_table_name = $self->get_quoted_queues_table_name();
 	
 	my $queue_elements_table_name = $self->get_queue_elements_table_name();
-	my $quoted_queue_elements_table_name = $database_handle->quote_identifier(
-		$queue_elements_table_name
-	);
+	my $quoted_queue_elements_table_name = $self->get_quoted_queue_elements_table_name();
 	
 	# Drop the tables, if requested.
-	# Note: due to foreign key constraints, we need to drop the tables in the
-	# reverse order in which they are created.
-	if ( $drop_if_exist )
-	{
-		$database_handle->do(
-			sprintf(
-				q|DROP TABLE IF EXISTS %s|,
-				$quoted_queue_elements_table_name,
-			)
-		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-		
-		$database_handle->do(
-			sprintf(
-				q|DROP TABLE IF EXISTS %s|,
-				$quoted_queues_table_name,
-			)
-		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-	}
+	$self->drop_tables()
+		if $drop_if_exist;
 	
 	# Create the list of queues.
 	if ( $database_type eq 'SQLite' )
