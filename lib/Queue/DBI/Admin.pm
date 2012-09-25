@@ -543,6 +543,28 @@ sub get_quoted_queues_table_name
 }
 
 
+=head2 sub get_quoted_queue_elements_table_name()
+
+Return the name of the table used to store queue elements, quoted for inclusion
+in SQL statements.
+
+	my $quoted_queue_elements_table_name = $queue->get_quoted_queue_elements_table_name();
+
+=cut
+
+sub get_quoted_queue_elements_table_name
+{
+	my ( $self ) = @_;
+	
+	my $database_handle = $self->get_database_handle();
+	my $queue_elements_table_name = $self->get_queue_elements_table_name();
+	
+	return defined( $queue_elements_table_name )
+		? $database_handle->quote_identifier( $queue_elements_table_name )
+		: undef;
+}
+
+
 =head1 AUTHOR
 
 Guillaume Aubert, C<< <aubertg at cpan.org> >>.
