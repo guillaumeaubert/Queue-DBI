@@ -565,6 +565,31 @@ sub get_quoted_queue_elements_table_name
 }
 
 
+=head2 assert_database_type_supported()
+
+Assert (i.e., die on failure) whether the database type specified by the
+database handle passed to C<new()> is supported or not.
+
+	my $database_type = $queues_admin->assert_database_type_supported();
+
+Note: the type of the database handle associated with the current object is
+returned when it is supported.
+
+=cut
+
+sub assert_database_type_supported
+{
+	my ( $self ) = @_;
+	
+	# Check the database type.
+	my $database_type = $self->get_database_type();
+	croak "This database type ($database_type) is not supported yet, please email the maintainer of the module for help"
+		if $database_type !~ m/^(?:SQLite|MySQL)$/i;
+	
+	return $database_type;
+}
+
+
 =head2 get_database_type()
 
 Return the database type corresponding to the database handle associated
