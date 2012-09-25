@@ -31,7 +31,7 @@ subtest(
 	'Check default tables.',
 	sub
 	{
-		plan( tests => 2 );
+		plan( tests => 4 );
 		
 		my $queue_admin;
 		lives_ok(
@@ -48,6 +48,22 @@ subtest(
 			!$queue_admin->has_tables(),
 			'The default tables do not exist yet.',
 		);
+		
+		my ( $tables_exist, $missing_tables ) = $queue_admin->has_tables();
+		
+		ok(
+			!$tables_exist,
+			'The call in list context indicates that the tables do not exist.',
+		);
+		
+		is_deeply(
+			$missing_tables,
+			[
+				'queues',
+				'queue_elements',
+			],
+			'All the tables are missing.',
+		) || diag( explain( $missing_tables ) );
 	}
 );
 
@@ -55,7 +71,7 @@ subtest(
 	'Check custom tables.',
 	sub
 	{
-		plan( tests => 2 );
+		plan( tests => 4 );
 		
 		my $queue_admin;
 		lives_ok(
@@ -74,6 +90,22 @@ subtest(
 			!$queue_admin->has_tables(),
 			'The custom tables do not exist yet.',
 		);
+		
+		my ( $tables_exist, $missing_tables ) = $queue_admin->has_tables();
+		
+		ok(
+			!$tables_exist,
+			'The call in list context indicates that the tables do not exist.',
+		);
+		
+		is_deeply(
+			$missing_tables,
+			[
+				'test_queues',
+				'test_queue_elements',
+			],
+			'All the tables are missing.',
+		) || diag( explain( $missing_tables ) );
 	}
 );
 
