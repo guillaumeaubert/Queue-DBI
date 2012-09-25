@@ -654,7 +654,7 @@ sub get_quoted_queues_table_name
 }
 
 
-=head2 sub get_quoted_queue_elements_table_name()
+=head2 get_quoted_queue_elements_table_name()
 
 Return the name of the table used to store queue elements, quoted for inclusion
 in SQL statements.
