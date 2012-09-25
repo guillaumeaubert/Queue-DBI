@@ -23,7 +23,9 @@ t/01-Admin/14-get_queues_table_name.t
 t/01-Admin/15-get_quoted_queues_table_name.t
 t/01-Admin/16-get_queue_elements_table_name.t
 t/01-Admin/17-get_quoted_queue_elements_table_name.t
+t/01-Admin/19-has_tables.t
 t/01-Admin/20-create_tables.t
+t/01-Admin/21-has_tables.t
 t/01-Admin/30-create_queue.t
 t/01-Admin/40-has_queue.t
 t/01-Admin/50-retrieve_queue.t
