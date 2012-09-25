@@ -59,8 +59,8 @@ subtest(
 		is_deeply(
 			$missing_tables,
 			[
-				'queues',
-				'queue_elements',
+				$Queue::DBI::DEFAULT_QUEUES_TABLE_NAME,
+				$Queue::DBI::DEFAULT_QUEUE_ELEMENTS_TABLE_NAME,
 			],
 			'All the tables are missing.',
 		) || diag( explain( $missing_tables ) );
