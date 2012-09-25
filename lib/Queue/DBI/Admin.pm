@@ -470,7 +470,7 @@ sub delete_queue
 
 =head2 get_database_handle()
 
-Returns the database handle associated with the C<Queue::DBI::Admin>.
+Return the database handle associated with the C<Queue::DBI::Admin>.
 
 	my $database_handle = $queue->get_database_handle();
 
@@ -486,7 +486,7 @@ sub get_database_handle
 
 =head2 get_queues_table_name()
 
-Returns the name of the table used to store queue definitions.
+Return the name of the table used to store queue definitions.
 
 	my $queues_table_name = $queue->get_queues_table_name();
 
@@ -504,7 +504,7 @@ sub get_queues_table_name
 
 =head2 get_queue_elements_table_name()
 
-Returns the name of the table used to store queue definitions.
+Return the name of the table used to store queue elements.
 
 	my $queue_elements_table_name = $queue->get_queue_elements_table_name();
 
