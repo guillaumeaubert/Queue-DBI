@@ -599,7 +599,7 @@ sub get_database_handle
 
 Return the name of the table used to store queue definitions.
 
-	my $queues_table_name = $queue->get_queues_table_name();
+	my $queues_table_name = $queues_admin->get_queues_table_name();
 
 =cut
 
@@ -617,7 +617,7 @@ sub get_queues_table_name
 
 Return the name of the table used to store queue elements.
 
-	my $queue_elements_table_name = $queue->get_queue_elements_table_name();
+	my $queue_elements_table_name = $queues_admin->get_queue_elements_table_name();
 
 =cut
 
@@ -636,7 +636,7 @@ sub get_queue_elements_table_name
 Return the name of the table used to store queue definitions, quoted for
 inclusion in SQL statements.
 
-	my $quoted_queues_table_name = $queue->get_quoted_queues_table_name();
+	my $quoted_queues_table_name = $queues_admin->get_quoted_queues_table_name();
 
 
 =cut
@@ -659,7 +659,7 @@ sub get_quoted_queues_table_name
 Return the name of the table used to store queue elements, quoted for inclusion
 in SQL statements.
 
-	my $quoted_queue_elements_table_name = $queue->get_quoted_queue_elements_table_name();
+	my $quoted_queue_elements_table_name = $queues_admin->get_quoted_queue_elements_table_name();
 
 =cut
 
