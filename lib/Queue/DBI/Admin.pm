@@ -34,8 +34,12 @@ our $VERSION = '2.2.1';
 		database_handle => $dbh,
 	);
 	
-	# Create the tables required by Queue::DBI to store the queues and data.
-	$queues_admin->create_tables();
+	# Check if the tables required by Queue::DBI exist.
+	if ( !$queues_admin->has_tables() )
+	{
+		# Create the tables required by Queue::DBI to store the queues and data.
+		$queues_admin->create_tables();
+	}
 	
 	# Create a new queue.
 	my $queue = $queues_admin->create_queue( $queue_name );
