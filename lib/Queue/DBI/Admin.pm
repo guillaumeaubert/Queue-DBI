@@ -565,6 +565,25 @@ sub get_quoted_queue_elements_table_name
 }
 
 
+=head2 get_database_type()
+
+Return the database type corresponding to the database handle associated
+with the C<Queue::DBI::Admin> object.
+
+	my $database_type = $queues_admin->get_database_type();
+
+=cut
+
+sub get_database_type
+{
+	my ( $self ) = @_;
+	
+	my $database_handle = $self->get_database_handle();
+	
+	return $database_handle->{'Driver'}->{'Name'} || '';
+}
+
+
 =head1 AUTHOR
 
 Guillaume Aubert, C<< <aubertg at cpan.org> >>.
