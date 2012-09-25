@@ -765,7 +765,7 @@ L<http://search.cpan.org/dist/Queue-DBI/>
 =head1 ACKNOWLEDGEMENTS
 
 Thanks to Sergey Bond for suggesting this administration module to extend
-and complete the features offered by C<Queue::DBI>.
+and complete the features offered by L<Queue::DBI>.
 
 
 =head1 COPYRIGHT & LICENSE
