@@ -90,15 +90,15 @@ Optional parameters:
 
 =over 4
 
-=item * 'queues_table_name'
+=item * queues_table_name
 
-By default, Queue::DBI uses a table named 'queues' to store the queue
+By default, Queue::DBI uses a table named I<queues> to store the queue
 definitions. This allows using your own name, if you want to support separate
 queuing systems or legacy systems.
 
-=item * 'queue_elements_table_name'
+=item * queue_elements_table_name
 
-By default, Queue::DBI uses a table named 'queue_elements' to store the queued
+By default, Queue::DBI uses a table named I<queue_elements> to store the queued
 data. This allows using your own name, if you want to support separate queuing
 systems or legacy systems.
 
