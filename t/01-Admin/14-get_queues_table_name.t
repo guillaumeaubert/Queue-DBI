@@ -47,7 +47,7 @@ subtest(
 		is(
 			$queue_admin->get_queues_table_name(),
 			$Queue::DBI::DEFAULT_QUEUES_TABLE_NAME,
-			'The method get_database_handle() returns the default queue table name.',
+			'The method get_queues_table_name() returns the default queue table name.',
 		);
 	}
 );
