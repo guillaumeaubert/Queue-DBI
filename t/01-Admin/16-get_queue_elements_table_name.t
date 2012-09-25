@@ -48,7 +48,7 @@ subtest(
 		is(
 			$queue_admin->get_queue_elements_table_name(),
 			$Queue::DBI::DEFAULT_QUEUE_ELEMENTS_TABLE_NAME,
-			'The method get_database_handle() returns the default queue elements table name.',
+			'The method get_queue_elements_table_name() returns the default queue elements table name.',
 		);
 	}
 );
