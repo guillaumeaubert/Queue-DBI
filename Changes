@@ -1,5 +1,14 @@
 Revision history for Queue-DBI
 
+v2.3.0  09/25/2012
+        * (RT #79676) Added croak()s to propagate up all SQL errors.
+        * (RT #79676) Documented return value of Queue::DBI->purge().
+        * Added internal methods for Queue::DBI::Admin and tests.
+        * Refactored code to leverage the new internal methods.
+        * (RT #79676) Added Queue::DBI::Admin->drop_tables() and tests.
+        * (RT #79676) Added Queue::DBI::Admin->has_tables() and tests.
+        * POD cleanup.
+
 v2.2.1  09/19/2012
         * Moved repository to GitHub.
 
