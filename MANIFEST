@@ -18,6 +18,7 @@ t/01-Admin/00-load.t
 t/01-Admin/07-new.t
 t/01-Admin/10-get_database_handle.t
 t/01-Admin/11-get_database_type.t
+t/01-Admin/12-assert_database_type_supported.t
 t/01-Admin/14-get_queues_table_name.t
 t/01-Admin/15-get_quoted_queues_table_name.t
 t/01-Admin/16-get_queue_elements_table_name.t
