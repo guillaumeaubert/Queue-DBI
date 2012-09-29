@@ -351,6 +351,7 @@ sub has_tables
 	{
 		# Disable printing errors out since we expect the statement to fail.
 		local $database_handle->{'PrintError'} = 0;
+		local $database_handle->{'RaiseError'} = 1;
 		
 		$database_handle->selectrow_array(
 			sprintf(
@@ -372,6 +373,7 @@ sub has_tables
 	{
 		# Disable printing errors out since we expect the statement to fail.
 		local $database_handle->{'PrintError'} = 0;
+		local $database_handle->{'RaiseError'} = 1;
 		
 		$database_handle->selectrow_array(
 			sprintf(
