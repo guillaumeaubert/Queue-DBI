@@ -1,5 +1,10 @@
 Revision history for Queue-DBI
 
+v2.3.1  10/01/2012
+        * (RT #79676) Refactored Queue::DBI::Admin->has_tables() to check for
+          mandatory fields and to simplify its return value.
+        * (RT #79676) Force raising errors in try {} blocks.
+
 v2.3.0  09/25/2012
         * (RT #79676) Added croak()s to propagate up all SQL errors.
         * (RT #79676) Documented return value of Queue::DBI->purge().
