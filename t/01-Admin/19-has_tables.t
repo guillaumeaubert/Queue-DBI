@@ -31,7 +31,7 @@ subtest(
 	'Check default tables.',
 	sub
 	{
-		plan( tests => 4 );
+		plan( tests => 3 );
 		
 		my $queue_admin;
 		lives_ok(
@@ -44,26 +44,19 @@ subtest(
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
 		
-		ok(
-			!$queue_admin->has_tables(),
-			'The default tables do not exist yet.',
+		my $tables_exist;
+		lives_ok(
+			sub
+			{
+				$tables_exist = $queue_admin->has_tables();
+			},
+			'Call has_tables().',
 		);
-		
-		my ( $tables_exist, $missing_tables ) = $queue_admin->has_tables();
 		
 		ok(
 			!$tables_exist,
-			'The call in list context indicates that the tables do not exist.',
+			'The default tables do not exist yet.',
 		);
-		
-		is_deeply(
-			$missing_tables,
-			[
-				$Queue::DBI::DEFAULT_QUEUES_TABLE_NAME,
-				$Queue::DBI::DEFAULT_QUEUE_ELEMENTS_TABLE_NAME,
-			],
-			'All the tables are missing.',
-		) || diag( explain( $missing_tables ) );
 	}
 );
 
@@ -71,7 +64,7 @@ subtest(
 	'Check custom tables.',
 	sub
 	{
-		plan( tests => 4 );
+		plan( tests => 3 );
 		
 		my $queue_admin;
 		lives_ok(
@@ -86,26 +79,19 @@ subtest(
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
 		
-		ok(
-			!$queue_admin->has_tables(),
-			'The custom tables do not exist yet.',
+		my $tables_exist;
+		lives_ok(
+			sub
+			{
+				$tables_exist = $queue_admin->has_tables();
+			},
+			'Call has_tables().',
 		);
-		
-		my ( $tables_exist, $missing_tables ) = $queue_admin->has_tables();
 		
 		ok(
 			!$tables_exist,
-			'The call in list context indicates that the tables do not exist.',
+			'The custom tables do not exist yet.',
 		);
-		
-		is_deeply(
-			$missing_tables,
-			[
-				'test_queues',
-				'test_queue_elements',
-			],
-			'All the tables are missing.',
-		) || diag( explain( $missing_tables ) );
 	}
 );
 

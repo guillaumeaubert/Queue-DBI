@@ -52,18 +52,18 @@ subtest(
 			'Drop the default tables.',
 		);
 		
-		my ( $tables_exist, $missing_tables ) = $queue_admin->has_tables();
+		my $tables_exist;
+		lives_ok(
+			sub
+			{
+				$tables_exist = $queue_admin->has_tables();
+			},
+			'Call has_tables().',
+		);
+		
 		ok(
 			!$tables_exist,
 			'The default tables do not exist anymore.',
-		);
-		is_deeply(
-			$missing_tables,
-			[
-				$Queue::DBI::DEFAULT_QUEUES_TABLE_NAME,
-				$Queue::DBI::DEFAULT_QUEUE_ELEMENTS_TABLE_NAME,
-			],
-			'The list of missing tables is complete.',
 		);
 	}
 );
@@ -95,18 +95,18 @@ subtest(
 			'Drop the custom tables.',
 		);
 		
-		my ( $tables_exist, $missing_tables ) = $queue_admin->has_tables();
+		my $tables_exist;
+		lives_ok(
+			sub
+			{
+				$tables_exist = $queue_admin->has_tables();
+			},
+			'Call has_tables().',
+		);
+		
 		ok(
 			!$tables_exist,
 			'The custom tables do not exist anymore.',
-		);
-		is_deeply(
-			$missing_tables,
-			[
-				'test_queues',
-				'test_queue_elements',
-			],
-			'The list of missing tables is complete.',
 		);
 	}
 );
