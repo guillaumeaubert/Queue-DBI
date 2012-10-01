@@ -321,18 +321,11 @@ sub delete_queue
 
 Determine if the tables required for L<Queue::DBI> to operate exist.
 
-In scalar context, this method returns a boolean indicating whether all the
-necessary tables exist:
-
-	# Determine if the tables exist.
 	my $tables_exist = $queues_admin->has_tables();
 
-In list context, this method returns a boolean indicating whether all the
-necessary tables exist, and an arrayref of the name of the missing table(s) if
-any:
-
-	# Determine if the tables exist, and the missing one(s).
-	my ( $tables_exist, $missing_tables ) = $queues_admin->has_tables();
+This method returns 1 if all tables exist, 0 if none exist, and croaks with
+more information if some tables are missing or if the mandatory fields on some
+of the tables are missing.
 
 =cut
 
@@ -347,6 +340,7 @@ sub has_tables
 	$self->assert_database_type_supported();
 	
 	# Check if the queues table exists.
+	my $queues_table_exists =
 	try
 	{
 		# Disable printing errors out since we expect the statement to fail.
@@ -362,13 +356,16 @@ sub has_tables
 				$self->get_quoted_queues_table_name(),
 			)
 		);
+		
+		return 1;
 	}
 	catch
 	{
-		push( @$missing_tables, $self->get_queues_table_name() );
+		return 0;
 	};
 	
 	# Check if the queue elements table exists.
+	my $queue_elements_table_exists =
 	try
 	{
 		# Disable printing errors out since we expect the statement to fail.
@@ -384,16 +381,84 @@ sub has_tables
 				$self->get_quoted_queue_elements_table_name(),
 			)
 		);
+		
+		return 1;
 	}
 	catch
 	{
-		push( @$missing_tables, $self->get_queue_elements_table_name() );
+		return 0;
 	};
 	
-	my $tables_exist = scalar( @$missing_tables ) == 0 ? 1 : 0;
-	return wantarray()
-		? ( $tables_exist, $missing_tables )
-		: $tables_exist;
+	# If both tables don't exist, return 0.
+	return 0
+		if !$queues_table_exists && !$queue_elements_table_exists;
+	
+	# If one of the tables is missing, we want the user to know that there is
+	# a problem to fix and that create_table() won't work.
+	croak "The table '" . $self->get_queues_table_name() . "' exists, but '" . $self->get_queue_elements_table_name() . "' is missing"
+		if $queues_table_exists && !$queue_elements_table_exists;
+	croak "The table '" . $self->get_queue_elements_table_name() . "' exists, but '" . $self->get_queues_table_name() . "' is missing"
+		if !$queues_table_exists && $queue_elements_table_exists;
+	
+	# Check if the queues table has the mandatory fields.
+	my $queues_table_has_fields =
+	try
+	{
+		# Disable printing errors out since we expect the statement to fail.
+		local $database_handle->{'PrintError'} = 0;
+		local $database_handle->{'RaiseError'} = 1;
+		
+		$database_handle->selectrow_array(
+			sprintf(
+				q|
+					SELECT queue_id, name
+					FROM %s
+				|,
+				$self->get_quoted_queues_table_name(),
+			)
+		);
+		
+		return 1;
+	}
+	catch
+	{
+		return 0;
+	};
+	
+	croak "The table '" . $self->get_queues_table_name() . "' exists, but is missing mandatory fields"
+		if !$queues_table_has_fields;
+	
+	# Check if the queue elements table has the mandatory fields.
+	my $queue_elements_table_has_fields =
+	try
+	{
+		# Disable printing errors out since we expect the statement to fail.
+		local $database_handle->{'PrintError'} = 0;
+		local $database_handle->{'RaiseError'} = 1;
+		
+		$database_handle->selectrow_array(
+			sprintf(
+				q|
+					SELECT queue_element_id, queue_id, data, lock_time, requeue_count, created
+					FROM %s
+				|,
+				$self->get_quoted_queue_elements_table_name(),
+			)
+		);
+		
+		return 1;
+	}
+	catch
+	{
+		return 0;
+	};
+	
+	croak "The table '" . $self->get_queue_elements_table_name() . "' exists, but is missing mandatory fields"
+		if !$queue_elements_table_has_fields;
+	
+	# Both tables exist and have the mandatory fields for Queue::DBI to
+	# work, we can safely return 1.
+	return 1;
 }
 
 
