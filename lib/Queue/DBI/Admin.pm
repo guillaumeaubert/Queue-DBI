@@ -332,8 +332,6 @@ of the tables are missing.
 sub has_tables
 {
 	my ( $self ) = @_;
-	my $missing_tables = [];
-	
 	my $database_handle = $self->get_database_handle();
 	
 	# Check the database type.
