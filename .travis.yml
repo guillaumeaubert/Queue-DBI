@@ -1,14 +1,11 @@
 language: perl
 perl:
   - "5.16"
-  - "5.14"
-  - "5.12"
   - "5.10"
 before_script:
   - mysql -e 'CREATE DATABASE queue_dbi;'
   - psql -c 'CREATE DATABASE queue_dbi;' -U postgres
-  - cpanm DBI
-  - cpanm -v DBD::Pg
+  - sudo apt-get install libdbd-pg-perl
   - cpanm DBD::mysql
 env:
   - QUEUE_DBI_DATABASE=''
