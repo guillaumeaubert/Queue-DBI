@@ -4,3 +4,12 @@ perl:
   - "5.14"
   - "5.12"
   - "5.10"
+before_script:
+  - mysql -e 'CREATE DATABASE queue_dbi;'
+  - psql -c 'CREATE DATABASE queue_dbi;' -U postgres
+  - cpanm DBD::mysql
+  - cpanm DBD::Pg
+env:
+  - QUEUE_DBI_DATABASE=''
+  - QUEUE_DBI_DATABASE='dbi:mysql:dbname=queue_dbi;root;'
+  - QUEUE_DBI_DATABASE='dbi:Pg:dbname=queue_dbi;postgres;'
