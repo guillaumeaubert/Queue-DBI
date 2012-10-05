@@ -88,18 +88,41 @@ subtest(
 	'Check queues table with incorrect fields.',
 	sub
 	{
-		plan( tests => 4 );
+		plan( tests => 5 );
+		
+		my $create_table_sql =
+		{
+			SQLite =>
+			q|
+				CREATE TABLE IF NOT EXISTS queues_incorrect_fields
+				(
+					queue_id INTEGER PRIMARY KEY AUTOINCREMENT
+				)
+			|,
+			mysql  =>
+			q|
+				CREATE TABLE IF NOT EXISTS queues_incorrect_fields
+				(
+					queue_id INT(11) NOT NULL AUTO_INCREMENT,
+					PRIMARY KEY (queue_id)
+				)
+				ENGINE=InnoDB
+			|,
+		};
+		
+		my $database_type = $dbh->{'Driver'}->{'Name'} || '';
+		ok(
+			defined(
+				$create_table_sql->{ $database_type }
+			),
+			'The SQL for this database type is present.',
+		);
 		
 		lives_ok(
 			sub
 			{
 				$dbh->do(
-					q|
-						CREATE TABLE IF NOT EXISTS queues_incorrect_fields
-						(
-							queue_id INTEGER PRIMARY KEY AUTOINCREMENT
-						)
-					|,
+					$create_table_sql->{ $database_type }
 				);
 			},
 			'Create a queues table with incorrect fields.',
@@ -138,22 +161,49 @@ subtest(
 	'Check queue elements table with incorrect fields.',
 	sub
 	{
-		plan( tests => 4 );
+		plan( tests => 5 );
+		
+		my $create_table_sql =
+		{
+			SQLite =>
+			q|
+				CREATE TABLE IF NOT EXISTS queue_elements_incorrect_fields
+				(
+					queue_element_id INTEGER PRIMARY KEY AUTOINCREMENT,
+					data TEXT,
+					lock_time INT(10) DEFAULT NULL,
+					requeue_count INT(3) DEFAULT '0',
+					created INT(10) NOT NULL DEFAULT '0'
+				)
+			|,
+			mysql  =>
+			q|
+				CREATE TABLE IF NOT EXISTS queue_elements_incorrect_fields
+				(
+					queue_element_id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+					data TEXT,
+					lock_time INT(10) UNSIGNED DEFAULT NULL,
+					requeue_count INT(3) UNSIGNED DEFAULT '0',
+					created INT(10) UNSIGNED NOT NULL DEFAULT '0',
+					PRIMARY KEY (queue_element_id)
+				)
+				ENGINE=InnoDB
+			|,
+		};
+		
+		my $database_type = $dbh->{'Driver'}->{'Name'} || '';
+		ok(
+			defined(
+				$create_table_sql->{ $database_type }
+			),
+			'The SQL for this database type is present.',
+		);
 		
 		lives_ok(
 			sub
 			{
 				$dbh->do(
-					q|
-						CREATE TABLE IF NOT EXISTS queue_elements_incorrect_fields
-						(
-							queue_element_id INTEGER PRIMARY KEY AUTOINCREMENT,
-							data TEXT,
-							lock_time INT(10) DEFAULT NULL,
-							requeue_count INT(3) DEFAULT '0',
-							created INT(10) NOT NULL DEFAULT '0'
-						)
-					|,
+					$create_table_sql->{ $database_type }
 				);
 			},
 			'Create a queue elements table with incorrect fields.',
