@@ -41,9 +41,9 @@ Verify that a database handle can be created, and return it.
 
 sub ok_database_handle
 {
-	$ENV{'QUEUE_DBI_DATABASE'} ||= 'dbi:SQLite:dbname=t/test_database;;';
+	$ENV{'QUEUE_DBI_DATABASE'} ||= 'dbi:SQLite:dbname=t/test_database||';
 	
-	my ( $database_dsn, $database_user, $database_password ) = split( '%', $ENV{'QUEUE_DBI_DATABASE'} );
+	my ( $database_dsn, $database_user, $database_password ) = split( /\|/, $ENV{'QUEUE_DBI_DATABASE'} );
 	
 	ok(
 		my $database_handle = DBI->connect(

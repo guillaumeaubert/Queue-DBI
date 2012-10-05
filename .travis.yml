@@ -9,5 +9,5 @@ before_script:
   - cpanm DBD::mysql
 env:
   - QUEUE_DBI_DATABASE=''
-  - QUEUE_DBI_DATABASE='dbi:mysql:dbname=queue_dbi;root;'
-  - QUEUE_DBI_DATABASE='dbi:Pg:dbname=queue_dbi;postgres;'
+  - QUEUE_DBI_DATABASE='DBI:mysql:database=queue_dbi;host=127.0.0.1|root|'
+  - QUEUE_DBI_DATABASE='DBI:Pg:dbname=queue_dbi;host=127.0.0.1|postgres|'
