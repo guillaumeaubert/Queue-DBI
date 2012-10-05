@@ -7,8 +7,9 @@ perl:
 before_script:
   - mysql -e 'CREATE DATABASE queue_dbi;'
   - psql -c 'CREATE DATABASE queue_dbi;' -U postgres
+  - cpanm DBI
+  - cpanm -v DBD::Pg
   - cpanm DBD::mysql
-  - cpanm DBD::Pg
 env:
   - QUEUE_DBI_DATABASE=''
   - QUEUE_DBI_DATABASE='dbi:mysql:dbname=queue_dbi;root;'
