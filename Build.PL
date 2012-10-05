@@ -44,6 +44,7 @@ my $builder = Module::Build->new(
 			bugtracker  => 'http://rt.cpan.org/NoAuth/ReportBug.html?Queue=queue-dbi',
 		},
 	},
+	recursive_test_files => 1,
 );
 
 $builder->create_build_script();

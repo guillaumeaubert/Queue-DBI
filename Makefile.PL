@@ -20,6 +20,9 @@ WriteMakefile
                  },
   'INSTALLDIRS' => 'site',
   'EXE_FILES' => [],
-  'PL_FILES' => {}
+  'PL_FILES' => {},
+  'test' => {
+              'TESTS' => 't/*.t t/01-Admin/*.t t/90-Element/*.t'
+            }
 )
 ;
