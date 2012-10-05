@@ -4,11 +4,11 @@ use warnings;
 use Module::Build;
 
 my $builder = Module::Build->new(
-	module_name         => 'Queue::DBI',
-	license             => 'GPL_3',
-	dist_author         => q{Guillaume Aubert <aubertg@cpan.org>},
-	dist_version_from   => 'lib/Queue/DBI.pm',
-	build_requires      =>
+	module_name          => 'Queue::DBI',
+	license              => 'GPL_3',
+	dist_author          => q{Guillaume Aubert <aubertg@cpan.org>},
+	dist_version_from    => 'lib/Queue/DBI.pm',
+	build_requires       =>
 	{
 		'DBD::SQLite'          => 0,
 		'DBI'                  => 0,
@@ -16,7 +16,7 @@ my $builder = Module::Build->new(
 		'Test::Exception'      => 0,
 		'Test::Type'           => 0,
 	},
-	requires            =>
+	requires             =>
 	{
 		'perl'                 => 5.006,
 		'Data::Dumper'         => 0,
@@ -26,16 +26,16 @@ my $builder = Module::Build->new(
 		'Data::Validate::Type' => 0,
 		'Try::Tiny'            => 0,
 	},
-	add_to_cleanup      =>
+	add_to_cleanup       =>
 	[
 		'Queue-DBI-*',
 	],
-	create_makefile_pl  => 'traditional',
-	configure_requires  =>
+	create_makefile_pl   => 'traditional',
+	configure_requires   =>
 	{
 		'Module::Build'        => 0,
 	},
-	meta_merge          =>
+	meta_merge           =>
 	{
 		resources              =>
 		{
