@@ -30,9 +30,9 @@ lives_ok(
 	'Instantiate a new Queue::DBI::Admin object.',
 );
 
-is(
+like(
 	$queue_admin->get_database_type(),
-	'SQLite',
+	qr/^(?:SQLite|MySQL|Pg)$/i,
 	'The database type is correctly determined.',
 );
 
