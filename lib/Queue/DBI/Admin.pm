@@ -760,7 +760,7 @@ sub assert_database_type_supported
 	# Check the database type.
 	my $database_type = $self->get_database_type();
 	croak "This database type ($database_type) is not supported yet, please email the maintainer of the module for help"
-		if $database_type !~ m/^(?:SQLite|MySQL)$/i;
+		if $database_type !~ m/^(?:SQLite|MySQL|Pg)$/i;
 	
 	return $database_type;
 }
