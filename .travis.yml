@@ -5,8 +5,9 @@ perl:
 before_script:
   - mysql -e 'CREATE DATABASE queue_dbi;'
   - psql -c 'CREATE DATABASE queue_dbi;' -U postgres
-  - sudo apt-get install libdbd-pg-perl
-  - cpanm DBD::mysql
+  - cpanm --notest DBI
+  - cpanm --notest DBD::Pg
+  - cpanm --notest DBD::mysql
 env:
   - QUEUE_DBI_DATABASE=''
   - QUEUE_DBI_DATABASE='DBI:mysql:database=queue_dbi;host=127.0.0.1|root|'
