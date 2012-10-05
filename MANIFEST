@@ -50,6 +50,7 @@ t/70-cleanup.t
 t/90-Element/00-load.t
 t/90-Element/30-is_over_lifetime.t
 t/99-cleanup.t
+t/LocalTest.pm
 t/manifest.t
 t/module_versions.t
 t/perlcritic.t

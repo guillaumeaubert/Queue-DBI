@@ -13,6 +13,11 @@
       "version" : "2"
    },
    "name" : "Queue-DBI",
+   "no_index" : {
+      "file" : [
+         "t/LocalTest.pm"
+      ]
+   },
    "prereqs" : {
       "build" : {
          "requires" : {

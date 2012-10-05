@@ -17,6 +17,9 @@ meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Queue-DBI
+no_index:
+  file:
+    - t/LocalTest.pm
 provides:
   Queue::DBI:
     file: lib/Queue/DBI.pm
