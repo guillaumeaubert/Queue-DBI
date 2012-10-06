@@ -99,6 +99,14 @@ subtest(
 					queue_id INTEGER PRIMARY KEY AUTOINCREMENT
 				)
 			|,
+			Pg     =>
+			q|
+				CREATE TABLE IF NOT EXISTS queues_incorrect_fields
+				(
+					queue_id SERIAL,
+					PRIMARY KEY (queue_id)
+				)
+			|,
 			mysql  =>
 			q|
 				CREATE TABLE IF NOT EXISTS queues_incorrect_fields
@@ -174,6 +182,18 @@ subtest(
 					lock_time INT(10) DEFAULT NULL,
 					requeue_count INT(3) DEFAULT '0',
 					created INT(10) NOT NULL DEFAULT '0'
+				)
+			|,
+			Pg     =>
+			q|
+				CREATE TABLE IF NOT EXISTS queue_elements_incorrect_fields
+				(
+					queue_element_id SERIAL,
+					data TEXT,
+					lock_time INTEGER DEFAULT NULL,
+					requeue_count SMALLINT DEFAULT 0,
+					created INTEGER NOT NULL DEFAULT 0,
+					PRIMARY KEY (queue_element_id)
 				)
 			|,
 			mysql  =>
