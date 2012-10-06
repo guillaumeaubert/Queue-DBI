@@ -39,8 +39,8 @@ foreach my $queue_name ( qw( test1 test2 ) )
 		{
 			$dbh->do(
 				q|
-					INSERT INTO queues( queue_id, name )
-					VALUES( NULL, ? )
+					INSERT INTO queues( name )
+					VALUES( ? )
 				|,
 				{},
 				$queue_name,
@@ -59,8 +59,8 @@ dies_ok(
 		
 		$dbh->do(
 			q|
-				INSERT INTO queues( queue_id, name )
-				VALUES( NULL, ? )
+				INSERT INTO queues( name )
+				VALUES( ? )
 			|,
 			{},
 			'test1',
