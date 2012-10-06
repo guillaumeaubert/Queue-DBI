@@ -527,10 +527,11 @@ sub create_tables
 						queue_id SERIAL,
 						name VARCHAR(255) NOT NULL,
 						PRIMARY KEY (queue_id),
-						CONSTRAINT queues_name UNIQUE(name)
+						CONSTRAINT %s UNIQUE (name)
 					)
 				|,
 				$quoted_queues_table_name,
+				$unique_index_name,
 			)
 		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	}
