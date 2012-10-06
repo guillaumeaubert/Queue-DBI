@@ -1,5 +1,11 @@
 Revision history for Queue-DBI
 
+v2.4.0  10/06/2012
+        * Added full PostGreSQL support.
+        * Refactored tests to allow testing against multiple database types.
+        * Set up integration with Travis-CI for continuous integration.
+        * Forced tests to be run recursively during build.
+
 v2.3.1  10/01/2012
         * (RT #79676) Refactored Queue::DBI::Admin->has_tables() to check for
           mandatory fields and to simplify its return value.
