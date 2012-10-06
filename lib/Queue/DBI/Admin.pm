@@ -513,6 +513,27 @@ sub create_tables
 			)
 		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	}
+	elsif ( $database_type eq 'Pg' )
+	{
+		my $unique_index_name = $database_handle->quote_identifier(
+			'unq_' . $queues_table_name . '_name',
+		);
+		
+		$database_handle->do(
+			sprintf(
+				q|
+					CREATE TABLE %s
+					(
+						queue_id SERIAL,
+						name VARCHAR(255) NOT NULL,
+						PRIMARY KEY (queue_id),
+						CONSTRAINT queues_name UNIQUE(name)
+					)
+				|,
+				$quoted_queues_table_name,
+			)
+		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
+	}
 	else
 	{
 		my $unique_index_name = $database_handle->quote_identifier(
@@ -553,6 +574,42 @@ sub create_tables
 						created INT(10) NOT NULL DEFAULT '0'
 					)
 				|,
+				$quoted_queue_elements_table_name,
+			)
+		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
+	}
+	elsif ( $database_type eq 'Pg' )
+	{
+		$database_handle->do(
+			sprintf(
+				q|
+					CREATE TABLE %s
+					(
+						queue_element_id SERIAL,
+						queue_id INTEGER NOT NULL REFERENCES %s (queue_id),
+						data TEXT,
+						lock_time INTEGER DEFAULT NULL,
+						requeue_count SMALLINT DEFAULT 0,
+						created INTEGER NOT NULL DEFAULT 0,
+						PRIMARY KEY (queue_element_id)
+					)
+				|,
+				$quoted_queue_elements_table_name,
+				$quoted_queues_table_name,
+			)
+		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
+		
+		my $queue_id_index_name = $database_handle->quote_identifier(
+			'idx_' . $queue_elements_table_name . '_queue_id'
+		);
+		
+		$database_handle->do(
+			sprintf(
+				q|
+					CREATE INDEX %s
+					ON %s (queue_id)
+				|,
+				$queue_id_index_name,
 				$quoted_queue_elements_table_name,
 			)
 		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
