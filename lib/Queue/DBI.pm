@@ -235,7 +235,7 @@ sub new
 
 Returns the queue ID corresponding to the current queue object.
 
-	my $queue_id = $self->get_queue_id();
+	my $queue_id = $queue->get_queue_id();
 
 =cut
 
