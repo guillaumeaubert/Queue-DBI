@@ -251,6 +251,8 @@ sub get_queue_id
 
 Returns the number of elements in the queue.
 
+	my $elements_count = $queue->count();
+
 =cut
 
 sub count
