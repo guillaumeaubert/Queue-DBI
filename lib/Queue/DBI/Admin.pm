@@ -67,6 +67,8 @@ This distribution currently supports:
 
 =item * MySQL
 
+=item * PostgreSQL
+
 =back
 
 Please contact me if you need support for another database type, I'm always
