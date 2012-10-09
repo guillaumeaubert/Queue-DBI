@@ -253,23 +253,47 @@ Returns the number of elements in the queue.
 
 	my $elements_count = $queue->count();
 
+Optional parameter:
+
+=over 4
+
+=item * exclude_locked_elements
+
+Exclude locked elements from the count. Default 0.
+
+=back
+
+	my $unlocked_elements_count = $queue->count(
+		exclude_locked_elements => 1
+	);
+
 =cut
 
 sub count
 {
-	my ( $self ) = @_;
+	my ( $self, %args ) = @_;
+	my $exclude_locked_elements = delete( $args{'exclude_locked_elements'} ) || 0;
+	
 	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering count()." if $verbose;
 	
+	# Prepare optional additional clause to exclude locked elements.
+	my $exclude_locked_elements_sql = $exclude_locked_elements
+		? 'AND lock_time IS NULL'
+		: '';
+	
+	# Count elements.
 	my $data = $dbh->selectrow_arrayref(
 		sprintf(
 			q|
 				SELECT COUNT(*)
 				FROM %s
 				WHERE queue_id = ?
+					%s
 			|,
 			$dbh->quote_identifier( $self->get_queue_elements_table_name() ),
+			$exclude_locked_elements_sql,
 		),
 		{},
 		$self->get_queue_id(),
