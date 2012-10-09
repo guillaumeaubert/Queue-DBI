@@ -1,5 +1,12 @@
 Revision history for Queue-DBI
 
+v2.4.1  10/08/2012
+        * (RT #80055) Added PostgreSQL to the list of supported database types
+          in the documentation.
+        * (RT #80040) Added 'exclude_locked_elements' parameter to
+          Queue::DBI->count().
+        * Minor documentation cleanup.
+
 v2.4.0  10/06/2012
         * Added full PostgreSQL support.
         * Refactored tests to allow testing against multiple database types.

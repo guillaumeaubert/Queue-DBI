@@ -14,11 +14,11 @@ LocalTest - Test functions for L<Queue::DBI>.
 
 =head1 VERSION
 
-Version 2.4.0
+Version 2.4.1
 
 =cut
 
-our $VERSION = '2.4.0';
+our $VERSION = '2.4.1';
 
 
 =head1 SYNOPSIS
