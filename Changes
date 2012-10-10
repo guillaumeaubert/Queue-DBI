@@ -1,5 +1,12 @@
 Revision history for Queue-DBI
 
+v2.4.2  10/10/2012
+        * Added Queue::DBI::Admin->has_table().
+        * Added Queue::DBI::Admin->has_mandatory_fields().
+        * (RT #79676) Added check that tables have the mandatory fields before
+          deleting them, to prevent deletion of tables not related to
+          Queue::DBI.
+
 v2.4.1  10/08/2012
         * (RT #80055) Added PostgreSQL to the list of supported database types
           in the documentation.
