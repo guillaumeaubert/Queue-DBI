@@ -864,6 +864,75 @@ sub has_table
 }
 
 
+=head2 has_mandatory_fields()
+
+Return if a table required by L<Queue::DBI> has the mandatory fields.
+
+	my $has_mandatory_fields = $queues_admin->has_mandatory_fields( $table_type );
+
+Valid table types are:
+
+=over 4
+
+=item * 'queues'
+
+=item * 'queue_elements'
+
+=back
+
+=cut
+
+sub has_mandatory_fields
+{
+	my ( $self, $table_type ) = @_;
+	
+	# Check the table type.
+	croak 'A table type must be specified'
+		if !defined( $table_type );
+	croak "The table type '$table_type' is not valid"
+		if $table_type !~ /\A(?:queues|queue_elements)\Z/x;
+	
+	# Retrieve the table name.
+	my $table_name = $table_type eq 'queues'
+		? $self->get_quoted_queues_table_name()
+		: $self->get_quoted_queue_elements_table_name();
+	
+	# Retrieve the list of fields to check for.
+	my $mandatory_fields = $table_type eq 'queues'
+		? 'queue_id, name'
+		: 'queue_element_id, queue_id, data, lock_time, requeue_count, created';
+	
+	# Check if the fields exist.
+	my $database_handle = $self->get_database_handle();
+	my $has_mandatory_fields =
+	try
+	{
+		# Disable printing errors out since we expect the statement to fail.
+		local $database_handle->{'PrintError'} = 0;
+		local $database_handle->{'RaiseError'} = 1;
+		
+		$database_handle->selectrow_array(
+			sprintf(
+				q|
+					SELECT %s
+					FROM %s
+				|,
+				$mandatory_fields,
+				$table_name,
+			)
+		);
+		
+		return 1;
+	}
+	catch
+	{
+		return 0;
+	};
+	
+	return $has_mandatory_fields;
+}
+
+
 =head1 AUTHOR
 
 Guillaume Aubert, C<< <aubertg at cpan.org> >>.
