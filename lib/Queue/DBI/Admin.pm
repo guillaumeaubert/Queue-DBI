@@ -357,58 +357,12 @@ sub has_tables
 		if !$queues_table_exists && $queue_elements_table_exists;
 	
 	# Check if the queues table has the mandatory fields.
-	my $queues_table_has_fields =
-	try
-	{
-		# Disable printing errors out since we expect the statement to fail.
-		local $database_handle->{'PrintError'} = 0;
-		local $database_handle->{'RaiseError'} = 1;
-		
-		$database_handle->selectrow_array(
-			sprintf(
-				q|
-					SELECT queue_id, name
-					FROM %s
-				|,
-				$self->get_quoted_queues_table_name(),
-			)
-		);
-		
-		return 1;
-	}
-	catch
-	{
-		return 0;
-	};
-	
+	my $queues_table_has_fields = $self->has_mandatory_fields( 'queues' );
 	croak "The table '" . $self->get_queues_table_name() . "' exists, but is missing mandatory fields"
 		if !$queues_table_has_fields;
 	
 	# Check if the queue elements table has the mandatory fields.
-	my $queue_elements_table_has_fields =
-	try
-	{
-		# Disable printing errors out since we expect the statement to fail.
-		local $database_handle->{'PrintError'} = 0;
-		local $database_handle->{'RaiseError'} = 1;
-		
-		$database_handle->selectrow_array(
-			sprintf(
-				q|
-					SELECT queue_element_id, queue_id, data, lock_time, requeue_count, created
-					FROM %s
-				|,
-				$self->get_quoted_queue_elements_table_name(),
-			)
-		);
-		
-		return 1;
-	}
-	catch
-	{
-		return 0;
-	};
-	
+	my $queue_elements_table_has_fields = $self->has_mandatory_fields( 'queue_elements' );
 	croak "The table '" . $self->get_queue_elements_table_name() . "' exists, but is missing mandatory fields"
 		if !$queue_elements_table_has_fields;
 	
