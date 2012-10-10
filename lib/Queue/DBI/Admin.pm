@@ -340,54 +340,10 @@ sub has_tables
 	$self->assert_database_type_supported();
 	
 	# Check if the queues table exists.
-	my $queues_table_exists =
-	try
-	{
-		# Disable printing errors out since we expect the statement to fail.
-		local $database_handle->{'PrintError'} = 0;
-		local $database_handle->{'RaiseError'} = 1;
-		
-		$database_handle->selectrow_array(
-			sprintf(
-				q|
-					SELECT *
-					FROM %s
-				|,
-				$self->get_quoted_queues_table_name(),
-			)
-		);
-		
-		return 1;
-	}
-	catch
-	{
-		return 0;
-	};
+	my $queues_table_exists = $self->has_table( 'queues' );
 	
 	# Check if the queue elements table exists.
-	my $queue_elements_table_exists =
-	try
-	{
-		# Disable printing errors out since we expect the statement to fail.
-		local $database_handle->{'PrintError'} = 0;
-		local $database_handle->{'RaiseError'} = 1;
-		
-		$database_handle->selectrow_array(
-			sprintf(
-				q|
-					SELECT *
-					FROM %s
-				|,
-				$self->get_quoted_queue_elements_table_name(),
-			)
-		);
-		
-		return 1;
-	}
-	catch
-	{
-		return 0;
-	};
+	my $queue_elements_table_exists = $self->has_table( 'queue_elements' );
 	
 	# If both tables don't exist, return 0.
 	return 0
