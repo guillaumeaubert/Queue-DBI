@@ -845,6 +845,69 @@ sub get_database_type
 }
 
 
+=head2 has_table()
+
+Return if a table required by L<Queue::DBI> to operate exists.
+
+	my $has_table = $queues_admin->has_table( $table_type );
+
+Valid table types are:
+
+=over 4
+
+=item * 'queues'
+
+=item * 'queue_elements'
+
+=back
+
+=cut
+
+sub has_table
+{
+	my ( $self, $table_type ) = @_;
+	
+	# Check the table type.
+	croak 'A table type must be specified'
+		if !defined( $table_type );
+	croak "The table type '$table_type' is not valid"
+		if $table_type !~ /\A(?:queues|queue_elements)\Z/x;
+	
+	# Retrieve the table name.
+	my $table_name = $table_type eq 'queues'
+		? $self->get_quoted_queues_table_name()
+		: $self->get_quoted_queue_elements_table_name();
+	
+	# Check if the table exists.
+	my $database_handle = $self->get_database_handle();
+	my $table_exists =
+	try
+	{
+		# Disable printing errors out since we expect the statement to fail.
+		local $database_handle->{'PrintError'} = 0;
+		local $database_handle->{'RaiseError'} = 1;
+		
+		$database_handle->selectrow_array(
+			sprintf(
+				q|
+					SELECT *
+					FROM %s
+				|,
+				$table_name,
+			)
+		);
+		
+		return 1;
+	}
+	catch
+	{
+		return 0;
+	};
+	
+	return $table_exists;
+}
+
+
 =head1 AUTHOR
 
 Guillaume Aubert, C<< <aubertg at cpan.org> >>.
