@@ -587,6 +587,21 @@ sub drop_tables
 	# Check the database type.
 	$self->assert_database_type_supported();
 	
+	# If the tables exist, make sure that they have the mandatory fields. This
+	# prevents a user from deleting a random table using this function.
+	if ( $self->has_table( 'queues' ) )
+	{
+		my $queues_table_name = $self->get_queues_table_name();
+		croak "The table '$queues_table_name' is missing some or all mandatory fields, so we cannot safely determine that it is used by Queue::DBI and delete it"
+			if !$self->has_mandatory_fields( 'queues' );
+	}
+	if ( $self->has_table( 'queue_elements' ) )
+	{
+		my $queue_elements_table_name = $self->get_queue_elements_table_name();
+		croak "The table '$queue_elements_table_name' is missing some or all mandatory fields, so we cannot safely determine that it is used by Queue::DBI and delete it"
+			if !$self->has_mandatory_fields( 'queue_elements' );
+	}
+	
 	# Prepare the name of the tables.
 	my $quoted_queues_table_name = $self->get_quoted_queues_table_name();
 	my $quoted_queue_elements_table_name = $self->get_quoted_queue_elements_table_name();
