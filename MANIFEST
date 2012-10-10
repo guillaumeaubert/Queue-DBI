@@ -25,6 +25,7 @@ t/01-Admin/15-get_quoted_queues_table_name.t
 t/01-Admin/16-get_queue_elements_table_name.t
 t/01-Admin/17-get_quoted_queue_elements_table_name.t
 t/01-Admin/20-has_table.t
+t/01-Admin/21-has_mandatory_fields.t
 t/01-Admin/24-has_tables.t
 t/01-Admin/25-create_tables.t
 t/01-Admin/26-has_tables.t
