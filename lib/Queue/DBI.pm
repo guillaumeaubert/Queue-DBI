@@ -202,7 +202,7 @@ sub new
 	);
 	
 	# Find the queue id.
-	my @queue = $dbh->selectrow_array(
+	my $data = $dbh->selectrow_arrayref(
 		sprintf(
 			q|
 				SELECT queue_id
@@ -214,9 +214,13 @@ sub new
 		{},
 		$args{'queue_name'},
 	);
+	croak 'Cannot execute SQL: ' . $dbh->errstr()
+		if !defined( $data );
+	
+	my $queue_id = scalar( @$data ) != 0 ? $data->[0] : undef;
 	croak "The queue >$args{'queue_name'}< doesn't exist in the lookup table."
-		unless defined( $queue[0] ) && ( $queue[0] =~ m/^\d+$/ );
-	$self->{'queue_id'} = $queue[0];
+		unless defined( $queue_id ) && ( $queue_id =~ m/^\d+$/ );
+	$self->{'queue_id'} = $queue_id;
 	
 	# Set optional parameters.
 	$self->set_verbose( $args{'verbose'} );
