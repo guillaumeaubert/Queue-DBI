@@ -301,9 +301,11 @@ sub count
 		),
 		{},
 		$self->get_queue_id(),
-	) || croak 'Cannot execute SQL: ' . $dbh->errstr();
+	);
+	croak 'Cannot execute SQL: ' . $dbh->errstr()
+		if !defined( $data );
 	
-	my $element_count = defined( $data ) && defined( $data->[0] ) ? $data->[0] : 0;
+	my $element_count = scalar( @$data ) != 0 && defined( $data->[0] ) ? $data->[0] : 0;
 	
 	carp "Found $element_count elements, leaving count()." if $verbose;
 	
@@ -456,8 +458,10 @@ sub retrieve_batch
 			{},
 			$self->get_queue_id(),
 		);
-		croak 'Cannot execute SQL: ' . $dbh->errstr() if defined( $dbh->errstr() );
-		if ( defined( $data ) && defined( $data->[0] ) )
+		croak 'Cannot execute SQL: ' . $dbh->errstr()
+			if ! defined( $data );
+		
+		if ( scalar( @$data ) != 0 && defined( $data->[0] ) )
 		{
 			$self->{'max_id'} = $data->[0];
 		}
