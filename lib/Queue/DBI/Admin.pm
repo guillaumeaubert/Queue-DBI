@@ -162,6 +162,9 @@ sub create_queue
 	croak 'The first parameter must be a queue name'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
 	
+	# Make sure the tables are correctly set up.
+	$self->assert_tables_verified();
+	
 	my $queues_table_name = $database_handle->quote_identifier(
 		$self->get_queues_table_name()
 	);
@@ -202,6 +205,9 @@ sub has_queue
 	# Verify parameters.
 	croak 'The first parameter must be a queue name'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	# Make sure the tables are correctly set up.
+	$self->assert_tables_verified();
 	
 	return try
 	{
@@ -244,6 +250,9 @@ sub retrieve_queue
 	croak 'The first parameter must be a queue name'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
 	
+	# Make sure the tables are correctly set up.
+	$self->assert_tables_verified();
+	
 	# Instantiate a Queue::DBI object.
 	my $queue = Queue::DBI->new(
 		database_handle           => $database_handle,
@@ -274,6 +283,9 @@ sub delete_queue
 	# Verify parameters.
 	croak 'The first parameter must be a queue name'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
+	
+	# Make sure the tables are correctly set up.
+	$self->assert_tables_verified();
 	
 	# Retrieve the queue object, to get the queue ID.
 	my $queue = $self->retrieve_queue( $queue_name );
