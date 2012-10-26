@@ -136,6 +136,7 @@ sub new
 				'queues'         => $queues_table_name,
 				'queue_elements' => $queue_elements_table_name,
 			},
+			tables_verified => 0,
 		},
 		$class
 	);
@@ -899,6 +900,36 @@ sub has_mandatory_fields
 	};
 	
 	return $has_mandatory_fields;
+}
+
+
+=head2 assert_tables_verified()
+
+Assert that the tables exist and are defined correctly.
+
+	$queues_admin->assert_tables_verified();
+
+Note that this will perform the check only once per L<Queue::DBI::Admin>
+object, as this is an expensive check that would otherwise slow down the
+methods that use it.
+
+=cut
+
+sub assert_tables_verified
+{
+	my ( $self ) = @_;
+	
+	return if $self->{'tables_verified'};
+	
+	# If some tables are incorrectly set up, has_tables() will croak here.
+	# It however also returns 0 if no tables are defined, and we need to
+	# turn it into a croak here.
+	$self->has_tables()
+		|| croak 'The queues and queue elements tables need to be created, see Queue::DBI::Admin->create_tables()';
+	
+	$self->{'tables_verified'} = 1;
+	
+	return;
 }
 
 
