@@ -18,11 +18,11 @@ Queue::DBI - A queueing module with an emphasis on safety, using DBI as a storag
 
 =head1 VERSION
 
-Version 2.4.2
+Version 2.5.0
 
 =cut
 
-our $VERSION = '2.4.2';
+our $VERSION = '2.5.0';
 
 our $DEFAULT_QUEUES_TABLE_NAME = 'queues';
 

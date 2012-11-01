@@ -1,5 +1,12 @@
 Revision history for Queue-DBI
 
+v2.5.0  10/31/2012
+        * (RT #79676) Fixed detection of SQL errors in selectrow_arrayref()
+          calls.
+        * Added Queue::DBI::Admin->assert_tables_verified().
+        * (RT #79676) Queue::DBI::Admin now checks that the tables are
+          correctly set up before performing operations.
+
 v2.4.2  10/10/2012
         * Added Queue::DBI::Admin->has_table().
         * Added Queue::DBI::Admin->has_mandatory_fields().

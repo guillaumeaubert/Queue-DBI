@@ -14,11 +14,11 @@ Queue::DBI::Element - An object representing an element pulled from the queue.
 
 =head1 VERSION
 
-Version 2.4.2
+Version 2.5.0
 
 =cut
 
-our $VERSION = '2.4.2';
+our $VERSION = '2.5.0';
 
 
 =head1 SYNOPSIS
