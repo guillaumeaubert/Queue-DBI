@@ -202,22 +202,27 @@ sub new
 	);
 	
 	# Find the queue id.
-	my $data = $dbh->selectrow_arrayref(
-		sprintf(
-			q|
-				SELECT queue_id
-				FROM %s
-				WHERE name = ?
-			|,
-			$dbh->quote_identifier( $self->get_queues_table_name() ),
-		),
-		{},
-		$args{'queue_name'},
-	);
-	croak 'Cannot execute SQL: ' . $dbh->errstr()
-		if !defined( $data );
+	my $queue_id;
+	{
+		local $dbh->{'RaiseError'} = 1;
+		my $data = $dbh->selectrow_arrayref(
+			sprintf(
+				q|
+					SELECT queue_id
+					FROM %s
+					WHERE name = ?
+				|,
+				$dbh->quote_identifier( $self->get_queues_table_name() ),
+			),
+			{},
+			$args{'queue_name'},
+		);
+		
+		$queue_id = defined( $data ) && scalar( @$data ) != 0
+			? $data->[0]
+			: undef;
+	}
 	
-	my $queue_id = scalar( @$data ) != 0 ? $data->[0] : undef;
 	croak "The queue >$args{'queue_name'}< doesn't exist in the lookup table."
 		unless defined( $queue_id ) && ( $queue_id =~ m/^\d+$/ );
 	$self->{'queue_id'} = $queue_id;
@@ -288,24 +293,27 @@ sub count
 		: '';
 	
 	# Count elements.
-	my $data = $dbh->selectrow_arrayref(
-		sprintf(
-			q|
-				SELECT COUNT(*)
-				FROM %s
-				WHERE queue_id = ?
-					%s
-			|,
-			$dbh->quote_identifier( $self->get_queue_elements_table_name() ),
-			$exclude_locked_elements_sql,
-		),
-		{},
-		$self->get_queue_id(),
-	);
-	croak 'Cannot execute SQL: ' . $dbh->errstr()
-		if !defined( $data );
-	
-	my $element_count = scalar( @$data ) != 0 && defined( $data->[0] ) ? $data->[0] : 0;
+	my $element_count;
+	{
+		local $dbh->{'RaiseError'} = 1;
+		my $data = $dbh->selectrow_arrayref(
+			sprintf(
+				q|
+					SELECT COUNT(*)
+					FROM %s
+					WHERE queue_id = ?
+						%s
+				|,
+				$dbh->quote_identifier( $self->get_queue_elements_table_name() ),
+				$exclude_locked_elements_sql,
+			),
+			{},
+			$self->get_queue_id(),
+		);
+		$element_count = defined( $data ) && scalar( @$data ) != 0 && defined( $data->[0] )
+			? $data->[0]
+			: 0;
+	}
 	
 	carp "Found $element_count elements, leaving count()." if $verbose;
 	
@@ -446,24 +454,30 @@ sub retrieve_batch
 	# Prevent infinite loops
 	unless ( defined( $self->{'max_id'} ) )
 	{
-		my $data = $dbh->selectrow_arrayref(
-			sprintf(
-				q|
-					SELECT MAX(queue_element_id)
-					FROM %s
-					WHERE queue_id = ?
-				|,
-				$dbh->quote_identifier( $self->get_queue_elements_table_name() ),
-			),
-			{},
-			$self->get_queue_id(),
-		);
-		croak 'Cannot execute SQL: ' . $dbh->errstr()
-			if ! defined( $data );
-		
-		if ( scalar( @$data ) != 0 && defined( $data->[0] ) )
+		my $max_id;
 		{
-			$self->{'max_id'} = $data->[0];
+			local $dbh->{'RaiseError'} = 1;
+			my $data = $dbh->selectrow_arrayref(
+				sprintf(
+					q|
+						SELECT MAX(queue_element_id)
+						FROM %s
+						WHERE queue_id = ?
+					|,
+					$dbh->quote_identifier( $self->get_queue_elements_table_name() ),
+				),
+				{},
+				$self->get_queue_id(),
+			);
+			
+			$max_id = defined( $data ) && scalar( @$data ) != 0
+				? $data->[0]
+				: undef;
+		}
+		
+		if ( defined( $max_id ) )
+		{
+			$self->{'max_id'} = $max_id;
 		}
 		else
 		{
