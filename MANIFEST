@@ -10,6 +10,7 @@ META.json
 META.yml
 Makefile.PL
 README
+examples/examples.txt
 ignore.txt
 lib/Queue/DBI.pm
 lib/Queue/DBI/Admin.pm
