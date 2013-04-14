@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
+use Test::FailWarnings;
 use Test::More tests => 7;
 
 use lib 't/';
