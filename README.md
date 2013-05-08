@@ -1,9 +1,14 @@
 Queue-DBI
+=========
+
+[![Build Status](https://travis-ci.org/guillaumeaubert/Queue-DBI.png?branch=master)](https://travis-ci.org/guillaumeaubert/Queue-DBI)
 
 A queueing module with an emphasis on safety, using DBI as a storage system
 for queued data.
 
+
 INSTALLATION
+------------
 
 To install this module, run the following commands:
 
@@ -12,29 +17,33 @@ To install this module, run the following commands:
 	./Build test
 	./Build install
 
+
 SUPPORT AND DOCUMENTATION
+-------------------------
 
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc Queue::DBI
+	perldoc Queue::DBI
+
 
 You can also look for information at:
 
-    RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Queue-DBI
+ * [RT, CPAN's request tracker (report bugs here)]
+   (http://rt.cpan.org/NoAuth/Bugs.html?Dist=Queue-DBI)
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Queue-DBI
+ * [AnnoCPAN, Annotated CPAN documentation]
+   (http://annocpan.org/dist/Queue-DBI)
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/Queue-DBI
+ * [CPAN Ratings]
+   (http://cpanratings.perl.org/d/Queue-DBI)
 
-    Search CPAN
-        http://search.cpan.org/dist/Queue-DBI/
+ * [Search CPAN]
+   (http://search.cpan.org/dist/Queue-DBI/)
 
 
 LICENSE AND COPYRIGHT
+---------------------
 
 Copyright (C) 2009-2012 Guillaume Aubert
 
