@@ -9,7 +9,7 @@ MANIFEST.SKIP
 META.json
 META.yml
 Makefile.PL
-README
+README.md
 examples/examples.txt
 ignore.txt
 lib/Queue/DBI.pm
