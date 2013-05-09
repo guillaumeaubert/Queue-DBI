@@ -38,8 +38,8 @@ You can also look for information at:
  * [CPAN Ratings]
    (http://cpanratings.perl.org/d/Queue-DBI)
 
- * [Search CPAN]
-   (http://search.cpan.org/dist/Queue-DBI/)
+ * [MetaCPAN]
+   (https://metacpan.org/release/Queue-DBI)
 
 
 LICENSE AND COPYRIGHT

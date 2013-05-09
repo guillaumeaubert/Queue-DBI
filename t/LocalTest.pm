@@ -100,9 +100,9 @@ L<http://annocpan.org/dist/Queue-DBI>
 
 L<http://cpanratings.perl.org/d/Queue-DBI>
 
-=item * Search CPAN
+=item * MetaCPAN
 
-L<http://search.cpan.org/dist/Queue-DBI/>
+L<https://metacpan.org/release/Queue-DBI>
 
 =back
 
