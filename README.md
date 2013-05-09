@@ -29,8 +29,8 @@ perldoc command.
 
 You can also look for information at:
 
- * [RT, CPAN's request tracker (report bugs here)]
-   (http://rt.cpan.org/NoAuth/Bugs.html?Dist=Queue-DBI)
+ * [GitHub's request tracker (report bugs here)]
+   (https://github.com/guillaumeaubert/Queue-DBI/issues)
 
  * [AnnoCPAN, Annotated CPAN documentation]
    (http://annocpan.org/dist/Queue-DBI)

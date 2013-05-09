@@ -62,7 +62,7 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "http://rt.cpan.org/NoAuth/ReportBug.html?Queue=queue-dbi"
+         "web" : "https://github.com/guillaumeaubert/Queue-DBI/issues"
       },
       "homepage" : "https://metacpan.org/release/Queue-DBI",
       "license" : [

@@ -72,7 +72,7 @@ my $builder = $class->new(
 		{
 			repository  => 'https://github.com/guillaumeaubert/Queue-DBI',
 			homepage    => 'https://metacpan.org/release/Queue-DBI',
-			bugtracker  => 'http://rt.cpan.org/NoAuth/ReportBug.html?Queue=queue-dbi',
+			bugtracker  => 'https://github.com/guillaumeaubert/Queue-DBI/issues',
 		},
 		no_index                =>
 		{
