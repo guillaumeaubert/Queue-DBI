@@ -1,5 +1,15 @@
 Revision history for Queue-DBI
 
+v2.5.1  2013-05-08
+        * Moved release tests to xt/.
+        * Updated Build.PL to handle release tests as part of disttest.
+        * Added new release tests.
+        * Formatted readme with markdown.
+        * Added Test::FailWarnings to all tests.
+        * Added info on how to contribute examples.
+        * Updated links to point to MetaCPAN.
+        * Updated links to point to GitHub's issue tracker.
+
 v2.5.0  2012-10-31
         * (RT #79676) Fixed detection of SQL errors in selectrow_arrayref()
           calls.
