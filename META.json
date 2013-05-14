@@ -49,15 +49,15 @@
    "provides" : {
       "Queue::DBI" : {
          "file" : "lib/Queue/DBI.pm",
-         "version" : "v2.5.1"
+         "version" : "v2.5.2"
       },
       "Queue::DBI::Admin" : {
          "file" : "lib/Queue/DBI/Admin.pm",
-         "version" : "v2.5.1"
+         "version" : "v2.5.2"
       },
       "Queue::DBI::Element" : {
          "file" : "lib/Queue/DBI/Element.pm",
-         "version" : "v2.5.1"
+         "version" : "v2.5.2"
       }
    },
    "release_status" : "stable",
@@ -73,5 +73,5 @@
          "url" : "https://github.com/guillaumeaubert/Queue-DBI"
       }
    },
-   "version" : "v2.5.1"
+   "version" : "v2.5.2"
 }

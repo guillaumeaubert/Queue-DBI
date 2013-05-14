@@ -1,5 +1,8 @@
 Revision history for Queue-DBI
 
+v2.5.2  2013-05-13
+        * Added missing prerequisite.
+
 v2.5.1  2013-05-08
         * Moved release tests to xt/.
         * Updated Build.PL to handle release tests as part of disttest.
