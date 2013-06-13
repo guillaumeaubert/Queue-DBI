@@ -12,3 +12,7 @@ env:
   - QUEUE_DBI_DATABASE=''
   - QUEUE_DBI_DATABASE='DBI:mysql:database=queue_dbi;host=127.0.0.1|root|'
   - QUEUE_DBI_DATABASE='DBI:Pg:dbname=queue_dbi;host=127.0.0.1|postgres|'
+before_install:
+  cpanm -n Devel::Cover::Report::Coveralls
+script:
+  perl Build.PL && ./Build build && cover -test -report coveralls
