@@ -6,12 +6,12 @@ use warnings;
 use Test::More;
 
 
-# Load extra tests.
+# Load module.
 eval
 {
 	require Test::Kwalitee::Extra;
 };
-plan( skip_all => 'Test::Kwalitee required to evaluate code' )
+plan( skip_all => 'Test::Kwalitee::Extra required to evaluate code' )
 	if $@;
 
 # Run extra tests.
@@ -21,7 +21,7 @@ Test::Kwalitee::Extra->import(
 	)
 );
 
-# Clean up the extra file Test::Kwalitee generates.
+# Clean up the additional file Test::Kwalitee::Extra generates.
 END
 {
 	unlink 'Debian_CPANTS.txt'
