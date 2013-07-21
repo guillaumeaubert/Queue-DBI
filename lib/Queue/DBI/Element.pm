@@ -408,11 +408,6 @@ sub get_queue
 }
 
 
-=head1 AUTHOR
-
-Guillaume Aubert, C<< <aubertg at cpan.org> >>.
-
-
 =head1 BUGS
 
 Please report any bugs or feature requests through the web interface at
@@ -451,20 +446,16 @@ L<https://metacpan.org/release/Queue-DBI>
 =back
 
 
+=head1 AUTHOR
+
+L<Guillaume Aubert|https://metacpan.org/author/AUBERTG>,
+C<< <aubertg at cpan.org> >>.
+
+
 =head1 ACKNOWLEDGEMENTS
 
-Thanks to ThinkGeek (L<http://www.thinkgeek.com/>) and its corporate overlords
-at Geeknet (L<http://www.geek.net/>), for footing the bill while I write code
-for them!
-
-Thanks to Jacob Rose C<< <jacob at thinkgeek.com> >>, who wrote the first
-queueing module at ThinkGeek L<http://www.thinkgeek.com> and whose work
-provided the inspiration to write this full-fledged queueing system.
-
-Thanks to Jamie McCarthy for the locking mechanism improvements in version 1.1.0.
-
-Thanks to Sergey Bond for suggesting many features added in version 1.8.x
-(lifetime constraint, purge() function, get/set functions cleanup).
+I originally developed this project for ThinkGeek
+(L<http://www.thinkgeek.com/>). Thanks for allowing me to open-source it!
 
 
 =head1 COPYRIGHT & LICENSE
