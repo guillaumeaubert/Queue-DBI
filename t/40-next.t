@@ -54,7 +54,7 @@ for ( my $i = 0; $i < 5; $i++ )
 	{
 		'count' => $i,
 	};
-	
+
 	lives_ok(
 		sub
 		{
@@ -84,7 +84,7 @@ for ( my $i = 0; $i < 5; $i++ )
 				'Queue::DBI::Element',
 				'Object returned by next()',
 			);
-			
+
 			my $data;
 			lives_ok(
 				sub
@@ -97,7 +97,7 @@ for ( my $i = 0; $i < 5; $i++ )
 				defined( $data ),
 				'Data defined.',
 			);
-			
+
 			ok(
 				defined( $data->{'count'} ) && ( $data->{'count'} == $i ),
 				'Find expected item.',

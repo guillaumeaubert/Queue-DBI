@@ -52,12 +52,12 @@ sub test_create_queue
 	my ( %args ) = @_;
 	my $new_args = delete( $args{'new_args'} ) || {};
 	my $queue_name = delete( $args{'queue_name'} );
-	
+
 	die 'The queue name must be specified'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
+
 	plan( tests => 2 );
-	
+
 	my $queue_admin;
 	lives_ok(
 		sub
@@ -69,7 +69,7 @@ sub test_create_queue
 		},
 		'Instantiate a new Queue::DBI::Admin object.',
 	);
-	
+
 	lives_ok(
 		sub
 		{

@@ -25,7 +25,7 @@ subtest(
 	sub
 	{
 		plan( tests => 4 );
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -36,7 +36,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -44,7 +44,7 @@ subtest(
 			},
 			'Drop the default tables.',
 		);
-		
+
 		my $tables_exist;
 		lives_ok(
 			sub
@@ -53,7 +53,7 @@ subtest(
 			},
 			'Call has_tables().',
 		);
-		
+
 		ok(
 			!$tables_exist,
 			'The default tables do not exist anymore.',
@@ -66,7 +66,7 @@ subtest(
 	sub
 	{
 		plan( tests => 4 );
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -79,7 +79,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -87,7 +87,7 @@ subtest(
 			},
 			'Drop the custom tables.',
 		);
-		
+
 		my $tables_exist;
 		lives_ok(
 			sub
@@ -96,7 +96,7 @@ subtest(
 			},
 			'Call has_tables().',
 		);
-		
+
 		ok(
 			!$tables_exist,
 			'The custom tables do not exist anymore.',

@@ -57,7 +57,7 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		my $create_table_sql =
 		{
 			SQLite =>
@@ -85,7 +85,7 @@ subtest(
 				ENGINE=InnoDB
 			|,
 		};
-		
+
 		my $database_type = $dbh->{'Driver'}->{'Name'} || '';
 		ok(
 			defined(
@@ -93,7 +93,7 @@ subtest(
 			),
 			'The SQL for this database type is present.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -121,7 +121,7 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		my $create_table_sql =
 		{
 			SQLite =>
@@ -149,7 +149,7 @@ subtest(
 				ENGINE=InnoDB
 			|,
 		};
-		
+
 		my $database_type = $dbh->{'Driver'}->{'Name'} || '';
 		ok(
 			defined(
@@ -157,7 +157,7 @@ subtest(
 			),
 			'The SQL for this database type is present.',
 		);
-		
+
 		lives_ok(
 			sub
 			{

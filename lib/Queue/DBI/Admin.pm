@@ -28,31 +28,31 @@ our $VERSION = '2.5.2';
 =head1 SYNOPSIS
 
 	use Queue::DBI::Admin;
-	
+
 	# Create the object which will allow managing the queues.
 	my $queues_admin = Queue::DBI::Admin->new(
 		database_handle => $dbh,
 	);
-	
+
 	# Check if the tables required by Queue::DBI exist.
 	if ( !$queues_admin->has_tables() )
 	{
 		# Create the tables required by Queue::DBI to store the queues and data.
 		$queues_admin->create_tables();
 	}
-	
+
 	# Create a new queue.
 	my $queue = $queues_admin->create_queue( $queue_name );
-	
+
 	# Test if a queue exists.
 	if ( $queues_admin->has_queue( $queue_name ) )
 	{
 		...
 	}
-	
+
 	# Retrieve a queue.
 	my $queue = $queues_admin->retrieve_queue( $queue_name );
-	
+
 	# Delete a queue.
 	$queues_admin->delete_queue( $queue_name );
 
@@ -120,14 +120,14 @@ sub new
 	my $database_handle = delete( $args{'database_handle'} );
 	my $queues_table_name = delete( $args{'queues_table_name'} );
 	my $queue_elements_table_name = delete( $args{'queue_elements_table_name'} );
-	
+
 	croak 'Unrecognized arguments: ' . join( ', ', keys %args )
 		if scalar( keys %args ) != 0;
-	
+
 	# Verify arguments.
 	croak 'The argument "database_handle" must be a DBI connection handle object'
 		if !Data::Validate::Type::is_instance( $database_handle, class => 'DBI::db' );
-	
+
 	my $self = bless(
 		{
 			database_handle => $database_handle,
@@ -140,7 +140,7 @@ sub new
 		},
 		$class
 	);
-	
+
 	return $self;
 }
 
@@ -157,18 +157,18 @@ sub create_queue
 {
 	my ( $self, $queue_name ) = @_;
 	my $database_handle = $self->get_database_handle();
-	
+
 	# Verify parameters.
 	croak 'The first parameter must be a queue name'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
+
 	# Make sure the tables are correctly set up.
 	$self->assert_tables_verified();
-	
+
 	my $queues_table_name = $database_handle->quote_identifier(
 		$self->get_queues_table_name()
 	);
-	
+
 	# Create the queue.
 	$database_handle->do(
 		sprintf(
@@ -181,7 +181,7 @@ sub create_queue
 		{},
 		$queue_name,
 	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-	
+
 	return;
 }
 
@@ -201,21 +201,21 @@ sub has_queue
 {
 	my ( $self, $queue_name ) = @_;
 	my $database_handle = $self->get_database_handle();
-	
+
 	# Verify parameters.
 	croak 'The first parameter must be a queue name'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
+
 	# Make sure the tables are correctly set up.
 	$self->assert_tables_verified();
-	
+
 	return try
 	{
 		my $queue = $self->retrieve_queue( $queue_name );
-		
+
 		croak 'The queue does not exist'
 			if !defined( $queue );
-		
+
 		return 1;
 	}
 	catch
@@ -245,14 +245,14 @@ sub retrieve_queue
 {
 	my ( $self, $queue_name, %args ) = @_;
 	my $database_handle = $self->get_database_handle();
-	
+
 	# Verify parameters.
 	croak 'The first parameter must be a queue name'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
+
 	# Make sure the tables are correctly set up.
 	$self->assert_tables_verified();
-	
+
 	# Instantiate a Queue::DBI object.
 	my $queue = Queue::DBI->new(
 		database_handle           => $database_handle,
@@ -261,7 +261,7 @@ sub retrieve_queue
 		queue_elements_table_name => $self->get_queue_elements_table_name(),
 		%args
 	);
-	
+
 	return $queue;
 }
 
@@ -279,22 +279,22 @@ sub delete_queue
 {
 	my ( $self, $queue_name ) = @_;
 	my $database_handle = $self->get_database_handle();
-	
+
 	# Verify parameters.
 	croak 'The first parameter must be a queue name'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
+
 	# Make sure the tables are correctly set up.
 	$self->assert_tables_verified();
-	
+
 	# Retrieve the queue object, to get the queue ID.
 	my $queue = $self->retrieve_queue( $queue_name );
-	
+
 	# Delete queue elements.
 	my $queue_elements_table_name = $database_handle->quote_identifier(
 		$self->get_queue_elements_table_name()
 	);
-	
+
 	$database_handle->do(
 		sprintf(
 			q|
@@ -307,12 +307,12 @@ sub delete_queue
 		{},
 		$queue->get_queue_id(),
 	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-	
+
 	# Delete the queue.
 	my $queues_table_name = $database_handle->quote_identifier(
 		$self->get_queues_table_name()
 	);
-	
+
 	$database_handle->do(
 		sprintf(
 			q|
@@ -325,7 +325,7 @@ sub delete_queue
 		{},
 		$queue->get_queue_id(),
 	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-	
+
 	return;
 }
 
@@ -348,37 +348,37 @@ sub has_tables
 {
 	my ( $self ) = @_;
 	my $database_handle = $self->get_database_handle();
-	
+
 	# Check the database type.
 	$self->assert_database_type_supported();
-	
+
 	# Check if the queues table exists.
 	my $queues_table_exists = $self->has_table( 'queues' );
-	
+
 	# Check if the queue elements table exists.
 	my $queue_elements_table_exists = $self->has_table( 'queue_elements' );
-	
+
 	# If both tables don't exist, return 0.
 	return 0
 		if !$queues_table_exists && !$queue_elements_table_exists;
-	
+
 	# If one of the tables is missing, we want the user to know that there is
 	# a problem to fix and that create_table() won't work.
 	croak "The table '" . $self->get_queues_table_name() . "' exists, but '" . $self->get_queue_elements_table_name() . "' is missing"
 		if $queues_table_exists && !$queue_elements_table_exists;
 	croak "The table '" . $self->get_queue_elements_table_name() . "' exists, but '" . $self->get_queues_table_name() . "' is missing"
 		if !$queues_table_exists && $queue_elements_table_exists;
-	
+
 	# Check if the queues table has the mandatory fields.
 	my $queues_table_has_fields = $self->has_mandatory_fields( 'queues' );
 	croak "The table '" . $self->get_queues_table_name() . "' exists, but is missing mandatory fields"
 		if !$queues_table_has_fields;
-	
+
 	# Check if the queue elements table has the mandatory fields.
 	my $queue_elements_table_has_fields = $self->has_mandatory_fields( 'queue_elements' );
 	croak "The table '" . $self->get_queue_elements_table_name() . "' exists, but is missing mandatory fields"
 		if !$queue_elements_table_has_fields;
-	
+
 	# Both tables exist and have the mandatory fields for Queue::DBI to
 	# work, we can safely return 1.
 	return 1;
@@ -405,23 +405,23 @@ sub create_tables
 	my $drop_if_exist = delete( $args{'drop_if_exist'} ) || 0;
 	croak 'Unrecognized arguments: ' . join( ', ', keys %args )
 		if scalar( keys %args ) != 0;
-	
+
 	my $database_handle = $self->get_database_handle();
-	
+
 	# Check the database type.
 	my $database_type = $self->assert_database_type_supported();
-	
+
 	# Prepare the name of the tables.
 	my $queues_table_name = $self->get_queues_table_name();
 	my $quoted_queues_table_name = $self->get_quoted_queues_table_name();
-	
+
 	my $queue_elements_table_name = $self->get_queue_elements_table_name();
 	my $quoted_queue_elements_table_name = $self->get_quoted_queue_elements_table_name();
-	
+
 	# Drop the tables, if requested.
 	$self->drop_tables()
 		if $drop_if_exist;
-	
+
 	# Create the list of queues.
 	if ( $database_type eq 'SQLite' )
 	{
@@ -443,7 +443,7 @@ sub create_tables
 		my $unique_index_name = $database_handle->quote_identifier(
 			'unq_' . $queues_table_name . '_name',
 		);
-		
+
 		$database_handle->do(
 			sprintf(
 				q|
@@ -465,7 +465,7 @@ sub create_tables
 		my $unique_index_name = $database_handle->quote_identifier(
 			'unq_' . $queues_table_name . '_name',
 		);
-		
+
 		$database_handle->do(
 			sprintf(
 				q|
@@ -483,7 +483,7 @@ sub create_tables
 			)
 		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	}
-	
+
 	# Create the table that will hold the queue elements.
 	if ( $database_type eq 'SQLite' )
 	{
@@ -524,11 +524,11 @@ sub create_tables
 				$quoted_queues_table_name,
 			)
 		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-		
+
 		my $queue_id_index_name = $database_handle->quote_identifier(
 			'idx_' . $queue_elements_table_name . '_queue_id'
 		);
-		
+
 		$database_handle->do(
 			sprintf(
 				q|
@@ -548,7 +548,7 @@ sub create_tables
 		my $queue_id_foreign_key_name = $database_handle->quote_identifier(
 			'fk_' . $queue_elements_table_name . '_queue_id'
 		);
-		
+
 		$database_handle->do(
 			sprintf(
 				q|
@@ -573,7 +573,7 @@ sub create_tables
 			)
 		) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
 	}
-	
+
 	return;
 }
 
@@ -596,10 +596,10 @@ sub drop_tables
 {
 	my ( $self ) = @_;
 	my $database_handle = $self->get_database_handle();
-	
+
 	# Check the database type.
 	$self->assert_database_type_supported();
-	
+
 	# If the tables exist, make sure that they have the mandatory fields. This
 	# prevents a user from deleting a random table using this function.
 	if ( $self->has_table( 'queues' ) )
@@ -614,11 +614,11 @@ sub drop_tables
 		croak "The table '$queue_elements_table_name' is missing some or all mandatory fields, so we cannot safely determine that it is used by Queue::DBI and delete it"
 			if !$self->has_mandatory_fields( 'queue_elements' );
 	}
-	
+
 	# Prepare the name of the tables.
 	my $quoted_queues_table_name = $self->get_quoted_queues_table_name();
 	my $quoted_queue_elements_table_name = $self->get_quoted_queue_elements_table_name();
-	
+
 	# Drop the tables.
 	# Note: due to foreign key constraints, we need to drop the tables in the
 	# reverse order in which they are created.
@@ -628,14 +628,14 @@ sub drop_tables
 			$quoted_queue_elements_table_name,
 		)
 	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-	
+
 	$database_handle->do(
 		sprintf(
 			q|DROP TABLE IF EXISTS %s|,
 			$quoted_queues_table_name,
 		)
 	) || croak 'Cannot execute SQL: ' . $database_handle->errstr();
-	
+
 	return;
 }
 
@@ -653,7 +653,7 @@ Return the database handle associated with the L<Queue::DBI::Admin> object.
 sub get_database_handle
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'database_handle'};
 }
 
@@ -669,7 +669,7 @@ Return the name of the table used to store queue definitions.
 sub get_queues_table_name
 {
 	my ( $self ) = @_;
-	
+
 	return defined( $self->{'table_names'}->{'queues'} ) && ( $self->{'table_names'}->{'queues'} ne '' )
 		? $self->{'table_names'}->{'queues'}
 		: $Queue::DBI::DEFAULT_QUEUES_TABLE_NAME;
@@ -687,7 +687,7 @@ Return the name of the table used to store queue elements.
 sub get_queue_elements_table_name
 {
 	my ( $self ) = @_;
-	
+
 	return defined( $self->{'table_names'}->{'queue_elements'} ) && ( $self->{'table_names'}->{'queue_elements'} ne '' )
 		? $self->{'table_names'}->{'queue_elements'}
 		: $Queue::DBI::DEFAULT_QUEUE_ELEMENTS_TABLE_NAME;
@@ -707,10 +707,10 @@ inclusion in SQL statements.
 sub get_quoted_queues_table_name
 {
 	my ( $self ) = @_;
-	
+
 	my $database_handle = $self->get_database_handle();
 	my $queues_table_name = $self->get_queues_table_name();
-	
+
 	return defined( $queues_table_name )
 		? $database_handle->quote_identifier( $queues_table_name )
 		: undef;
@@ -729,10 +729,10 @@ in SQL statements.
 sub get_quoted_queue_elements_table_name
 {
 	my ( $self ) = @_;
-	
+
 	my $database_handle = $self->get_database_handle();
 	my $queue_elements_table_name = $self->get_queue_elements_table_name();
-	
+
 	return defined( $queue_elements_table_name )
 		? $database_handle->quote_identifier( $queue_elements_table_name )
 		: undef;
@@ -754,12 +754,12 @@ returned when it is supported.
 sub assert_database_type_supported
 {
 	my ( $self ) = @_;
-	
+
 	# Check the database type.
 	my $database_type = $self->get_database_type();
 	croak "This database type ($database_type) is not supported yet, please email the maintainer of the module for help"
 		if $database_type !~ m/^(?:SQLite|MySQL|Pg)$/ix;
-	
+
 	return $database_type;
 }
 
@@ -776,9 +776,9 @@ with the L<Queue::DBI::Admin> object.
 sub get_database_type
 {
 	my ( $self ) = @_;
-	
+
 	my $database_handle = $self->get_database_handle();
-	
+
 	return $database_handle->{'Driver'}->{'Name'} || '';
 }
 
@@ -804,18 +804,18 @@ Valid table types are:
 sub has_table
 {
 	my ( $self, $table_type ) = @_;
-	
+
 	# Check the table type.
 	croak 'A table type must be specified'
 		if !defined( $table_type );
 	croak "The table type '$table_type' is not valid"
 		if $table_type !~ /\A(?:queues|queue_elements)\Z/x;
-	
+
 	# Retrieve the table name.
 	my $table_name = $table_type eq 'queues'
 		? $self->get_quoted_queues_table_name()
 		: $self->get_quoted_queue_elements_table_name();
-	
+
 	# Check if the table exists.
 	my $database_handle = $self->get_database_handle();
 	my $table_exists =
@@ -824,7 +824,7 @@ sub has_table
 		# Disable printing errors out since we expect the statement to fail.
 		local $database_handle->{'PrintError'} = 0;
 		local $database_handle->{'RaiseError'} = 1;
-		
+
 		$database_handle->selectrow_array(
 			sprintf(
 				q|
@@ -834,14 +834,14 @@ sub has_table
 				$table_name,
 			)
 		);
-		
+
 		return 1;
 	}
 	catch
 	{
 		return 0;
 	};
-	
+
 	return $table_exists;
 }
 
@@ -867,23 +867,23 @@ Valid table types are:
 sub has_mandatory_fields
 {
 	my ( $self, $table_type ) = @_;
-	
+
 	# Check the table type.
 	croak 'A table type must be specified'
 		if !defined( $table_type );
 	croak "The table type '$table_type' is not valid"
 		if $table_type !~ /\A(?:queues|queue_elements)\Z/x;
-	
+
 	# Retrieve the table name.
 	my $table_name = $table_type eq 'queues'
 		? $self->get_quoted_queues_table_name()
 		: $self->get_quoted_queue_elements_table_name();
-	
+
 	# Retrieve the list of fields to check for.
 	my $mandatory_fields = $table_type eq 'queues'
 		? 'queue_id, name'
 		: 'queue_element_id, queue_id, data, lock_time, requeue_count, created';
-	
+
 	# Check if the fields exist.
 	my $database_handle = $self->get_database_handle();
 	my $has_mandatory_fields =
@@ -892,7 +892,7 @@ sub has_mandatory_fields
 		# Disable printing errors out since we expect the statement to fail.
 		local $database_handle->{'PrintError'} = 0;
 		local $database_handle->{'RaiseError'} = 1;
-		
+
 		$database_handle->selectrow_array(
 			sprintf(
 				q|
@@ -903,14 +903,14 @@ sub has_mandatory_fields
 				$table_name,
 			)
 		);
-		
+
 		return 1;
 	}
 	catch
 	{
 		return 0;
 	};
-	
+
 	return $has_mandatory_fields;
 }
 
@@ -930,17 +930,17 @@ methods that use it.
 sub assert_tables_verified
 {
 	my ( $self ) = @_;
-	
+
 	return if $self->{'tables_verified'};
-	
+
 	# If some tables are incorrectly set up, has_tables() will croak here.
 	# It however also returns 0 if no tables are defined, and we need to
 	# turn it into a croak here.
 	$self->has_tables()
 		|| croak 'The queues and queue elements tables need to be created, see Queue::DBI::Admin->create_tables()';
-	
+
 	$self->{'tables_verified'} = 1;
-	
+
 	return;
 }
 

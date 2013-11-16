@@ -25,7 +25,7 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -36,7 +36,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -52,7 +52,7 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -65,7 +65,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
-		
+
 		lives_ok(
 			sub
 			{

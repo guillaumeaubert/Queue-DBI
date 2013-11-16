@@ -51,7 +51,7 @@ subtest(
 	sub
 	{
 		plan( tests => 3 );
-		
+
 		is(
 			$queue->count(),
 			1,
@@ -101,7 +101,7 @@ subtest(
 	sub
 	{
 		plan( tests => 3 );
-		
+
 		is(
 			$queue->count(),
 			1,
@@ -141,7 +141,7 @@ subtest(
 	sub
 	{
 		plan( tests => 3 );
-		
+
 		is(
 			$queue->count(),
 			0,

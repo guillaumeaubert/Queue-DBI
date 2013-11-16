@@ -39,12 +39,12 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		ok(
 			$queue_admin->has_table( 'queues' ),
 			'The queues table exists.',
 		);
-		
+
 		ok(
 			!$queue_admin->has_mandatory_fields( 'queues' ),
 			'The queues table is missing mandatory fields.',
@@ -57,12 +57,12 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		ok(
 			$queue_admin->has_table( 'queue_elements' ),
 			'The queue elements table exists.',
 		);
-		
+
 		ok(
 			!$queue_admin->has_mandatory_fields( 'queue_elements' ),
 			'The queue elements table is missing mandatory fields.',

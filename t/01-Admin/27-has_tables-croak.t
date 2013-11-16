@@ -20,7 +20,7 @@ subtest(
 	sub
 	{
 		plan( tests => 3 );
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -33,7 +33,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
-		
+
 		dies_ok(
 			sub
 			{
@@ -41,7 +41,7 @@ subtest(
 			},
 			'Call has_tables().',
 		);
-		
+
 		like(
 			$@,
 			qr/The table 'test_queue_elements' exists, but 'invalid_table_name' is missing/,
@@ -55,7 +55,7 @@ subtest(
 	sub
 	{
 		plan( tests => 3 );
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -68,7 +68,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
-		
+
 		dies_ok(
 			sub
 			{
@@ -76,7 +76,7 @@ subtest(
 			},
 			'Call has_tables().',
 		);
-		
+
 		like(
 			$@,
 			qr/The table 'test_queues' exists, but 'invalid_table_name' is missing/,
@@ -90,7 +90,7 @@ subtest(
 	sub
 	{
 		plan( tests => 5 );
-		
+
 		my $create_table_sql =
 		{
 			SQLite =>
@@ -118,7 +118,7 @@ subtest(
 				ENGINE=InnoDB
 			|,
 		};
-		
+
 		my $database_type = $dbh->{'Driver'}->{'Name'} || '';
 		ok(
 			defined(
@@ -126,7 +126,7 @@ subtest(
 			),
 			'The SQL for this database type is present.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -136,7 +136,7 @@ subtest(
 			},
 			'Create a queues table with incorrect fields.',
 		);
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -149,7 +149,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
-		
+
 		dies_ok(
 			sub
 			{
@@ -157,7 +157,7 @@ subtest(
 			},
 			'Call has_tables().',
 		);
-		
+
 		like(
 			$@,
 			qr/The table 'queues_incorrect_fields' exists, but is missing mandatory fields/,
@@ -171,7 +171,7 @@ subtest(
 	sub
 	{
 		plan( tests => 5 );
-		
+
 		my $create_table_sql =
 		{
 			SQLite =>
@@ -211,7 +211,7 @@ subtest(
 				ENGINE=InnoDB
 			|,
 		};
-		
+
 		my $database_type = $dbh->{'Driver'}->{'Name'} || '';
 		ok(
 			defined(
@@ -219,7 +219,7 @@ subtest(
 			),
 			'The SQL for this database type is present.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -229,7 +229,7 @@ subtest(
 			},
 			'Create a queue elements table with incorrect fields.',
 		);
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -242,7 +242,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object.',
 		);
-		
+
 		dies_ok(
 			sub
 			{
@@ -250,7 +250,7 @@ subtest(
 			},
 			'Call has_tables().',
 		);
-		
+
 		like(
 			$@,
 			qr/The table 'queue_elements_incorrect_fields' exists, but is missing mandatory fields/,

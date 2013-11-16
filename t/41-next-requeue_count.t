@@ -35,7 +35,7 @@ my $dbh = LocalTest::ok_database_handle();
 		},
 		'Create the queue object.',
 	);
-	
+
 	# Clean up queue if needed.
 	my $removed_elements = 0;
 	lives_ok(
@@ -52,7 +52,7 @@ my $dbh = LocalTest::ok_database_handle();
 	);
 	note( "Removed >$removed_elements< elements." )
 		if $removed_elements != 0;
-	
+
 	# Insert data.
 	my $data =
 	{
@@ -95,7 +95,7 @@ foreach my $try ( 1..6 )
 				},
 				'Create the queue object.',
 			);
-			
+
 			# Retrieve element.
 			my $queue_element;
 			lives_ok(
@@ -110,7 +110,7 @@ foreach my $try ( 1..6 )
 				'Queue::DBI::Element',
 				'Object returned by next()',
 			);
-			
+
 			# Lock.
 			lives_ok(
 				sub
@@ -121,7 +121,7 @@ foreach my $try ( 1..6 )
 				},
 				'Lock element.',
 			);
-			
+
 			# Requeue.
 			lives_ok(
 				sub
@@ -153,7 +153,7 @@ foreach my $try ( 1..6 )
 		},
 		'Create the queue object.',
 	);
-	
+
 	# Retrieve element.
 	my $queue_element;
 	lives_ok(
@@ -175,7 +175,7 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		my $queue;
 		lives_ok(
 			sub
@@ -189,7 +189,7 @@ subtest(
 			},
 			'Create the queue object.',
 		);
-		
+
 		my $removed_elements = 0;
 		lives_ok(
 			sub

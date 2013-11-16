@@ -26,7 +26,7 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		dies_ok(
 			sub
 			{
@@ -38,7 +38,7 @@ subtest(
 			},
 			'The argument "queue_name" is required.',
 		);
-		
+
 		dies_ok(
 			sub
 			{
@@ -77,7 +77,7 @@ subtest(
 	sub
 	{
 		plan( tests => 3 );
-		
+
 		dies_ok(
 			sub
 			{
@@ -90,7 +90,7 @@ subtest(
 			},
 			'The argument "cleanup_timeout" must be an integer.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -102,7 +102,7 @@ subtest(
 			},
 			'The argument "verbose" is optional.',
 		);
-		
+
 		dies_ok(
 			sub
 			{

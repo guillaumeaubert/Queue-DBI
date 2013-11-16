@@ -26,7 +26,7 @@ subtest(
 	sub
 	{
 		plan( tests => 4 );
-		
+
 		lives_ok(
 			sub
 			{
@@ -39,13 +39,13 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI object without a lifetime.',
 		);
-		
+
 		is(
 			$queue->get_lifetime(),
 			undef,
 			'get_lifetime() returns undef.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -53,7 +53,7 @@ subtest(
 			},
 			'Change the lifetime to 5 seconds.',
 		);
-		
+
 		is(
 			$queue->get_lifetime(),
 			5,
@@ -66,7 +66,7 @@ subtest(
 	sub
 	{
 		plan( tests => 4 );
-		
+
 		lives_ok(
 			sub
 			{
@@ -80,13 +80,13 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI object with lifetime=10s.',
 		);
-		
+
 		is(
 			$queue->get_lifetime(),
 			10,
 			'get_lifetime() returns the correct lifetime value.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -94,7 +94,7 @@ subtest(
 			},
 			'Change the lifetime to 5 seconds.',
 		);
-		
+
 		is(
 			$queue->get_lifetime(),
 			5,
@@ -140,7 +140,7 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		my $subtest_queue;
 		lives_ok(
 			sub
@@ -155,7 +155,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI object with lifetime=2s.',
 		);
-		
+
 		# Retrieve data.
 		ok(
 			!defined(
@@ -171,7 +171,7 @@ subtest(
 	sub
 	{
 		plan( tests => 3 );
-		
+
 		my $subtest_queue;
 		lives_ok(
 			sub
@@ -186,7 +186,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI object with lifetime=5s.',
 		);
-		
+
 		# Retrieve data.
 		ok(
 			defined(
@@ -194,7 +194,7 @@ subtest(
 			),
 			'Retrieve the next item in the queue.',
 		);
-		
+
 		is(
 			$inserted_queue_id,
 			defined( $queue_element )
@@ -210,7 +210,7 @@ subtest(
 	sub
 	{
 		plan( tests => 3 );
-		
+
 		my $subtest_queue;
 		lives_ok(
 			sub
@@ -224,7 +224,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI object with lifetime=5s.',
 		);
-		
+
 		# Retrieve data.
 		ok(
 			defined(
@@ -232,7 +232,7 @@ subtest(
 			),
 			'Retrieve the next item in the queue.',
 		);
-		
+
 		is(
 			defined( $queue_element )
 				? $queue_element->id()
@@ -262,7 +262,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI object.',
 		);
-		
+
 		my $removed_elements = 0;
 		lives_ok(
 			sub

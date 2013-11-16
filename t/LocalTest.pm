@@ -25,7 +25,7 @@ our $VERSION = '2.5.2';
 
 	use lib 't/';
 	use LocalTest;
-	
+
 	my $dbh = LocalTest::ok_database_handle();
 
 
@@ -42,9 +42,9 @@ Verify that a database handle can be created, and return it.
 sub ok_database_handle
 {
 	$ENV{'QUEUE_DBI_DATABASE'} ||= 'dbi:SQLite:dbname=t/test_database||';
-	
+
 	my ( $database_dsn, $database_user, $database_password ) = split( /\|/, $ENV{'QUEUE_DBI_DATABASE'} );
-	
+
 	ok(
 		my $database_handle = DBI->connect(
 			$database_dsn,
@@ -56,10 +56,10 @@ sub ok_database_handle
 		),
 		'Create connection to a database.',
 	);
-	
+
 	my $database_type = $database_handle->{'Driver'}->{'Name'} || '';
 	note( "Testing $database_type database." );
-	
+
 	return $database_handle;
 }
 

@@ -58,14 +58,14 @@ subtest(
 	sub
 	{
 		plan( tests => 7 );
-		
+
 		# Make sure we start with an empty queue.
 		is(
 			$queue->count(),
 			0,
 			'The queue is empty.',
 		);
-		
+
 		# Insert data.
 		my $inserted_queue_id;
 		lives_ok(
@@ -81,7 +81,7 @@ subtest(
 			},
 			'Queue data.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -97,7 +97,7 @@ subtest(
 			},
 			'Set created timestamp on the element 10 seconds back in time.',
 		);
-		
+
 		my $elements_purged;
 		lives_ok(
 			sub
@@ -113,7 +113,7 @@ subtest(
 			0,
 			'Purged 0 elements.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -136,14 +136,14 @@ subtest(
 	sub
 	{
 		plan( tests => 9 );
-		
+
 		# Make sure we start with an empty queue.
 		is(
 			$queue->count(),
 			0,
 			'The queue is empty.',
 		);
-		
+
 		# Insert data.
 		my $inserted_queue_id;
 		lives_ok(
@@ -159,7 +159,7 @@ subtest(
 			},
 			'Queue data.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -175,7 +175,7 @@ subtest(
 			},
 			'Set max_requeue_count on the element to 10.',
 		);
-		
+
 		my $elements_purged;
 		lives_ok(
 			sub
@@ -191,7 +191,7 @@ subtest(
 			0,
 			'Purged 0 elements.',
 		);
-		
+
 		lives_ok(
 			sub
 			{
@@ -206,7 +206,7 @@ subtest(
 			0,
 			'Purged 0 elements.',
 		);
-		
+
 		lives_ok(
 			sub
 			{

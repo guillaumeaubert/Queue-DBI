@@ -53,7 +53,7 @@ Queue::DBI::Element objects:
 sub new
 {
 	my ( $class, %args ) = @_;
-	
+
 	# Check parameters
 	foreach my $arg ( qw( data id requeue_count created ) )
 	{
@@ -62,7 +62,7 @@ sub new
 	}
 	croak 'Pass a Queue::DBI object to create an Queue::DBI::Element object'
 		unless defined( $args{'queue'} ) && $args{'queue'}->isa( 'Queue::DBI' );
-	
+
 	# Create the object
 	my $self = bless(
 		{
@@ -74,7 +74,7 @@ sub new
 		},
 		$class
 	);
-	
+
 	return $self;
 }
 
@@ -102,7 +102,7 @@ sub lock ## no critic (Subroutines::ProhibitBuiltinHomonyms)
 	my $verbose = $queue->get_verbose();
 	my $dbh = $queue->get_dbh();
 	carp "Entering lock()." if $verbose;
-	
+
 	my $rows = $dbh->do(
 		sprintf(
 			q|
@@ -117,10 +117,10 @@ sub lock ## no critic (Subroutines::ProhibitBuiltinHomonyms)
 		time(),
 		$self->id(),
 	) || croak 'Cannot lock element: ' . $dbh->errstr;
-	
+
 	my $success = ( defined( $rows ) && ( $rows == 1 ) ) ? 1 : 0;
 	carp "Element locked: " . ( $success ? 'success' : 'already locked or gone' ) . "." if $verbose;
-	
+
 	carp "Leaving lock()." if $verbose;
 	return $success;
 }
@@ -148,7 +148,7 @@ sub requeue
 	my $verbose = $queue->get_verbose();
 	my $dbh = $queue->get_dbh();
 	carp "Entering requeue()." if $verbose;
-	
+
 	my $rows = $dbh->do(
 		sprintf(
 			q|
@@ -164,7 +164,7 @@ sub requeue
 		{},
 		$self->id(),
 	);
-	
+
 	# Since Queue::DBI does not enclose the SELECTing of a queue_element
 	# to be requeued, and this actual requeueing, it is possible for the
 	# element to be requeued by another process in-between. It may even
@@ -180,15 +180,15 @@ sub requeue
 		carp 'Cannot requeue element: ' . ( defined( $error ) ? $error : 'no error returned by DBI' );
 		return 0;
 	}
-	
+
 	my $requeued = ( $rows == 1 ) ? 1 : 0;
 	carp "Element requeued: " . ( $requeued ? 'done' : 'already requeued or gone' ) . "." if $verbose;
-	
+
 	# Update the requeue_count on the object as well if the database update was
 	# successful.
 	$self->{'requeue_count'}++
 		if $requeued;
-	
+
 	carp "Leaving requeue()." if $verbose;
 	return $requeued;
 }
@@ -217,11 +217,11 @@ sub success
 	my $verbose = $queue->get_verbose();
 	my $dbh = $queue->get_dbh();
 	carp "Entering success()." if $verbose;
-	
+
 	# Possible improvement:
 	# Add $self->{'lock_time'} in lock() and insist that it matches that value
 	# when trying to delete the element here.
-	
+
 	# First, we try to delete the LOCKED element.
 	my $rows = $dbh->do(
 		sprintf(
@@ -236,12 +236,12 @@ sub success
 		{},
 		$self->id(),
 	);
-	
+
 	if ( ! defined( $rows ) || $rows == -1 )
 	{
 		croak 'Cannot remove element: ' . $dbh->errstr();
 	}
-	
+
 	my $success = 0;
 	if ( $rows == 1 )
 	{
@@ -265,12 +265,12 @@ sub success
 			{},
 			$self->id(),
 		);
-		
+
 		if ( ! defined( $deleted_rows ) || $deleted_rows == -1 )
 		{
 			croak 'Cannot remove element: ' . $dbh->errstr;
 		}
-		
+
 		if ( $deleted_rows == 1 )
 		{
 			# An UNLOCKED element was found and deleted. It probably means that
@@ -294,7 +294,7 @@ sub success
 			$success = 0;
 		}
 	}
-	
+
 	carp "Leaving success()." if $verbose;
 	return $success;
 }
@@ -311,7 +311,7 @@ Returns the data initially queued.
 sub data
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'data'};
 }
 
@@ -327,7 +327,7 @@ Returns the number of times that the current element has been requeued.
 sub requeue_count
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'requeue_count'};
 }
 
@@ -343,7 +343,7 @@ Returns the ID of the current element
 sub id
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'id'};
 }
 
@@ -359,7 +359,7 @@ Returns the unixtime at which the element was originally created.
 sub get_created_time
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'created'};
 }
 
@@ -380,10 +380,10 @@ sub is_over_lifetime
 	my ( $self ) = @_;
 	my $queue = $self->get_queue();
 	my $lifetime = $queue->get_lifetime();
-	
+
 	# If the queue doesn't a lifetime, an element will never "expire".
 	return 0 if !defined( $lifetime );
-	
+
 	# Check the time the element was created.
 	my $created_time = $self->get_created_time();
 	return time() - $created_time > $lifetime;
@@ -403,7 +403,7 @@ Returns the Queue::DBI object used to pull the current element.
 sub get_queue
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'queue'};
 }
 

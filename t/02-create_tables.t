@@ -20,7 +20,7 @@ dies_ok(
 	{
 		# Disable printing errors out since we expect the test to fail.
 		local $dbh->{'PrintError'} = 0;
-		
+
 		$dbh->selectrow_array( q| SELECT * FROM queues | );
 	},
 	'The queues table does not exist yet.',
@@ -31,7 +31,7 @@ dies_ok(
 	{
 		# Disable printing errors out since we expect the test to fail.
 		local $dbh->{'PrintError'} = 0;
-		
+
 		$dbh->selectrow_array( q| SELECT * FROM queue_elements | );
 	},
 	'The queue elements table does not exist yet.',

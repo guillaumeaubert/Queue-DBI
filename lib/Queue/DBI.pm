@@ -46,14 +46,14 @@ mechanism without having to use transactions.
 		'cleanup_timeout' => 3600,
 		'verbose'         => 1,
 	);
-	
+
 	$queue->enqueue( $data );
-	
+
 	while ( my $queue_element = $queue->next() )
 	{
 		next
 			unless $queue_element->lock();
-		
+
 		eval {
 			# Do some work
 			process( $queue_element->{'email'} );
@@ -70,7 +70,7 @@ mechanism without having to use transactions.
 			$queue_element->success();
 		}
 	}
-	
+
 	# Requeue items that have been locked for more than 6 hours
 	$queue->cleanup( 6 * 3600 );
 
@@ -106,7 +106,7 @@ Create a new Queue::DBI object.
 		'verbose'           => 1,
 		'max_requeue_count' => 5,
 	);
-	
+
 	# Custom table names (optional).
 	my $queue = Queue::DBI->new(
 		'queue_name'                => $queue_name,
@@ -174,7 +174,7 @@ retrieved for processing.
 sub new
 {
 	my ( $class, %args ) = @_;
-	
+
 	# Check parameters.
 	foreach my $arg ( qw( queue_name database_handle ) )
 	{
@@ -185,7 +185,7 @@ sub new
 		if defined( $args{'cleanup_timeout'} ) && ( $args{'cleanup_timeout'} !~ m/^\d+$/ );
 	croak 'Lifetime must be an integer representing seconds'
 		if defined( $args{'lifetime'} ) && ( $args{'lifetime'} !~ m/^\d+$/ );
-	
+
 	# Create the object.
 	my $dbh = $args{'database_handle'};
 	my $self = bless(
@@ -200,7 +200,7 @@ sub new
 		},
 		$class
 	);
-	
+
 	# Find the queue id.
 	my $queue_id;
 	{
@@ -217,25 +217,25 @@ sub new
 			{},
 			$args{'queue_name'},
 		);
-		
+
 		$queue_id = defined( $data ) && scalar( @$data ) != 0
 			? $data->[0]
 			: undef;
 	}
-	
+
 	croak "The queue >$args{'queue_name'}< doesn't exist in the lookup table."
 		unless defined( $queue_id ) && ( $queue_id =~ m/^\d+$/ );
 	$self->{'queue_id'} = $queue_id;
-	
+
 	# Set optional parameters.
 	$self->set_verbose( $args{'verbose'} );
 	$self->set_max_requeue_count( $args{'max_requeue_count'} );
 	$self->set_lifetime( $args{'lifetime'} );
-	
+
 	# Perform queue cleanup if a timeout is specified.
 	$self->cleanup( $args{'cleanup_timeout'} )
 		if defined( $args{'cleanup_timeout'} );
-	
+
 	return $self;
 }
 
@@ -251,7 +251,7 @@ Returns the queue ID corresponding to the current queue object.
 sub get_queue_id
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'queue_id'};
 }
 
@@ -282,16 +282,16 @@ sub count
 {
 	my ( $self, %args ) = @_;
 	my $exclude_locked_elements = delete( $args{'exclude_locked_elements'} ) || 0;
-	
+
 	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering count()." if $verbose;
-	
+
 	# Prepare optional additional clause to exclude locked elements.
 	my $exclude_locked_elements_sql = $exclude_locked_elements
 		? 'AND lock_time IS NULL'
 		: '';
-	
+
 	# Count elements.
 	my $element_count;
 	{
@@ -314,9 +314,9 @@ sub count
 			? $data->[0]
 			: 0;
 	}
-	
+
 	carp "Found $element_count elements, leaving count()." if $verbose;
-	
+
 	return $element_count;
 }
 
@@ -340,11 +340,11 @@ sub enqueue
 	my $dbh = $self->get_dbh();
 	carp "Entering enqueue()." if $verbose;
 	carp "Data is: " . Dumper( $data ) if $verbose > 1;
-	
+
 	my $encoded_data = MIME::Base64::encode_base64( Storable::freeze( $data ) );
 	croak 'The size of the data to store exceeds the maximum internal storage size available.'
 		if length( $encoded_data ) > $MAX_VALUE_SIZE;
-	
+
 	$dbh->do(
 		sprintf(
 			q|
@@ -358,14 +358,14 @@ sub enqueue
 		$encoded_data,
 		time(),
 	) || croak 'Cannot execute SQL: ' . $dbh->errstr();
-	
+
 	# We need to reset the internal cached value preventing infinite loops, other-
 	# wise this new element will not be taken into account by the current queue
 	# object.
 	$self->{'max_id'} = undef;
-	
+
 	carp "Element inserted, leaving enqueue()." if $verbose;
-	
+
 	return $dbh->last_insert_id(
 		undef,
 		undef,
@@ -381,7 +381,7 @@ Retrieves the next element from the queue and returns it in the form of a
 Queue::DBI::Element object.
 
 	my $queue_element = $queue->next();
-	
+
 	while ( my $queue_element = $queue->next() )
 	{
 		# [...]
@@ -399,18 +399,18 @@ sub next ## no critic (Subroutines::ProhibitBuiltinHomonyms)
 	my ( $self, %args ) = @_;
 	my $verbose = $self->get_verbose();
 	carp "Entering next()." if $verbose;
-	
+
 	my $elements = $self->retrieve_batch(
 		1,
 		'search_in_ids' => defined( $args{'search_in_ids'} )
 			? $args{'search_in_ids'}
 			: undef,
 	);
-	
+
 	my $return = defined( $elements ) && ( scalar( @$elements ) != 0 )
 		? $elements->[0]
 		: undef;
-	
+
 	carp "Leaving next()." if $verbose;
 	return $return;
 }
@@ -424,7 +424,7 @@ This method requires an integer to be passed as parameter to indicate the
 maximum size of the batch to be retrieved.
 
 	my $queue_elements = $queue->retrieve_batch( 500 );
-	
+
 	foreach ( @$queue_elements )
 	{
 		# [...]
@@ -446,11 +446,11 @@ sub retrieve_batch
 	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering retrieve_batch()." if $verbose;
-	
+
 	# Check parameters
 	croak 'The number of elements to retrieve from the queue is not properly formatted'
 		unless defined( $number_of_elements_to_retrieve ) && ( $number_of_elements_to_retrieve =~ m/^\d+$/ );
-	
+
 	# Prevent infinite loops
 	unless ( defined( $self->{'max_id'} ) )
 	{
@@ -469,12 +469,12 @@ sub retrieve_batch
 				{},
 				$self->get_queue_id(),
 			);
-			
+
 			$max_id = defined( $data ) && scalar( @$data ) != 0
 				? $data->[0]
 				: undef;
 		}
-		
+
 		if ( defined( $max_id ) )
 		{
 			$self->{'max_id'} = $max_id;
@@ -486,35 +486,35 @@ sub retrieve_batch
 			return;
 		}
 	}
-	
+
 	# Prevent backtracking in case elements are requeued
 	$self->{'last_id'} = -1
 		unless defined( $self->{'last_id'} );
-	
+
 	# Detect end of queue quicker
 	if ( $self->{'last_id'} == $self->{'max_id'} )
 	{
 		carp "Finished processing queue, leaving." if $verbose;
 		return [];
 	}
-	
+
 	# Make sure we don't use requeued elements more times than specified.
 	my $max_requeue_count = $self->get_max_requeue_count();
 	my $sql_max_requeue_count = defined( $max_requeue_count )
 		? 'AND requeue_count <= ' . $dbh->quote( $max_requeue_count )
 		: '';
-	
+
 	# Make sure we don't use elements that exceed the specified lifetime.
 	my $lifetime = $self->get_lifetime();
 	my $sql_lifetime = defined( $lifetime )
 		? 'AND created >= ' . ( time() - $lifetime )
 		: '';
-	
+
 	# If specified, retrieve only those IDs.
 	my $ids = defined( $args{'search_in_ids'} )
 		? 'AND queue_element_id IN (' . join( ',', map { $dbh->quote( $_ ) } @{ $args{'search_in_ids' } } ) . ')'
 		: '';
-	
+
 	# Retrieve the first available elements from the queue.
 	carp "Retrieving data." if $verbose;
 	carp "Parameters:\n\tLast ID: $self->{'last_id'}\n\tMax ID: $self->{'max_id'}\n" if $verbose > 1;
@@ -545,11 +545,11 @@ sub retrieve_batch
 		$number_of_elements_to_retrieve,
 	);
 	croak 'Cannot execute SQL: ' . $dbh->errstr() if defined( $dbh->errstr() );
-	
+
 	# All the remaining elements are locked
 	return []
 		if !defined( $data ) || ( scalar( @$data) == 0 );
-	
+
 	# Create objects
 	carp "Creating new Queue::DBI::Element objects." if $verbose;
 	my @return = ();
@@ -566,10 +566,10 @@ sub retrieve_batch
 			)
 		);
 	}
-	
+
 	# Prevent backtracking in case elements are requeued
 	$self->{'last_id'} = $return[-1]->id();
-	
+
 	carp "Leaving retrieve_batch()." if $verbose;
 	return \@return;
 }
@@ -595,11 +595,11 @@ sub get_element_by_id
 	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering get_element_by_id()." if $verbose;
-	
+
 	# Check parameters.
 	croak 'A queue element ID is required by this method'
 		unless defined( $queue_element_id );
-	
+
 	# Retrieve the specified element from the queue.
 	carp "Retrieving data." if $verbose;
 	my $data = $dbh->selectrow_hashref(
@@ -617,13 +617,13 @@ sub get_element_by_id
 		$queue_element_id,
 	);
 	croak 'Cannot execute SQL: ' . $dbh->errstr() if defined( $dbh->errstr() );
-	
+
 	# Queue element ID doesn't exist or belongs to another queue.
 	return unless defined( $data );
-	
+
 	# Create the Queue::DBI::Element object.
 	carp "Creating a new Queue::DBI::Element object." if $verbose;
-	
+
 	my $queue_element = Queue::DBI::Element->new(
 		'queue'         => $self,
 		'data'          => Storable::thaw( MIME::Base64::decode_base64( $data->{'data'} ) ),
@@ -631,7 +631,7 @@ sub get_element_by_id
 		'requeue_count' => $data->{'requeue_count'},
 		'created'       => $data->{'created'},
 	);
-	
+
 	carp "Leaving get_element_by_id()." if $verbose;
 	return $queue_element;
 }
@@ -658,11 +658,11 @@ sub cleanup
 	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering cleanup()." if $verbose;
-	
+
 	$time_in_seconds ||= '';
 	croak 'Time in seconds is not correctly formatted'
 		unless $time_in_seconds =~ m/^\d+$/;
-	
+
 	# Find all the orphans
 	carp "Retrieving data." if $verbose;
 	my $rows = $dbh->selectall_arrayref(
@@ -682,7 +682,7 @@ sub cleanup
 	croak 'Cannot execute SQL: ' . $dbh->errstr() if defined( $dbh->errstr() );
 	return []
 		unless defined( $rows );
-	
+
 	# Create objects and requeue them
 	carp "Creating new Queue::DBI::Element objects." if $verbose;
 	my $queue_elements = [];
@@ -702,7 +702,7 @@ sub cleanup
 			if $queue_element->requeue();
 	}
 	carp "Found " . scalar( @$queue_elements ) . " orphaned element(s)." if $verbose;
-	
+
 	carp "Leaving cleanup()." if $verbose;
 	return $queue_elements;
 }
@@ -716,7 +716,7 @@ deleted.
 
 	# Remove permanently elements that have been requeued more than 10 times.
 	my $deleted_elements_count = $queue->purge( max_requeue_count => 10 );
-	
+
 	# Remove permanently elements that were created over an hour ago.
 	my $deleted_elements_count = $queue->purge( lifetime => 3600 );
 
@@ -734,10 +734,10 @@ sub purge
 	my $verbose = $self->get_verbose();
 	my $dbh = $self->get_dbh();
 	carp "Entering cleanup()." if $verbose;
-	
+
 	my $max_requeue_count = $args{'max_requeue_count'};
 	my $lifetime = $args{'lifetime'};
-	
+
 	# Check parameters.
 	croak '"max_requeue_count" must be an integer'
 		if defined( $max_requeue_count ) && ( $max_requeue_count !~ m/^\d+$/ );
@@ -747,7 +747,7 @@ sub purge
 		if defined( $lifetime ) && defined( $max_requeue_count );
 	croak '"max_requeue_count" or "lifetime" must be specified'
 		if !defined( $lifetime ) && !defined( $max_requeue_count );
-	
+
 	# Prepare query clauses.
 	my $sql_lifetime = defined( $lifetime )
 		? 'AND created < ' . ( time() - $lifetime )
@@ -755,7 +755,7 @@ sub purge
 	my $sql_max_requeue_count = defined( $max_requeue_count )
 		? 'AND requeue_count > ' . $dbh->quote( $max_requeue_count )
 		: '';
-	
+
 	# Purge the queue.
 	my $rows_deleted = $dbh->do(
 		sprintf(
@@ -774,7 +774,7 @@ sub purge
 		{},
 		$self->get_queue_id(),
 	) || croak 'Cannot execute SQL: ' . $dbh->errstr();
-	
+
 	carp "Leaving cleanup()." if $verbose;
 	# Account for '0E0' which means no rows affected, and translates into no
 	# rows deleted in our case.
@@ -798,7 +798,7 @@ retrieving elements.
 sub get_max_requeue_count
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'max_requeue_count'};
 }
 
@@ -810,7 +810,7 @@ retrieving elements. Set it to C<undef> to disable the limit.
 
 	# Don't keep pulling the element if it has been requeued more than 5 times.
 	$queue->set_max_requeue_count( 5 );+
-	
+
 	# Retry without limit.
 	$queue->set_max_requeue_count( undef );
 
@@ -819,12 +819,12 @@ retrieving elements. Set it to C<undef> to disable the limit.
 sub set_max_requeue_count
 {
 	my ( $self, $max_requeue_count ) = @_;
-	
+
 	croak 'max_requeue_count must be an integer or undef'
 		if defined( $max_requeue_count ) && ( $max_requeue_count !~ /^\d+$/ );
-	
+
 	$self->{'max_requeue_count'} = $max_requeue_count;
-	
+
 	return;
 }
 
@@ -841,7 +841,7 @@ Return how old an element can be before it is ignored when retrieving elements.
 sub get_lifetime
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'lifetime'};
 }
 
@@ -855,7 +855,7 @@ retrieving elements without time limit.
 
 	# Don't pull queue elements that are more than an hour old.
 	$queue->set_lifetime( 3600 );
-	
+
 	# Pull elements without time limit.
 	$queue->set_lifetime( undef );
 
@@ -864,12 +864,12 @@ retrieving elements without time limit.
 sub set_lifetime
 {
 	my ( $self, $lifetime ) = @_;
-	
+
 	croak 'lifetime must be an integer or undef'
 		if defined( $lifetime ) && ( $lifetime !~ /^\d+$/ );
-	
+
 	$self->{'lifetime'} = $lifetime;
-	
+
 	return;
 }
 
@@ -882,7 +882,7 @@ what type of debugging statements / information should be warned out.
 See C<set_verbose()> for the possible values this function can return.
 
 	warn 'Verbose' if $queue->get_verbose();
-	
+
 	warn 'Very verbose' if $queue->get_verbose() > 1;
 
 =cut
@@ -890,7 +890,7 @@ See C<set_verbose()> for the possible values this function can return.
 sub get_verbose
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'verbose'};
 }
 
@@ -910,9 +910,9 @@ Control the verbosity of the warnings in the code:
 =back
 
 	$queue->set_verbose(1); # turn on verbose information
-	
+
 	$queue->set_verbose(2); # be extra verbose
-	
+
 	$queue->set_verbose(0); # quiet now!
 
 =cut
@@ -920,9 +920,9 @@ Control the verbosity of the warnings in the code:
 sub set_verbose
 {
 	my ( $self, $verbose ) = @_;
-	
+
 	$self->{'verbose'} = ( $verbose || 0 );
-	
+
 	return;
 }
 
@@ -938,12 +938,12 @@ function:
 
 	# Load the admin module.
 	use Queue::DBI::Admin;
-	
+
 	# Create the object which will allow managing the queues.
 	my $queues_admin = Queue::DBI::Admin->new(
 		database_handle => $dbh,
 	);
-	
+
 	# Create the tables required by Queue::DBI to store the queues and data.
 	$queues_admin->create_tables(
 		drop_if_exist => $boolean,
@@ -1006,7 +1006,7 @@ Returns the database handle used for this queue.
 sub get_dbh
 {
 	my ( $self ) = @_;
-	
+
 	return $self->{'dbh'};
 }
 
@@ -1022,7 +1022,7 @@ Returns the name of the table used to store queue definitions.
 sub get_queues_table_name
 {
 	my ( $self ) = @_;
-	
+
 	return defined( $self->{'table_names'}->{'queues'} ) && ( $self->{'table_names'}->{'queues'} ne '' )
 		? $self->{'table_names'}->{'queues'}
 		: $DEFAULT_QUEUES_TABLE_NAME;
@@ -1040,7 +1040,7 @@ Returns the name of the table used to store queue definitions.
 sub get_queue_elements_table_name
 {
 	my ( $self ) = @_;
-	
+
 	return defined( $self->{'table_names'}->{'queue_elements'} ) && ( $self->{'table_names'}->{'queue_elements'} ne '' )
 		? $self->{'table_names'}->{'queue_elements'}
 		: $DEFAULT_QUEUE_ELEMENTS_TABLE_NAME;

@@ -52,12 +52,12 @@ sub test_retrieve_queue
 	my ( %args ) = @_;
 	my $new_args = delete( $args{'new_args'} ) || {};
 	my $queue_name = delete( $args{'queue_name'} );
-	
+
 	die 'The queue name must be specified'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
+
 	plan( tests => 4 );
-	
+
 	my $queue_admin;
 	lives_ok(
 		sub
@@ -69,7 +69,7 @@ sub test_retrieve_queue
 		},
 		'Instantiate a new Queue::DBI::Admin object.',
 	);
-	
+
 	my $queue;
 	lives_ok(
 		sub
@@ -80,13 +80,13 @@ sub test_retrieve_queue
 		},
 		"Retrieve queue >$queue_name<.",
 	);
-	
+
 	isa_ok(
 		$queue,
 		'Queue::DBI',
 		'retrieve_queue() return value',
 	);
-	
+
 	dies_ok(
 		sub
 		{

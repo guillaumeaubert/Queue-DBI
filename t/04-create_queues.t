@@ -57,7 +57,7 @@ dies_ok(
 	{
 		# Disable printing errors out since we expect the test to fail.
 		local $dbh->{'PrintError'} = 0;
-		
+
 		$dbh->do(
 			q|
 				INSERT INTO queues( name )

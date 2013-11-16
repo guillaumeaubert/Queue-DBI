@@ -52,12 +52,12 @@ sub test_delete_queue
 	my ( %args ) = @_;
 	my $new_args = delete( $args{'new_args'} ) || {};
 	my $queue_name = delete( $args{'queue_name'} );
-	
+
 	die 'The queue name must be specified'
 		if !defined( $queue_name ) || ( $queue_name eq '' );
-	
+
 	plan( tests => 4 );
-	
+
 	my $queue_admin;
 	lives_ok(
 		sub
@@ -69,7 +69,7 @@ sub test_delete_queue
 		},
 		'Instantiate a new Queue::DBI::Admin object.',
 	);
-	
+
 	lives_ok(
 		sub
 		{
@@ -79,14 +79,14 @@ sub test_delete_queue
 		},
 		"Delete queue >$queue_name<.",
 	);
-	
+
 	ok(
 		defined(
 			my $queues_table_name = $queue_admin->get_queues_table_name()
 		),
 		'Retrieve the name of the queues table.',
 	);
-	
+
 	dies_ok(
 		sub
 		{

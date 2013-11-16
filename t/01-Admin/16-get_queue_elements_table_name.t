@@ -26,7 +26,7 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -37,7 +37,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object with "get_queue_elements_table_name" not set.',
 		);
-		
+
 		is(
 			$queue_admin->get_queue_elements_table_name(),
 			$Queue::DBI::DEFAULT_QUEUE_ELEMENTS_TABLE_NAME,
@@ -51,7 +51,7 @@ subtest(
 	sub
 	{
 		plan( tests => 2 );
-		
+
 		my $queue_admin;
 		lives_ok(
 			sub
@@ -63,7 +63,7 @@ subtest(
 			},
 			'Instantiate a new Queue::DBI::Admin object with "queue_elements_table_name" set.',
 		);
-		
+
 		is(
 			$queue_admin->get_queue_elements_table_name(),
 			'test_queue_elements',
