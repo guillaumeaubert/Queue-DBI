@@ -3,20 +3,20 @@ abstract: 'A queueing module with an emphasis on safety, using DBI as a storage 
 author:
   - 'Guillaume Aubert <aubertg@cpan.org>'
 build_requires:
-  DBD::SQLite: 0
-  DBI: 0
-  Test::Exception: 0
-  Test::FailWarnings: 0
-  Test::More: 0.94
-  Test::Type: 0
+  DBD::SQLite: '0'
+  DBI: '0'
+  Test::Exception: '0'
+  Test::FailWarnings: '0'
+  Test::More: '0.94'
+  Test::Type: '0'
 configure_requires:
-  Module::Build: 0
+  Module::Build: '0'
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4005, CPAN::Meta::Converter version 2.131560'
-license: open_source
+generated_by: 'Module::Build version 0.4205, CPAN::Meta::Converter version 2.140640'
+license: gpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: Queue-DBI
 no_index:
   file:
@@ -32,13 +32,13 @@ provides:
     file: lib/Queue/DBI/Element.pm
     version: v2.5.2
 requires:
-  Carp: 0
-  Data::Dumper: 0
-  Data::Validate::Type: 0
-  MIME::Base64: 0
-  Storable: 0
-  Try::Tiny: 0
-  perl: 5.006
+  Carp: '0'
+  Data::Dumper: '0'
+  Data::Validate::Type: '0'
+  MIME::Base64: '0'
+  Storable: '0'
+  Try::Tiny: '0'
+  perl: '5.006'
 resources:
   bugtracker: https://github.com/guillaumeaubert/Queue-DBI/issues
   homepage: https://metacpan.org/release/Queue-DBI
