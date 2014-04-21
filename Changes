@@ -1,5 +1,10 @@
 Revision history for Queue-DBI
 
+v2.5.3  2014-04-20
+        - Fixed "package version matches dist version" for CPANTS.
+        - Fixed license declared in meta files.
+        - General cleanup.
+
 v2.5.2  2013-05-13
         - Added missing prerequisite.
 
