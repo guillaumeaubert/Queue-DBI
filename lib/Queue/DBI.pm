@@ -185,6 +185,8 @@ sub new
 		if defined( $args{'cleanup_timeout'} ) && ( $args{'cleanup_timeout'} !~ m/^\d+$/ );
 	croak 'Lifetime must be an integer representing seconds'
 		if defined( $args{'lifetime'} ) && ( $args{'lifetime'} !~ m/^\d+$/ );
+	croak 'Freeze and Thaw must be defined both'
+		if defined( $args{'serializer_freeze'} ) xor defined( $args{'serializer_thaw'} );
 
 	# Create the object.
 	my $dbh = $args{'database_handle'};
@@ -197,6 +199,11 @@ sub new
 				'queues'         => $args{'queues_table_name'},
 				'queue_elements' => $args{'queue_elements_table_name'},
 			},
+			'serializer' =>
+			{
+				'freeze'	=> $args{'serializer_freeze'},
+				'thaw'		=> $args{'serializer_thaw'},
+			}
 		},
 		$class
 	);
@@ -341,7 +348,7 @@ sub enqueue
 	carp "Entering enqueue()." if $verbose;
 	carp "Data is: " . Dumper( $data ) if $verbose > 1;
 
-	my $encoded_data = MIME::Base64::encode_base64( Storable::freeze( $data ) );
+	my $encoded_data = $self->freeze( $data );
 	croak 'The size of the data to store exceeds the maximum internal storage size available.'
 		if length( $encoded_data ) > $MAX_VALUE_SIZE;
 
@@ -559,7 +566,7 @@ sub retrieve_batch
 			@return,
 			Queue::DBI::Element->new(
 				'queue'         => $self,
-				'data'          => Storable::thaw( MIME::Base64::decode_base64( $row->[1] ) ),
+				'data'          => $self->thaw( $row->[1] ),
 				'id'            => $row->[0],
 				'requeue_count' => $row->[2],
 				'created'       => $row->[3],
@@ -626,7 +633,7 @@ sub get_element_by_id
 
 	my $queue_element = Queue::DBI::Element->new(
 		'queue'         => $self,
-		'data'          => Storable::thaw( MIME::Base64::decode_base64( $data->{'data'} ) ),
+		'data'          => $self->thaw( $data->{'data'} ),
 		'id'            => $data->{'queue_element_id'},
 		'requeue_count' => $data->{'requeue_count'},
 		'created'       => $data->{'created'},
@@ -690,7 +697,7 @@ sub cleanup
 	{
 		my $queue_element = Queue::DBI::Element->new(
 			'queue'         => $self,
-			'data'          => Storable::thaw( MIME::Base64::decode_base64( $row->[1] ) ),
+			'data'          => $self->thaw( $row->[1] ),
 			'id'            => $row->[0],
 			'requeue_count' => $row->[2],
 			'created'       => $row->[3],
@@ -926,6 +933,36 @@ sub set_verbose
 	return;
 }
 
+
+=head1 INTERNAL METHODS
+
+=head2 freeze()
+
+Serializes an element to store it in a sql "text" column.
+
+=cut
+
+sub freeze 
+{
+	my ( $self, $data ) = @_;
+	return defined( $self->{'serializer'} ) && defined( $self->{'serializer'}->{'freeze'} ) 
+		? $self->{'serializer'}->{'freeze'}($data) 
+		: MIME::Base64::encode_base64( Storable::freeze( $data ) );
+}
+
+=head2 thaw()
+
+Deserializes an element which was stored a sql "text" column.
+
+=cut
+
+sub thaw
+{
+	my ( $self, $data ) = @_;
+	return defined( $self->{'serializer'} ) && defined( $self->{'serializer'}->{'thaw'} ) 
+		? $self->{'serializer'}->{'thaw'}($data) 
+		: Storable::thaw( MIME::Base64::decode_base64( $data ) );
+}
 
 =head1 DEPRECATED METHODS
 
