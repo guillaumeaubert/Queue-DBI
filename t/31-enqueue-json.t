@@ -21,7 +21,7 @@ plan( skip_all => "JSON::MaybeXS is not installed." )
 plan( tests => 7 );
 
 my $dbh = LocalTest::ok_database_handle();
-my $JSON = JSON::MaybeXS->new;
+my $json = JSON::MaybeXS->new();
 
 # Instantiate the queue object.
 my $queue;
@@ -33,8 +33,8 @@ lives_ok(
 			'database_handle'   => $dbh,
 			'cleanup_timeout'   => 3600,
 			'verbose'           => 0,
-			'serializer_freeze' => sub { $JSON->encode($_[0]) },
-			'serializer_thaw'   => sub { $JSON->decode($_[0]) },
+			'serializer_freeze' => sub { $json->encode($_[0]) },
+			'serializer_thaw'   => sub { $json->decode($_[0]) },
 		);
 	},
 	'Instantiate a new Queue::DBI object.',
