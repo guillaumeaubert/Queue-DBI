@@ -181,11 +181,11 @@ sub new
 		croak "Argument '$arg' is needed to create the Queue::DBI object"
 			if !defined( $args{$arg} ) || ( $args{$arg} eq '' );
 	}
-	croak 'Cleanup timeout must be an integer representing seconds'
+	croak 'Argument "cleanup_timeout" must be an integer representing seconds'
 		if defined( $args{'cleanup_timeout'} ) && ( $args{'cleanup_timeout'} !~ m/^\d+$/ );
-	croak 'Lifetime must be an integer representing seconds'
+	croak 'Argument "lifetime" must be an integer representing seconds'
 		if defined( $args{'lifetime'} ) && ( $args{'lifetime'} !~ m/^\d+$/ );
-	croak 'Freeze and Thaw must be defined both'
+	croak 'Arguments "serializer_freeze" and "serializer_thaw" must be defined together'
 		if defined( $args{'serializer_freeze'} ) xor defined( $args{'serializer_thaw'} );
 
 	# Create the object.
