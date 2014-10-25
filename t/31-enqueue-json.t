@@ -33,8 +33,8 @@ lives_ok(
 			'database_handle' => $dbh,
 			'cleanup_timeout' => 3600,
 			'verbose'         => 0,
-			'serialize_freeze'  => sub { $JSON->encode($_[0]) },
-			'serialize_thaw'    => sub { $JSON->decode($_[0]) },
+			'serializer_freeze' => sub { $JSON->encode($_[0]) },
+			'serializer_thaw'   => sub { $JSON->decode($_[0]) },
 		);
 	},
 	'Instantiate a new Queue::DBI object.',
