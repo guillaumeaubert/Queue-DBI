@@ -4,6 +4,7 @@ use warnings;
 use strict;
 
 use Data::Dumper;
+use Data::Validate::Type;
 use Carp;
 use Storable qw();
 use MIME::Base64 qw();
@@ -185,6 +186,10 @@ sub new
 		if defined( $args{'cleanup_timeout'} ) && ( $args{'cleanup_timeout'} !~ m/^\d+$/ );
 	croak 'Argument "lifetime" must be an integer representing seconds'
 		if defined( $args{'lifetime'} ) && ( $args{'lifetime'} !~ m/^\d+$/ );
+	croak 'Argument "serializer_freeze" must be a code reference'
+		if defined( $args{'serializer_freeze'} ) && !Data::Validate::Type::is_coderef( $args{'serializer_freeze'} );
+	croak 'Argument "serializer_thaw" must be a code reference'
+		if defined( $args{'serializer_thaw'} ) && !Data::Validate::Type::is_coderef( $args{'serializer_thaw'} );
 	croak 'Arguments "serializer_freeze" and "serializer_thaw" must be defined together'
 		if defined( $args{'serializer_freeze'} ) xor defined( $args{'serializer_thaw'} );
 
