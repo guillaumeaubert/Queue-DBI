@@ -18,7 +18,7 @@ eval "use JSON::MaybeXS";
 plan( skip_all => "JSON::MaybeXS is not installed." )
 	if $@;
 
-plan( tests => 7 );
+plan( tests => 12 );
 
 my $dbh = LocalTest::ok_database_handle();
 my $json = JSON::MaybeXS->new();
@@ -40,13 +40,46 @@ lives_ok(
 	'Instantiate a new Queue::DBI object.',
 );
 
+# Test data.
+ok(
+	defined(
+		my $data =
+		{
+			block => 49494494,
+		}
+	),
+	'Define test data.',
+);
+
+# Test freezing/unfreezing.
+my $frozen_data;
+lives_ok(
+	sub
+	{
+		$frozen_data = $queue->freeze( $data );
+	},
+	'Freeze the data.',
+);
+like(
+	$frozen_data,
+	qr/^\{\W*block\W*:\W*49494494\W*\}/,
+	'The frozen data looks like a JSON string.',
+);
+my $thawed_data;
+lives_ok(
+	sub
+	{
+		$thawed_data = $queue->thaw( $frozen_data ),
+	},
+	'Thaw the frozen data.',
+);
+is_deeply(
+	$thawed_data,
+	$data,
+	'The thawed data matches the original data.',
+);
+
 # Insert data.
-my $data =
-{
-	block1 => 141592653,
-	block2 => 589793238,
-	block3 => 462643383,
-};
 lives_ok(
 	sub
 	{
@@ -91,4 +124,3 @@ lives_ok(
 	},
 	'Mark as successfully processed.',
 );
-
