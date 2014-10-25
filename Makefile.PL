@@ -3,27 +3,27 @@ require 5.006;
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-  'NAME' => 'Queue::DBI',
-  'VERSION_FROM' => 'lib/Queue/DBI.pm',
-  'PREREQ_PM' => {
-                   'Carp' => 0,
-                   'DBD::SQLite' => 0,
-                   'DBI' => 0,
-                   'Data::Dumper' => 0,
-                   'Data::Validate::Type' => 0,
-                   'MIME::Base64' => 0,
-                   'Storable' => 0,
-                   'Test::Exception' => 0,
-                   'Test::FailWarnings' => 0,
-                   'Test::More' => '0.94',
-                   'Test::Type' => 0,
-                   'Try::Tiny' => 0
-                 },
-  'INSTALLDIRS' => 'site',
-  'EXE_FILES' => [],
-  'PL_FILES' => {},
   'test' => {
               'TESTS' => 't/*.t t/01-Admin/*.t t/90-Element/*.t'
-            }
+            },
+  'PL_FILES' => {},
+  'INSTALLDIRS' => 'site',
+  'NAME' => 'Queue::DBI',
+  'EXE_FILES' => [],
+  'VERSION_FROM' => 'lib/Queue/DBI.pm',
+  'PREREQ_PM' => {
+                   'Try::Tiny' => 0,
+                   'Test::Exception' => 0,
+                   'Test::FailWarnings' => 0,
+                   'DBD::SQLite' => 0,
+                   'Data::Dumper' => 0,
+                   'Storable' => 0,
+                   'Carp' => 0,
+                   'Test::More' => '0.94',
+                   'MIME::Base64' => 0,
+                   'Test::Type' => 0,
+                   'Data::Validate::Type' => 0,
+                   'DBI' => 0
+                 }
 )
 ;
