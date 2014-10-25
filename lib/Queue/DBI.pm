@@ -943,7 +943,9 @@ sub set_verbose
 
 =head2 freeze()
 
-Serializes an element to store it in a sql "text" column.
+Serialize an element to store it in a SQL "text" column.
+
+	my $frozen_data = $queue->freeze( $data );
 
 =cut
 
@@ -957,7 +959,9 @@ sub freeze
 
 =head2 thaw()
 
-Deserializes an element which was stored a sql "text" column.
+Deserialize an element which was stored a SQL "text" column.
+
+	my $thawed_data = $queue->thaw( $frozen_data );
 
 =cut
 
