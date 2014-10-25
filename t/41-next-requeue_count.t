@@ -80,6 +80,8 @@ foreach my $try ( 1..6 )
 		"Round $try.",
 		sub
 		{
+			plan( tests => 6 );
+
 			# Instantiate the queue object.
 			my $queue;
 			lives_ok(
