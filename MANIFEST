@@ -41,6 +41,7 @@ t/02-create_tables.t
 t/04-create_queues.t
 t/10-new.t
 t/15-get_dbh.t
+t/17-freeze.t
 t/30-enqueue.t
 t/31-enqueue-json.t
 t/32-lifetime.t
