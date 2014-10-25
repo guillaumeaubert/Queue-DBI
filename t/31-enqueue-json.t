@@ -5,17 +5,23 @@ use warnings;
 
 use Test::Exception;
 use Test::FailWarnings;
-use Test::More tests => 7;
+use Test::More;
 
 use lib 't/';
 use LocalTest;
 
 use Queue::DBI;
-use JSON::XS;
 
+
+# Only run this test if a JSON module is available.
+eval "use JSON::MaybeXS";
+plan( skip_all => "JSON::MaybeXS is not installed." )
+	if $@;
+
+plan( tests => 7 );
 
 my $dbh = LocalTest::ok_database_handle();
-my $JSON = JSON::XS->new;
+my $JSON = JSON::MaybeXS->new;
 
 # Instantiate the queue object.
 my $queue;
