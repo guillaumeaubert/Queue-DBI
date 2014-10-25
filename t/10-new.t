@@ -5,7 +5,7 @@ use warnings;
 
 use Test::Exception;
 use Test::FailWarnings;
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use lib 't/';
 use LocalTest;
@@ -114,6 +114,81 @@ subtest(
 				);
 			},
 			'The argument "lifetime" must be an integer.',
+		);
+	}
+);
+
+subtest(
+	'Verify "freeze" and "thaw" arguments.',
+	sub
+	{
+		plan( tests => 5 );
+
+		throws_ok(
+			sub
+			{
+				Queue::DBI->new(
+					'queue_name'        => 'test1',
+					'database_handle'   => $dbh,
+					'serializer_freeze' => 'test',
+				);
+			},
+			qr/\QArgument "serializer_freeze" must be a code reference\E/,
+			'The argument "serializer_freeze" must be a code ref.',
+		);
+
+		throws_ok(
+			sub
+			{
+				Queue::DBI->new(
+					'queue_name'        => 'test1',
+					'database_handle'   => $dbh,
+					'serializer_thaw'   => 'test',
+				);
+			},
+			qr/\QArgument "serializer_thaw" must be a code reference\E/,
+			'The argument "serializer_thaw" must be a code ref.',
+		);
+
+		throws_ok(
+			sub
+			{
+				Queue::DBI->new(
+					'queue_name'        => 'test1',
+					'database_handle'   => $dbh,
+					'serializer_freeze' => undef,
+					'serializer_thaw'   => sub { return $_[0] },
+				);
+			},
+			qr/\QArguments "serializer_freeze" and "serializer_thaw" must be defined together\E/,
+			'If "serializer_thaw" is defined, "serializer_freeze" must be defined as well.',
+		);
+
+		throws_ok(
+			sub
+			{
+				Queue::DBI->new(
+					'queue_name'        => 'test1',
+					'database_handle'   => $dbh,
+					'serializer_freeze' => sub { return $_[0] },
+					'serializer_thaw'   => undef,
+				);
+			},
+			qr/\QArguments "serializer_freeze" and "serializer_thaw" must be defined together\E/,
+			'If "serializer_freeze" is defined, "serializer_thaw" must be defined as well.',
+		);
+
+		lives_ok(
+			sub
+			{
+				Queue::DBI->new(
+					'queue_name'        => 'test1',
+					'database_handle'   => $dbh,
+					'serializer_freeze' => sub { return $_[0] },
+					'serializer_thaw'   => sub { return $_[0] },
+				);
+			},
+			'Pass "serializer_freeze" and "serializer_thaw" coderefs.'
 		);
 	}
 );
