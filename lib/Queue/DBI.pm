@@ -949,11 +949,12 @@ Serialize an element to store it in a SQL "text" column.
 
 =cut
 
-sub freeze 
+sub freeze
 {
 	my ( $self, $data ) = @_;
-	return defined( $self->{'serializer'} ) && defined( $self->{'serializer'}->{'freeze'} ) 
-		? $self->{'serializer'}->{'freeze'}($data) 
+
+	return defined( $self->{'serializer'} ) && defined( $self->{'serializer'}->{'freeze'} )
+		? $self->{'serializer'}->{'freeze'}($data)
 		: MIME::Base64::encode_base64( Storable::freeze( $data ) );
 }
 
@@ -968,10 +969,12 @@ Deserialize an element which was stored a SQL "text" column.
 sub thaw
 {
 	my ( $self, $data ) = @_;
-	return defined( $self->{'serializer'} ) && defined( $self->{'serializer'}->{'thaw'} ) 
-		? $self->{'serializer'}->{'thaw'}($data) 
+
+	return defined( $self->{'serializer'} ) && defined( $self->{'serializer'}->{'thaw'} )
+		? $self->{'serializer'}->{'thaw'}($data)
 		: Storable::thaw( MIME::Base64::decode_base64( $data ) );
 }
+
 
 =head1 DEPRECATED METHODS
 
