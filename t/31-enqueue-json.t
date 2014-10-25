@@ -29,10 +29,10 @@ lives_ok(
 	sub
 	{
 		$queue = Queue::DBI->new(
-			'queue_name'      => 'test1',
-			'database_handle' => $dbh,
-			'cleanup_timeout' => 3600,
-			'verbose'         => 0,
+			'queue_name'        => 'test1',
+			'database_handle'   => $dbh,
+			'cleanup_timeout'   => 3600,
+			'verbose'           => 0,
 			'serializer_freeze' => sub { $JSON->encode($_[0]) },
 			'serializer_thaw'   => sub { $JSON->decode($_[0]) },
 		);
