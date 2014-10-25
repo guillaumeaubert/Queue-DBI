@@ -113,6 +113,14 @@ foreach my $try ( 1..6 )
 				'Object returned by next()',
 			);
 
+			# Verify the number of times the element was requeued.
+			my $expected_requeue_count = $try - 1;
+			is(
+				$queue_element->requeue_count(),
+				$expected_requeue_count,
+				'The element was requeued $expected_requeue_count time(s).',
+			);
+
 			# Lock.
 			lives_ok(
 				sub
