@@ -113,7 +113,7 @@ subtest(
 					'lifetime'        => 'test',
 				);
 			},
-			'The argument "test" must be an integer.',
+			'The argument "lifetime" must be an integer.',
 		);
 	}
 );
