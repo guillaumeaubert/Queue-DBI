@@ -13,15 +13,34 @@ use LocalTest;
 use Queue::DBI;
 
 
-# Only run this test if a JSON module is available.
-eval "use JSON::MaybeXS";
-plan( skip_all => "JSON::MaybeXS is not installed." )
-	if $@;
+# Important: only run this test if a JSON module is available.
+my $json_module;
 
+# Check if JSON::MaybeXS is installed, which allows using either
+# Cpanel::JSON::XS, JSON::XS, or JSON::PP.
+eval "use JSON::MaybeXS";
+if ( !$@ )
+{
+	$json_module = 'JSON::MaybeXS';
+}
+else
+{
+	# Fall back on JSON::PP if JSON::MaybeXS wasn't found, as it became a core
+	# module starting with perl v5.13.9.
+	eval "use JSON::PP";
+	$json_module = 'JSON::PP'
+		if !$@;
+}
+plan( skip_all => "Neither JSON::MaybeXS nor JSON::PP are installed." )
+	if !defined( $json_module );
+
+diag( "Using $json_module for testing JSON serialization." );
+
+# Start testing.
 plan( tests => 12 );
 
 my $dbh = LocalTest::ok_database_handle();
-my $json = JSON::MaybeXS->new();
+my $json = $json_module->new();
 
 # Instantiate the queue object.
 my $queue;
