@@ -1140,15 +1140,6 @@ L<Guillaume Aubert|https://metacpan.org/author/AUBERTG>,
 C<< <aubertg at cpan.org> >>.
 
 
-=head1 CONTRIBUTORS
-
-=over 4
-
-=item * Jamie McCarthy
-
-=back
-
-
 =head1 ACKNOWLEDGEMENTS
 
 I originally developed this project for ThinkGeek
