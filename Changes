@@ -1,5 +1,12 @@
 Revision history for Queue-DBI
 
+v2.6.0  2014-10-28
+        - Added support for custom serializer methods, with Storable as the
+          backward-compatible default (GH-1). Thank you Oliver Paukstadt!
+        - Improved test coverage for Queue::DBI::Element->requeue_count().
+        - Cleaned up the wording of error messages for incorrect arguments
+          passed to Queue::DBI->new().
+
 v2.5.3  2014-04-20
         - Fixed "package version matches dist version" for CPANTS.
         - Fixed license declared in meta files.
