@@ -18,7 +18,9 @@ my $json_module;
 
 # Check if JSON::MaybeXS is installed, which allows using either
 # Cpanel::JSON::XS, JSON::XS, or JSON::PP.
-eval "use JSON::MaybeXS";
+# Important: new() was only added in version 1.001000, so we need to skip
+# previous versions of JSON::MaybeXS.
+eval "use JSON::MaybeXS 1.001000";
 if ( !$@ )
 {
 	$json_module = 'JSON::MaybeXS';
@@ -34,7 +36,18 @@ else
 plan( skip_all => "Neither JSON::MaybeXS nor JSON::PP are installed." )
 	if !defined( $json_module );
 
-diag( "Using $json_module for testing JSON serialization." );
+# Print out some debugging information.
+# Since the JSON modules are not explicit prerequisites for the installation of
+# this distribution, the version information does not show up in CPAN tester
+# reports.
+my $json_module_version = $json_module->VERSION;
+diag(
+	sprintf(
+		"Using %s (%s) for testing JSON serialization.",
+		$json_module,
+		defined( $json_module_version ) ? $json_module_version : 'undef',
+	)
+);
 
 # Start testing.
 plan( tests => 12 );
