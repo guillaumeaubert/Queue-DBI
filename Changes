@@ -1,5 +1,8 @@
 Revision history for Queue-DBI
 
+v2.6.1  2014-11-15
+        - Only use JSON::MaybeXS 1.001000 or above for testing (GH-2).
+
 v2.6.0  2014-10-28
         - Added support for custom serializer methods, with Storable as the
           backward-compatible default (GH-1). Thank you Oliver Paukstadt!
