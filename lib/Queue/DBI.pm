@@ -353,6 +353,12 @@ sub enqueue
 	carp "Entering enqueue()." if $verbose;
 	carp "Data is: " . Dumper( $data ) if $verbose > 1;
 
+	# Make sure the data passed is a reference. We don't support scalars, as
+	# trying to store both scalars and references results in a mess documented in
+	# GH-3.
+	croak 'The data passed must be a reference, not a scalar'
+		if !ref( $data );
+
 	my $encoded_data = $self->freeze( $data );
 	croak 'The size of the data to store exceeds the maximum internal storage size available.'
 		if length( $encoded_data ) > $MAX_VALUE_SIZE;

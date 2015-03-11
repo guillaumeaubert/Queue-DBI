@@ -5,7 +5,7 @@ use warnings;
 
 use Test::Exception;
 use Test::FailWarnings;
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use lib 't/';
 use LocalTest;
@@ -28,6 +28,16 @@ lives_ok(
 		);
 	},
 	'Instantiate a new Queue::DBI object.',
+);
+
+# Make sure we can't enqueue scalars.
+throws_ok(
+	sub
+	{
+		$queue->enqueue( 'test' );
+	},
+	qr/\QThe data passed must be a reference, not a scalar\E/,
+	'Scalars are not allowed.',
 );
 
 # Insert data.
