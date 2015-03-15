@@ -348,11 +348,28 @@ sub count
 
 Adds a new element at the end of the current queue.
 
-	my $queue_element_id = $queue->enqueue( $data );
+	# Store a scalar by passing its reference.
+	my $queue_element_id = $queue->enqueue( \$string );
+	my $queue_element_id = $queue->enqueue( \"string" );
 
-The data passed can be a scalar or a reference to a complex data
-structure. There is no limitation on the type of data that can be stored
-as it is serialized for storage in the database.
+	# Store an array reference.
+	my $queue_element_id = $queue->enqueue( [ 1, 2, 3 ] );
+
+	# Store a hash reference.
+	my $queue_element_id = $queue->enqueue( { key => 123 } );
+
+	# Store a complex datastructure.
+	my $queue_element_id = $queue->enqueue(
+		{
+			values => [ 1, 2, 3 ],
+			data   => { key1 => 1, key2 => 2 },
+		}
+	);
+
+The data passed should be a reference to a scalar or a reference to a complex
+data structure, but you cannot pass a scalar directly. There is otherwise no
+limitation on the type of data that can be stored as it is serialized for
+storage in the database.
 
 =cut
 
