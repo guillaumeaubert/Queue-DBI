@@ -48,10 +48,21 @@ mechanism without having to use transactions.
 		'verbose'         => 1,
 	);
 
-	$queue->enqueue( $data );
+	# Store a complex data structure.
+	$queue->enqueue(
+		{
+			values => [ 1, 2, 3 ],
+			data   => { key1 => 1, key2 => 2 },
+		}
+	);
 
+	# Store a scalar, which must be passed by reference.
+	$queue->enqueue( \"Lorem ipsum dolor sit amet" );
+
+	# Process the queued elements one by one.
 	while ( my $queue_element = $queue->next() )
 	{
+		# Skip elements that cannot be locked.
 		next
 			unless $queue_element->lock();
 
