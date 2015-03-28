@@ -1,5 +1,9 @@
 Revision history for Queue-DBI
 
+v2.6.2  2015-03-28
+        - Explicitly disallowed enqueuing scalars (GH-3).
+        - Improved synopsis and documentation (GH-3).
+
 v2.6.1  2014-11-15
         - Only use JSON::MaybeXS 1.001000 or above for testing (GH-2).
 
