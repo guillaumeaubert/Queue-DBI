@@ -1,1 +1,2 @@
-t/test_database
+/cover_db/
+/t/test_database
