@@ -4,6 +4,7 @@ Queue-DBI
 [![Build Status](https://travis-ci.org/guillaumeaubert/Queue-DBI.svg?branch=master)](https://travis-ci.org/guillaumeaubert/Queue-DBI)
 [![Coverage Status](https://coveralls.io/repos/guillaumeaubert/Queue-DBI/badge.svg?branch=master)](https://coveralls.io/r/guillaumeaubert/Queue-DBI?branch=master)
 [![CPAN](https://img.shields.io/cpan/v/Queue-DBI.svg)](https://metacpan.org/release/Queue-DBI)
+[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://opensource.org/licenses/GPL-3.0)
 
 A queueing module with an emphasis on safety, using DBI as a storage system
 for queued data.
