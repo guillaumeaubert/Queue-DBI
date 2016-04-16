@@ -36,7 +36,7 @@ my $class = Module::Build->subclass(
 
 my $builder = $class->new(
 	module_name          => 'Queue::DBI',
-	license              => 'GPL_3',
+	license              => 'Perl_5',
 	dist_author          => q{Guillaume Aubert <aubertg@cpan.org>},
 	dist_version_from    => 'lib/Queue/DBI.pm',
 	build_requires       =>
