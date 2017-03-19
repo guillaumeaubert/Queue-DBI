@@ -109,7 +109,7 @@ L<https://metacpan.org/release/Queue-DBI>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2016 Guillaume Aubert.
+Copyright 2009-2017 Guillaume Aubert.
 
 This code is free software; you can redistribute it and/or modify it under the
 same terms as Perl 5 itself.
