@@ -1,5 +1,8 @@
 Revision history for Queue-DBI
 
+v2.7.0  2017-03-22
+        - Relicensed under Perl 5 terms.
+
 v2.6.2  2015-03-28
         - Explicitly disallowed enqueuing scalars (GH-3).
         - Improved synopsis and documentation (GH-3).

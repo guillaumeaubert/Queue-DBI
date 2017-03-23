@@ -18,11 +18,11 @@ Queue::DBI::Admin - Manage Queue::DBI queues.
 
 =head1 VERSION
 
-Version 2.6.2
+Version 2.7.0
 
 =cut
 
-our $VERSION = '2.6.2';
+our $VERSION = '2.7.0';
 
 
 =head1 SYNOPSIS

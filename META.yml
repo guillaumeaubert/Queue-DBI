@@ -24,13 +24,13 @@ no_index:
 provides:
   Queue::DBI:
     file: lib/Queue/DBI.pm
-    version: v2.6.2
+    version: v2.7.0
   Queue::DBI::Admin:
     file: lib/Queue/DBI/Admin.pm
-    version: v2.6.2
+    version: v2.7.0
   Queue::DBI::Element:
     file: lib/Queue/DBI/Element.pm
-    version: v2.6.2
+    version: v2.7.0
 requires:
   Carp: '0'
   Data::Dumper: '0'
@@ -44,4 +44,4 @@ resources:
   homepage: https://metacpan.org/release/Queue-DBI
   license: http://dev.perl.org/licenses/
   repository: https://github.com/guillaumeaubert/Queue-DBI
-version: v2.6.2
+version: v2.7.0
